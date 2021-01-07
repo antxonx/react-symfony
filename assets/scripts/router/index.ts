@@ -1,4 +1,4 @@
-import routes from './routes.json';
+import routes from '@scripts/router/routes.json';
 
 interface RoutesI {
     [name: string]: string

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom';
-import Router from './router';
-import Dashboard from './pages/Dashboard';
-import AnotherPage from './pages/AnotherPage';
+import Router from '@scripts/router';
+import Dashboard from '@pages/Dashboard';
+import AnotherPage from '@pages/AnotherPage';
 import '@styles/app.scss';
 
 class App extends React.Component {
@@ -14,7 +14,7 @@ class App extends React.Component {
         super(props);
         this.router = new Router(process.env.BASE_ROUTE);
     }
-    render() {
+    render(): JSX.Element {
         return (
             <BrowserRouter>
                 <div>
