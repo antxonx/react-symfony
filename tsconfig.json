@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "CommonJS",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "strict": true,
+        "baseUrl": ".",
+        "resolveJsonModule": true,
+        "jsx": "react-jsx",
+        "paths": {
+            "@styles/*": ["assets/styles/*"],
+            "@scripts/*": ["assets/scripts/*"],
+            "@components/*": ["assets/scripts/components/*"],
+            "@pages/*": ["assets/scripts/pages/*"]
+        }
+    }
+}

@@ -4,13 +4,17 @@ import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom';
 import Router from './router';
 import Dashboard from './pages/Dashboard';
 import AnotherPage from './pages/AnotherPage';
-import './styles/app.scss';
+import '@styles/app.scss';
+
 class App extends React.Component {
-    constructor (props) {
+
+    protected router: Router;
+
+    constructor (props: {}) {
         super(props);
         this.router = new Router(process.env.BASE_ROUTE);
     }
-    render () {
+    render() {
         return (
             <BrowserRouter>
                 <div>
