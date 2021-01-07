@@ -1,7 +1,6 @@
 var Encore = require('@symfony/webpack-encore');
 const dotenv = require('dotenv');
 const path = require('path');
-const { configureDefinePlugin } = require('@symfony/webpack-encore');
 
 const env = dotenv.config({path: '.env'});
 
@@ -15,7 +14,7 @@ Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
-    .setPublicPath(env.parsed.BASE_ROUTE  + '/public/build')
+    .setPublicPath(env.parsed.BASE_ROUTE  + '/build')
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 

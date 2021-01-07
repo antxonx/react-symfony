@@ -1,9 +1,16 @@
 import routes from './routes.json';
 
+/**
+ * Router
+ *
+ * @export
+ * @class Router
+ */
 export default class Router {
+    
     constructor(baseUrl = "") {
         this.baseUrl = baseUrl;
-        this.routes = routes;;
+        this.routes = routes;
     }
 
     setBaseUrl(baseUrl) {
