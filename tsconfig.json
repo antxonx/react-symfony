@@ -15,7 +15,8 @@
             "@styles/*": ["assets/styles/*"],
             "@scripts/*": ["assets/scripts/*"],
             "@components/*": ["assets/scripts/components/*"],
-            "@pages/*": ["assets/scripts/pages/*"]
+            "@pages/*": ["assets/scripts/pages/*"],
+            "@services/*": ["assets/scripts/services/*"]
         }
     }
 }
