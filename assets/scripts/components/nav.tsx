@@ -43,8 +43,8 @@ export default class Nav extends React.Component <{router: Router}, {}> {
                             <NavLink
                                 exact
                                 className="nav-link"
-                                to={this.props.router.get("me")}
-                            >Me</NavLink>
+                                to={this.props.router.get("profile")}
+                            >Perfil</NavLink>
                         </li>
                     </ul>
                 </div>

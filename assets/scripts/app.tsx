@@ -5,12 +5,13 @@ import '@styles/app.scss';
 import Router from '@scripts/router';
 
 import Dashboard from '@pages/dashboard';
-import Me from '@pages/me';
+import Profile from '@pages/profile';
 import Login from '@pages/login';
 
 import Authentication from '@services/authentication';
 import Head from './components/head';
 import Nav from './components/nav';
+import Error404 from './pages/error404';
 
 class App extends React.Component<{}, { loggedIn: boolean | null; }>{
 
@@ -39,17 +40,13 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
         this.setState({
             loggedIn: logged
         });
-    }
+    };
 
     render(): JSX.Element {
         return (
             <>
-                <Head>
-                    <meta property="og:title" content="Sistema" />
-                    <title>Sistema</title>
-                </Head>
                 <BrowserRouter>
-                    <div>
+                    <>
                         {this.state.loggedIn == null ? (
                             <div>
                                 ....
@@ -58,11 +55,12 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
                             <>
                                 <Nav router={this.router}></Nav>
                                 <Switch>
-                                    <Route exact path={this.router.get("me")} component={Me} />
+                                    <Route exact path={this.router.get("profile")} component={Profile} />
                                     <Route exact path={this.router.get("home")} component={Dashboard} />
                                     <Route exact path={this.router.get("login")}>
-                                            <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
-                                        </Route>
+                                        <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
+                                    </Route>
+                                    <Route component={Error404} />
                                 </Switch>
                             </>
                         ) : (
@@ -72,11 +70,12 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
                                         <Route exact path={this.router.get("login")}>
                                             <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
                                         </Route>
+                                        <Route component={Error404} />
                                     </Switch>
                                 </>
                             ))}
 
-                    </div>
+                    </>
                 </BrowserRouter>
             </>
         );
