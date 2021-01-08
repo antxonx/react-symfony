@@ -1,14 +1,12 @@
 import React from 'react';
-import Axios from 'axios';
+import axios from '@services/axios';
+import { UserI } from '@scripts/services/authentication';
 
-export default class Me extends React.Component <{
+interface MeStateI {
+    user: UserI|null
+}
 
-}, {
-    user: {
-        username: string; 
-        roles: string[];
-    }|null
-}>{
+export default class Me extends React.Component <{}, MeStateI>{
 
     public constructor (props: {}) {
         super(props);
@@ -17,8 +15,8 @@ export default class Me extends React.Component <{
         }
     }
 
-    getUserInfo() {
-        Axios.get("/api/user/me")
+    componentDidMount = () => {
+        axios.get("/api/user/me")
         .then(res => {
             this.setState({ user: res.data })
         })
@@ -29,13 +27,12 @@ export default class Me extends React.Component <{
     }
 
     render(): JSX.Element {
-        this.getUserInfo();
         return (
             <div>
                 {this.state.user ? (
                     <p>Welcome {this.state.user.username}</p>
                 ) : (
-                    <p>Not auth</p>
+                    <p>...</p>
                 )}
             </div>
         );
