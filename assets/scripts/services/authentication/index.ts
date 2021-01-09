@@ -1,3 +1,4 @@
+import { Router } from '@scripts/router';
 import axios from 'axios';
 
 export interface UserI {
@@ -15,7 +16,7 @@ export default class Authentication {
         let result = false;
         const token = Authentication.getCookie(CookiesNames.AUTH_COOKIE_NAME).trim();
         if (token !== "") {
-            await axios.get("/api/checklogin", {headers: { Authorization: `Bearer ${token}` }})
+            await axios.get(( new Router(process.env.BASE_ROUTE)).apiGet("index_check_login"), { headers: { Authorization: `Bearer ${token}` } })
                 .then(() => {
                     result = true;
                 })
@@ -58,7 +59,7 @@ export default class Authentication {
 
     private static deleteCookie = (cname: string) => {
         if (Authentication.getCookie(cname).trim() !== "")
-            document.cookie = "{$cname}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = `${cname}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     };
 
     public static logIn = (options: {
@@ -68,7 +69,7 @@ export default class Authentication {
         onError?: () => void;
         finally?: () => void;
     }) => {
-        axios.post("/api/login_check", {
+        axios.post(( new Router(process.env.BASE_ROUTE)).apiGet("api_login_check"), {
             username: options.username,
             password: options.password
         })
@@ -88,5 +89,5 @@ export default class Authentication {
 
     public static logOut = () => {
         Authentication.deleteCookie(CookiesNames.AUTH_COOKIE_NAME);
-    }
+    };
 }

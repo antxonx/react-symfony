@@ -1,11 +1,10 @@
-// import axios from 'axios';
 import Authentication from '@services/authentication';
 import SubmitButton from '@components/submitButton';
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import Router from '@scripts/router';
-import Layout from '@scripts/components/layout';
-import TextInput from '@scripts/components/textInput';
+import { Router } from '@scripts/router';
+import Layout from '@components/layout';
+import TextInput from '@components/textInput';
 
 declare type LoginFields = "username" | "password";
 
@@ -72,9 +71,7 @@ export default class Login extends React.Component<LoginProps, LoginState>{
             username: this.state.username,
             password: this.state.password,
             onSuccess: () => {
-                this.changeStateValue("error", false);
-                this.changeStateValue("isLoggedIn", true);
-                this.props.onloggedinchange(true);
+                window.location.href = "/";
             },
             onError: () => {
                 this.changeStateValue("error", true);
@@ -97,7 +94,7 @@ export default class Login extends React.Component<LoginProps, LoginState>{
 
     render = (): JSX.Element => {
         return (
-            <Layout title="login">
+            <Layout title="Inicar sesión">
                 {this.state.isLoggedIn ? (
                     <Redirect to={(new Router()).get("home")} />
                 ) : (

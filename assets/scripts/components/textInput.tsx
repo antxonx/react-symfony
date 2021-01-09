@@ -26,7 +26,7 @@ export default class TextInput extends React.Component<TextInputPropsI, {}> {
                     onKeyDown={this.props.onKeyDown}
                 />
                 { this.props.error && this.props.errorMsg && (
-                    <span className="text-danger">*{this.props.errorMsg}</span>
+                    <small><span className="text-danger">*{this.props.errorMsg}</span></small>
                 )}
             </div>
         );

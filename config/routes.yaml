@@ -9,6 +9,8 @@ register:
 api_login_check:
   path: /api/login_check
   controller: App\Controller\AuthController::getTokenUser
+  options:
+    expose: true
 
 test:
   path: /api/test

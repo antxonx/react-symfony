@@ -22,7 +22,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/me", name="user_index")
+     * @Route("/profile", name="user_profile", methods={"GET"}, options={"expose"=true})
      */
     public function me(): JsonResponse
     {

@@ -1,4 +1,4 @@
-import Layout from '@scripts/components/layout';
+import Layout from '@components/layout';
 import React from 'react';
 
 export default class Dashboard extends React.Component {

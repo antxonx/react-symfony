@@ -1,17 +1,17 @@
 import React from 'react';
 
 interface SubmitButtonPropsI {
-    loading: boolean; 
+    loading: boolean;
     text: string;
 }
 
-export default class SubmitButton extends React.Component <SubmitButtonPropsI, {}>{
-    constructor(props: SubmitButtonPropsI) {
+export default class SubmitButton extends React.Component<SubmitButtonPropsI, {}>{
+    constructor (props: SubmitButtonPropsI) {
         super(props);
     }
 
     render = (): JSX.Element => {
-        return ( 
+        return (
             <>
                 {this.props.loading ? (
                     <button className="btn btn-antxony mt-2 round w-100" type="submit" disabled>
@@ -19,12 +19,12 @@ export default class SubmitButton extends React.Component <SubmitButtonPropsI, {
                         <span className="sr-only">cargando...</span>
                     </button>
                 ) : (
-                    <button className="btn btn-antxony mt-2 round w-100" type="submit">
-                        {this.props.text}
-                    </button>
-                )}
+                        <button className="btn btn-antxony mt-2 round w-100" type="submit">
+                            {this.props.text}
+                        </button>
+                    )}
             </>
-        )
-    }
-    
+        );
+    };
+
 }

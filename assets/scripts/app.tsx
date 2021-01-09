@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, NavLink, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import '@styles/app.scss';
-import Router from '@scripts/router';
+import { Router } from '@scripts/router';
 
 import Dashboard from '@pages/dashboard';
 import Profile from '@pages/profile';
 import Login from '@pages/login';
 
 import Authentication from '@services/authentication';
-import Head from './components/head';
-import Nav from './components/nav';
-import Error404 from './pages/error404';
+import Nav from '@components/nav';
+import Error404 from '@pages/error404';
+import Logout from '@pages/logout';
 
 class App extends React.Component<{}, { loggedIn: boolean | null; }>{
 
@@ -60,6 +60,7 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
                                     <Route exact path={this.router.get("login")}>
                                         <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
                                     </Route>
+                                    <Route exact path={this.router.get("logout")} component={Logout} />
                                     <Route component={Error404} />
                                 </Switch>
                             </>

@@ -18,7 +18,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/api/checklogin", name="index_check_login", methods={"GET"})
+     * @Route("/api/checklogin", name="index_check_login", methods={"GET"}, options={"expose"=true})
      *
      */
     public function checkApi(): JsonResponse
