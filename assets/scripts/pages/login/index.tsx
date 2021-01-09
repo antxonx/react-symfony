@@ -5,6 +5,7 @@ import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Router from '@scripts/router';
 import Layout from '@scripts/components/layout';
+import TextInput from '@scripts/components/textInput';
 
 declare type LoginFields = "username" | "password";
 
@@ -19,6 +20,10 @@ interface LoginState {
     error: boolean;
     loading: boolean;
     isLoggedIn: boolean;
+    errors: {
+        username: boolean;
+        password: boolean;
+    };
 }
 
 export default class Login extends React.Component<LoginProps, LoginState>{
@@ -30,6 +35,10 @@ export default class Login extends React.Component<LoginProps, LoginState>{
             error: false,
             loading: false,
             isLoggedIn: this.props.logged,
+            errors: {
+                username: false,
+                password: false,
+            },
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -41,7 +50,23 @@ export default class Login extends React.Component<LoginProps, LoginState>{
     };
 
     handleSubmit = (e: React.FormEvent) => {
+        let error = false;
+        const newState = { ...this.state };
         e.preventDefault();
+        newState.errors = {
+            username: false,
+            password: false,
+        };
+        if (this.state.username.trim() == "") {
+            newState.errors.username = true;
+            error = true;
+        }
+        if (this.state.password == "") {
+            newState.errors.password = true;
+            error = true;
+        }
+        this.setState(newState);
+        if (error) return;
         this.changeStateValue("loading", true);
         Authentication.logIn({
             username: this.state.username,
@@ -65,8 +90,9 @@ export default class Login extends React.Component<LoginProps, LoginState>{
     };
 
     handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if(e.key.match(/\s/))
+        if (e.key.match(/\s/)) {
             e.preventDefault();
+        }
     };
 
     render = (): JSX.Element => {
@@ -82,27 +108,23 @@ export default class Login extends React.Component<LoginProps, LoginState>{
                                     <hr className="divide" />
                                     {this.state.error ? (
                                         <div className="alert alert-danger round text-center">
-                                            Datos incorrectos
+                                            Nombre de usuario o contraseña incorrecta
                                         </div>
                                     ) : <></>}
                                     <form onSubmit={this.handleSubmit}>
-                                        <div className="form-group">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                name="username"
-                                                onChange={this.handleChange}
-                                                onKeyDown={this.handleKeyDown}
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <input
-                                                type="password"
-                                                className="form-control"
-                                                name="password"
-                                                onChange={this.handleChange}
-                                            />
-                                        </div>
+                                        <TextInput
+                                            name="username"
+                                            onChange={this.handleChange}
+                                            onKeyDown={this.handleKeyDown}
+                                            error={this.state.errors.username}
+                                            errorMsg="Ingresa un nombre de usaurio válido"
+                                        />
+                                        <TextInput
+                                            name="password"
+                                            onChange={this.handleChange}
+                                            error={this.state.errors.password}
+                                            errorMsg="Ingresa una contraseña"
+                                        />
                                         <SubmitButton text="Iniciar sesión" loading={this.state.loading} />
                                     </form>
                                     <hr />

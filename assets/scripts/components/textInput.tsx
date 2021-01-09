@@ -1,0 +1,34 @@
+import React from 'react';
+
+interface TextInputPropsI {
+    error: boolean;
+    name: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    errorMsg?: string;
+    type?: string;
+}
+
+export default class TextInput extends React.Component<TextInputPropsI, {}> {
+
+    constructor (props: TextInputPropsI) {
+        super(props);
+    }
+
+    public render = (): JSX.Element => {
+        return (
+            <div className="form-group">
+                <input
+                    type={this.props.type ? this.props.type : 'text'}
+                    className={this.props.error ? 'form-control is-invalid' : 'form-control'}
+                    name={this.props.name}
+                    onChange={this.props.onChange}
+                    onKeyDown={this.props.onKeyDown}
+                />
+                { this.props.error && this.props.errorMsg && (
+                    <span className="text-danger">*{this.props.errorMsg}</span>
+                )}
+            </div>
+        );
+    };
+}
