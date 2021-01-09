@@ -3,6 +3,7 @@ import axios from '@services/axios';
 import { UserI } from '@scripts/services/authentication';
 import { Router } from '@scripts/router';
 import Layout from '@scripts/components/layout';
+import Loader from '@scripts/components/loader';
 
 interface MeStateI {
     user: UserI | null;
@@ -32,9 +33,11 @@ export default class Me extends React.Component<{}, MeStateI>{
         return (
             <Layout title="perfil">
                 {this.state.user ? (
+                    <>
                     <p>Welcome {this.state.user.username}</p>
+                    </>
                 ) : (
-                        <p>...</p>
+                        <Loader/>
                     )}
             </Layout>
         );

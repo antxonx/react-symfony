@@ -12,6 +12,7 @@ import Authentication from '@services/authentication';
 import Nav from '@components/nav';
 import Error404 from '@pages/error404';
 import Logout from '@pages/logout';
+import Loader from './components/loader';
 
 class App extends React.Component<{}, { loggedIn: boolean | null; }>{
 
@@ -48,9 +49,7 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
                 <BrowserRouter>
                     <>
                         {this.state.loggedIn == null ? (
-                            <div>
-                                ....
-                            </div>
+                            <Loader/>
                         ) : (this.state.loggedIn ? (
                             <>
                                 <Nav router={this.router}></Nav>
