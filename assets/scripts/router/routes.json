@@ -1,4 +1,6 @@
 {
     "home": "/",
-    "anotherPage": "/another-page"
+    "profile": "/profile",
+    "login": "/login",
+    "logout": "/logout"
 }

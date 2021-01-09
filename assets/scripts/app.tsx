@@ -1,46 +1,84 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom';
-import Router from '@scripts/router';
-import Dashboard from '@pages/Dashboard';
-import AnotherPage from '@pages/AnotherPage';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import '@styles/app.scss';
+import { Router } from '@scripts/router';
 
-class App extends React.Component {
+import Dashboard from '@pages/dashboard';
+import Profile from '@pages/profile';
+import Login from '@pages/login';
+
+import Authentication from '@services/authentication';
+import Nav from '@components/nav';
+import Error404 from '@pages/error404';
+import Logout from '@pages/logout';
+
+class App extends React.Component<{}, { loggedIn: boolean | null; }>{
 
     protected router: Router;
 
     constructor (props: {}) {
         super(props);
+        this.state = {
+            loggedIn: null
+        };
         this.router = new Router(process.env.BASE_ROUTE);
     }
+
+    async checkLogin() {
+        let loggedIn = await Authentication.isLoggedIn();
+        this.setState({
+            loggedIn: loggedIn
+        });
+    }
+
+    componentDidMount() {
+        this.checkLogin();
+    }
+
+    handleLoggedInChange = (logged: boolean) => {
+        this.setState({
+            loggedIn: logged
+        });
+    };
+
     render(): JSX.Element {
         return (
-            <BrowserRouter>
-                <div>
-                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                        <NavLink exact className="navbar-brand" to={this.router.get("home")}>Sistema</NavLink>
-                        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-                        <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
-                            <ul></ul>
-                            <ul className="navbar-nav">
-                                <li className="nav-item">
-                                    <NavLink exact className="nav-link" to={this.router.get("home")}>Dashboard</NavLink>
-                                </li>
-                                <li className="nav-item">
-                                    <NavLink exact className="nav-link" to={this.router.get("anotherPage")}>Another Page</NavLink>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                    <Switch>
-                        <Route path={this.router.get("anotherPage")} component={AnotherPage} />
-                        <Route path={this.router.get("home")} component={Dashboard} />
-                    </Switch>
-                </div>
-            </BrowserRouter>
+            <>
+                <BrowserRouter>
+                    <>
+                        {this.state.loggedIn == null ? (
+                            <div>
+                                ....
+                            </div>
+                        ) : (this.state.loggedIn ? (
+                            <>
+                                <Nav router={this.router}></Nav>
+                                <Switch>
+                                    <Route exact path={this.router.get("profile")} component={Profile} />
+                                    <Route exact path={this.router.get("home")} component={Dashboard} />
+                                    <Route exact path={this.router.get("login")}>
+                                        <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
+                                    </Route>
+                                    <Route exact path={this.router.get("logout")} component={Logout} />
+                                    <Route component={Error404} />
+                                </Switch>
+                            </>
+                        ) : (
+                                <>
+                                    <Redirect to={this.router.get("login")} />
+                                    <Switch>
+                                        <Route exact path={this.router.get("login")}>
+                                            <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
+                                        </Route>
+                                        <Route component={Error404} />
+                                    </Switch>
+                                </>
+                            ))}
+
+                    </>
+                </BrowserRouter>
+            </>
         );
     }
 }
