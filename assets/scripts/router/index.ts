@@ -32,7 +32,7 @@ export class Router {
         return this.baseUrl + this.routes[ name ];
     }
 
-    apiGet(name: string): string {
-        return this.apiRoutes.generate(name);
+    apiGet(name: string, args?: {}): string {
+        return this.apiRoutes.generate(name, args);
     }
 }

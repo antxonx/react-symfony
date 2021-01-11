@@ -29,7 +29,7 @@ export default class Authentication {
         return result;
     };
 
-    public setToken = (value: string) => {
+    public static setToken = (value: string) => {
         Authentication.setCookie(CookiesNames.AUTH_COOKIE_NAME, value);
     };
 

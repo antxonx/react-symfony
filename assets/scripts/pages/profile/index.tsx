@@ -1,11 +1,10 @@
 import React from 'react';
 import axios from '@services/axios';
-import { UserI } from '@scripts/services/authentication';
+import Authentication, { UserI } from '@scripts/services/authentication';
 import { Router } from '@scripts/router';
 import Layout from '@scripts/components/layout';
 import Loader from '@scripts/components/loader';
 import EditableTextField from '@scripts/components/editableTextField';
-import { bool } from 'prop-types';
 import { setTimeout } from 'timers';
 
 interface ProfileStateI {
@@ -16,6 +15,8 @@ interface ProfileStateI {
         name?: string;
     };
 }
+
+declare type UserFields = "username" | "email";
 
 export default class Profile extends React.Component<{}, ProfileStateI>{
 
@@ -39,25 +40,30 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
     };
 
     onTextFieldEdit = async (name: string, value: string): Promise<boolean> => {
-        await this.timeout(1000);
-        const res = !Math.floor(Math.random() * 2);
-        console.log(res);
+        let result = false;
         let newState = { ...this.state };
-        if(res) {
-            this.onTextFieldCalcel(name);
-            return true;
-        } else {
-            newState.errors[ name as "username" | "email" | "name" ] = "Ocurrió un error";
-            this.setState(newState);
-            return false;
-        }
+        await axios.patch((new Router(process.env.BASE_URL).apiGet("user_profile_edit", { 'id': this.state.user?.id })), { name, value })
+            .then(res => {
+                this.onTextFieldCalcel(name);
+                newState.user![ name as UserFields ] = value;
+                result = true;
+                Authentication.setToken(res.data);
+            })
+            .catch(err => {
+                console.error(err);
+                console.error(err.response.data);
+                newState.errors[ name as UserFields ] = err.response.data;
+                result = false;
+            });
+        this.setState(newState);
+        return result;
     };
 
     onTextFieldCalcel = (name: string) => {
         let newState = { ...this.state };
-        delete newState.errors[ name as "username" | "email" | "name" ];
+        delete newState.errors[ name as UserFields ];
         this.setState(newState);
-    }
+    };
 
     timeout(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));

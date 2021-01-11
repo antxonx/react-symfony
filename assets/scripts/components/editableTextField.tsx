@@ -55,7 +55,7 @@ export default class EditableTextField extends React.Component<EditableTextField
             this.setState({
                 loading: true,
             });
-            this.props.onTextFieldEdit && (res = await this.props.onTextFieldEdit(this.props.name, this.state.newValue));
+            res = await this.props.onTextFieldEdit(this.props.name, this.state.newValue);
             this.setState({
                 loading: false,
             });
