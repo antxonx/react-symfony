@@ -28,10 +28,4 @@ class UserController extends AbstractController
     {
         return new JsonResponse($this->security->getUser());
     }
-
-    
-    public function check() : JsonResponse
-    {
-        return new JsonResponse("ok");
-    }
 }

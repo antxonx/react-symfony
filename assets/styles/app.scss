@@ -40,6 +40,21 @@ a {
     transform: translateY(-75%);
 }
 
+.btn-sm2 {
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 1.25rem;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-normal {
+  cursor: context-menu !important;
+}
+
 @media screen and (max-width: 900px) and (min-width: 300px) {
     .wd-40-wm-95 {
         width: 95% !important;

@@ -49,7 +49,7 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
                 <BrowserRouter>
                     <>
                         {this.state.loggedIn == null ? (
-                            <Loader/>
+                            <Loader />
                         ) : (this.state.loggedIn ? (
                             <>
                                 <Nav router={this.router}></Nav>

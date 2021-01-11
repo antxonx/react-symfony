@@ -4,6 +4,8 @@ import axios from 'axios';
 export interface UserI {
     username: string;
     roles: string[];
+    email: string;
+    id: number
 }
 
 enum CookiesNames {
