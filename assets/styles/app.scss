@@ -1,8 +1,14 @@
 @import "bootstrap";
 @import "@styles/loader";
+@import "@styles/editable";
+@import "@fortawesome/fontawesome-free";
 
 a {
     color: rgb(58, 60, 199);
+}
+
+b, h5 {
+    color: #191734;
 }
 
 .wd-40-wm-95 {
@@ -11,6 +17,11 @@ a {
 
 .round {
     border-radius: 1.25rem;
+}
+
+.round-right {
+    border-top-right-radius: 1.25rem !important;
+    border-bottom-right-radius: 1.25rem !important;
 }
 
 .divide {

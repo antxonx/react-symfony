@@ -18,6 +18,7 @@
     },
     "dependencies": {
         "@babel/preset-react": "^7.12.10",
+        "@fortawesome/fontawesome-free": "^5.15.1",
         "@types/bootstrap": "^5.0.1",
         "@types/jquery": "^3.5.5",
         "@types/node": "^14.14.20",
