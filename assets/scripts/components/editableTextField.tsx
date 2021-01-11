@@ -49,7 +49,7 @@ export default class EditableTextField extends React.Component<EditableTextField
         });
     };
 
-    handleOkclick = async () => {
+    handleSubmit = async () => {
         let res = false;
         if (this.props.onTextFieldEdit) {
             this.setState({
@@ -87,7 +87,7 @@ export default class EditableTextField extends React.Component<EditableTextField
                         <span className="sr-only">Loading...</span>
                     </div>
                 ) : (
-                        <>
+                        <form onSubmit={this.handleSubmit}>
                             <div className="input-group">
                                 <input
                                     className={this.state.error ? "form-control form-control-sm is-invalid" : "form-control form-control-sm"}
@@ -96,14 +96,16 @@ export default class EditableTextField extends React.Component<EditableTextField
                                 />
                                 <div className="input-group-append btn-group-sm">
                                     <button
+                                        type="button"
                                         onClick={this.handleCnacelClick}
                                         className="btn btn-info w-100"
                                     >
                                         <i className="fas fa-times"></i>
                                     </button>
                                     <button
+                                        type="submit"
                                         className="btn btn-antxony w-100 round-right"
-                                        onClick={this.handleOkclick}
+                                        onClick={this.handleSubmit}
                                     >
                                         <i className="fas fa-check"></i>
                                     </button>
@@ -112,7 +114,7 @@ export default class EditableTextField extends React.Component<EditableTextField
                             {this.props.errorMsg ? (
                                 <small className="text-danger">{this.props.errorMsg}</small>
                             ) : <></>}
-                        </>
+                        </form>
                     )) : (
                         <div className="editable-field-container">
                             <span className="editable-field" onClick={this.handleClick}>{this.props.value}</span>

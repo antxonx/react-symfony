@@ -49,6 +49,11 @@ class User implements UserInterface, \JsonSerializable
      */
     private string $email;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -160,6 +165,19 @@ class User implements UserInterface, \JsonSerializable
             "username" => $this->getUsername(),
             "roles" => $this->getRoles(),
             "email" => $this->getEmail(),
+            "name" => $this->getName(),
         ];
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 }

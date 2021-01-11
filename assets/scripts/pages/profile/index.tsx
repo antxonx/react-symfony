@@ -16,7 +16,7 @@ interface ProfileStateI {
     };
 }
 
-declare type UserFields = "username" | "email";
+declare type UserFields = "username" | "email" | "name";
 
 export default class Profile extends React.Component<{}, ProfileStateI>{
 
@@ -48,6 +48,9 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                 newState.user![ name as UserFields ] = value;
                 result = true;
                 Authentication.setToken(res.data);
+                if(name == "username") {
+                    window.location.reload();
+                }
             })
             .catch(err => {
                 console.error(err);
@@ -97,7 +100,7 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                     <div className="col-md-6 border-left">
                                         <EditableTextField
                                             name="name"
-                                            value={this.state.user.username}
+                                            value={this.state.user.name}
                                             errorMsg={this.state.errors.name}
                                             title="Nombre"
                                             onTextFieldEdit={this.onTextFieldEdit}

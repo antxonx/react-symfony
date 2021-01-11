@@ -5,7 +5,8 @@ export interface UserI {
     username: string;
     roles: string[];
     email: string;
-    id: number
+    id: number;
+    name: string;
 }
 
 enum CookiesNames {

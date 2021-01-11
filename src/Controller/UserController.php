@@ -47,6 +47,9 @@ class UserController extends AbstractController
         if($content->name == "email") {
             $user->setEmail($content->value);
         }
+        if($content->name == "name") {
+            $user->setName($content->value);
+        }
         $this->getDoctrine()->getManager()->flush();
         return new JsonResponse($JWTManager->create($user));
     }
