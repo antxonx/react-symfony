@@ -1,10 +1,12 @@
 import React from 'react';
+import LoaderH from './loaderH';
 
 interface EditableTextFieldPropsI {
-    value: string;
+    value?: string;
     title?: string;
     name: string;
     errorMsg?: string;
+    wait?: boolean;
     onTextFieldEdit?: (name: string, value: string) => Promise<boolean>;
     onTextFieldCacel?: (name: string) => void;
 }
@@ -22,7 +24,7 @@ export default class EditableTextField extends React.Component<EditableTextField
         super(props);
         this.state = {
             editig: false,
-            newValue: this.props.value,
+            newValue: this.props.value || "",
             loading: false,
             error: false,
         };
@@ -31,6 +33,7 @@ export default class EditableTextField extends React.Component<EditableTextField
     handleClick = () => {
         this.setState({
             editig: !this.state.editig,
+            newValue: this.props.value || "",
         });
     };
 
@@ -44,7 +47,7 @@ export default class EditableTextField extends React.Component<EditableTextField
         this.props.onTextFieldCacel && this.props.onTextFieldCacel(this.props.name);
         this.setState({
             editig: false,
-            newValue: this.props.value,
+            newValue: this.props.value || "",
             error: false,
         });
     };
@@ -82,10 +85,8 @@ export default class EditableTextField extends React.Component<EditableTextField
                         </small>
                     </div>
                 )}
-                {this.state.editig ? (this.state.loading ? (
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
+                {this.state.editig || this.props.wait ? (this.state.loading || this.props.wait ? (
+                    <LoaderH position="left" />
                 ) : (
                         <form onSubmit={this.handleSubmit}>
                             <div className="input-group">
@@ -94,7 +95,7 @@ export default class EditableTextField extends React.Component<EditableTextField
                                     value={this.state.newValue}
                                     onChange={this.handleChange}
                                 />
-                                <div className="input-group-append btn-group-sm">
+                                <div className="input-group-append btn-group-sm editable-buttons">
                                     <button
                                         type="button"
                                         onClick={this.handleCnacelClick}

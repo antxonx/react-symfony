@@ -6,6 +6,7 @@ import Layout from '@scripts/components/layout';
 import Loader from '@scripts/components/loader';
 import EditableTextField from '@scripts/components/editableTextField';
 import { setTimeout } from 'timers';
+import LoaderH from '@scripts/components/loaderH';
 
 interface ProfileStateI {
     user: UserI | null;
@@ -48,7 +49,7 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                 newState.user![ name as UserFields ] = value;
                 result = true;
                 Authentication.setToken(res.data);
-                if(name == "username") {
+                if (name == "username") {
                     window.location.reload();
                 }
             })
@@ -75,58 +76,59 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
     render(): JSX.Element {
         return (
             <Layout title="perfil">
-                {this.state.user ? (
-                    <div className="container mt-5">
-                        <div className="card round main-2">
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <EditableTextField value={this.state.user.username}
-                                            name="username"
-                                            title="Usuario"
-                                            errorMsg={this.state.errors.username}
-                                            onTextFieldEdit={this.onTextFieldEdit}
-                                            onTextFieldCacel={this.onTextFieldCalcel}
-                                        />
-                                        <EditableTextField
-                                            name="email"
-                                            value={this.state.user.email}
-                                            errorMsg={this.state.errors.email}
-                                            title="Correo"
-                                            onTextFieldEdit={this.onTextFieldEdit}
-                                            onTextFieldCacel={this.onTextFieldCalcel}
-                                        />
-                                    </div>
-                                    <div className="col-md-6 border-left">
-                                        <EditableTextField
-                                            name="name"
-                                            value={this.state.user.name}
-                                            errorMsg={this.state.errors.name}
-                                            title="Nombre"
-                                            onTextFieldEdit={this.onTextFieldEdit}
-                                            onTextFieldCacel={this.onTextFieldCalcel}
-                                        />
-                                        <b className="field-title">roles:</b>
-                                        <br />
-                                        {this.state.user.roles.map(role => {
-                                            return (
+                <div className="container mt-5">
+                    <div className="card round main-2">
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <EditableTextField value={this.state.user?.username}
+                                        name="username"
+                                        title="Usuario"
+                                        errorMsg={this.state.errors.username}
+                                        onTextFieldEdit={this.onTextFieldEdit}
+                                        onTextFieldCacel={this.onTextFieldCalcel}
+                                        wait={!this.state.user}
+                                    />
+                                    <EditableTextField
+                                        name="email"
+                                        value={this.state.user?.email}
+                                        errorMsg={this.state.errors.email}
+                                        title="Correo"
+                                        onTextFieldEdit={this.onTextFieldEdit}
+                                        onTextFieldCacel={this.onTextFieldCalcel}
+                                        wait={!this.state.user}
+                                    />
+                                </div>
+                                <div className="col-md-6 border-left">
+                                    <EditableTextField
+                                        name="name"
+                                        value={this.state.user?.name}
+                                        errorMsg={this.state.errors.name}
+                                        title="Nombre"
+                                        onTextFieldEdit={this.onTextFieldEdit}
+                                        onTextFieldCacel={this.onTextFieldCalcel}
+                                        wait={!this.state.user}
+                                    />
+                                    <b className="field-title">puesto:</b>
+                                    <br />
+                                    {this.state.user?.roles.map(role => {
+                                        return (
+                                            <>
                                                 <span
                                                     className="btn btn-sm2 alert-info cursor-normal"
                                                     key={role}
                                                 >
-                                                    {role.substring(5).toLowerCase()}
-                                                </span>
-                                            );
-                                        })}
-                                        <br />
-                                    </div>
+                                                    {role.substring(5)}
+                                                </span>{' '}
+                                            </>
+                                        );
+                                    })}
+                                    <br />
                                 </div>
                             </div>
                         </div>
                     </div>
-                ) : (
-                        <Loader />
-                    )}
+                </div>
             </Layout>
         );
     }

@@ -118,6 +118,7 @@ export default class Login extends React.Component<LoginProps, LoginState>{
                                         />
                                         <TextInput
                                             name="password"
+                                            type="password"
                                             onChange={this.handleChange}
                                             error={this.state.errors.password}
                                             errorMsg="Ingresa una contraseña"
