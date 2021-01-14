@@ -68,6 +68,10 @@ b, h5 {
   cursor: context-menu !important;
 }
 
+.input-group-prepend .btn, .input-group-append .btn {
+    z-index: 0;
+}
+
 @media screen and (max-width: 900px) and (min-width: 300px) {
     .wd-40-wm-95 {
         width: 95% !important;
