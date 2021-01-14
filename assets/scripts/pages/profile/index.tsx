@@ -7,6 +7,7 @@ import EditableTextField from '@components/editableTextField';
 import Column from '@components/grid/column';
 import Row from '@components/grid/row';
 import Button from '@components/buttons/button';
+import Modal from '@scripts/components/modals/modal';
 
 interface ProfileStateI {
     user: UserI | null;
@@ -15,6 +16,7 @@ interface ProfileStateI {
         email?: string;
         name?: string;
     };
+    passwordModalOpen: boolean;
 }
 
 declare type UserFields = "username" | "email" | "name";
@@ -26,6 +28,7 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
         this.state = {
             user: null,
             errors: {},
+            passwordModalOpen: false,
         };
     }
 
@@ -70,7 +73,15 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
     };
 
     onClickChangePassword = () => {
-        
+        this.setState({
+            passwordModalOpen: true,
+        });
+    };
+
+    onPasswordModalClose = () => {
+        this.setState({
+            passwordModalOpen: false,
+        });
     };
 
     render(): JSX.Element {
@@ -119,7 +130,6 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                     <ul className="list-group list-group-horizontal">
                                         {this.state.user?.roles.map(role => {
                                             if (role != "ROLE_USER") {
-                                                console.log(role);
                                                 return (
                                                     <li key={role} className="list-group-item border-0 p-1">
                                                         <span className="btn btn-sm2 alert-info cursor-normal">
@@ -147,6 +157,15 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                         </Column>
                                         <Column size={6} />
                                     </Row>
+                                    <Modal
+                                        show={this.state.passwordModalOpen}
+                                        onClose={this.onPasswordModalClose}
+                                        size={90}
+                                        title="Contraseña"
+                                        loading={true}
+                                    >
+                                        asdasd
+                                    </Modal>
                                 </Column>
                             </Row>
                         </div>
