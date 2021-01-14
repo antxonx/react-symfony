@@ -1,1 +1,75 @@
-@import 'bootstrap';
+@import "bootstrap";
+@import "@fortawesome/fontawesome-free";
+@import "@styles/loader";
+@import "@styles/editable";
+@import "@styles/loaderH";
+@import "@styles/modal";
+
+a {
+    color: rgb(58, 60, 199);
+}
+
+b, h5 {
+    color: #191734;
+}
+
+.wd-40-wm-95 {
+    width: 40%;
+}
+
+.round {
+    border-radius: 1.25rem;
+}
+
+.round-right {
+    border-top-right-radius: 1.25rem !important;
+    border-bottom-right-radius: 1.25rem !important;
+}
+
+.divide {
+    border-top: 2px solid #395ba6;
+}
+
+.form-control {
+    border-radius: 1.25rem;
+}
+
+.btn-antxony {
+    color: #ffffff;
+    background-color: #395ba6;
+    border-color: #395ba6;
+    &:hover {
+        color: #ffffff;
+        background-color: #2c4580;
+        border-color: #2c4580;
+    }
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-75%);
+    transform: translateY(-75%);
+}
+
+.btn-sm2 {
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 1.25rem;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-normal {
+  cursor: context-menu !important;
+}
+
+@media screen and (max-width: 900px) and (min-width: 300px) {
+    .wd-40-wm-95 {
+        width: 95% !important;
+    }
+}

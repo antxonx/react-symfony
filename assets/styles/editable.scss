@@ -1,0 +1,19 @@
+.editable-container {
+    min-height: 58px;
+    .editable-field-container {
+        padding: 5px 10px;
+        .editable-field {
+            color: rgb(95, 95, 95);
+            text-decoration: underline;
+            &:hover {
+                text-decoration: underline;
+                color: rgb(54, 54, 54);
+                cursor: pointer;
+            }
+        }
+    }
+
+    .editable-buttons {
+        width: 30%;
+    }
+}
