@@ -32,21 +32,21 @@ export default class Nav extends React.Component<{ router: Router; }, {}> {
                 <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
                     <ul></ul>
                     <ul className="navbar-nav">
-                        <li className="nav-item">
+                        <li className="nav-item" key="dashboard">
                             <NavLink
                                 exact
                                 className="nav-link"
                                 to={this.props.router.get("home")}
                             >Dashboard</NavLink>
                         </li>
-                        <li className="nav-item">
+                        <li className="nav-item" key="profile">
                             <NavLink
                                 exact
                                 className="nav-link"
                                 to={this.props.router.get("profile")}
                             >Perfil</NavLink>
                         </li>
-                        <li className="nav-item">
+                        <li className="nav-item" key="logout">
                             <NavLink
                                 exact
                                 className="nav-link"

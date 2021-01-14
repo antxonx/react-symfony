@@ -1,12 +1,11 @@
 import React from 'react';
 import axios from '@services/axios';
-import Authentication, { UserI } from '@scripts/services/authentication';
+import Authentication, { UserI } from '@services/authentication';
 import { Router } from '@scripts/router';
-import Layout from '@scripts/components/layout';
-import Loader from '@scripts/components/loader';
-import EditableTextField from '@scripts/components/editableTextField';
-import { setTimeout } from 'timers';
-import LoaderH from '@scripts/components/loaderH';
+import Layout from '@components/layout';
+import EditableTextField from '@components/editableTextField';
+import Column from '@components/grid/column';
+import Row from '@scripts/components/grid/row';
 
 interface ProfileStateI {
     user: UserI | null;
@@ -69,9 +68,9 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
         this.setState(newState);
     };
 
-    timeout(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    onClickChangePassword = (e: React.MouseEvent) => {
+        console.log("fff");
+    };
 
     render(): JSX.Element {
         return (
@@ -79,8 +78,8 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                 <div className="container mt-5">
                     <div className="card round main-2">
                         <div className="card-body">
-                            <div className="row">
-                                <div className="col-md-6">
+                            <Row>
+                                <Column size={6}>
                                     <EditableTextField value={this.state.user?.username}
                                         name="username"
                                         title="Usuario"
@@ -98,8 +97,8 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                         onTextFieldCacel={this.onTextFieldCalcel}
                                         wait={!this.state.user}
                                     />
-                                </div>
-                                <div className="col-md-6 border-left">
+                                </Column>
+                                <Column size={6} extraClass="border-left">
                                     <EditableTextField
                                         name="name"
                                         value={this.state.user?.name}
@@ -111,18 +110,17 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                     />
                                     {this.state.user && this.state.user.roles && (
                                         <div className="w-100">
-                                        <small>
-                                            <b>Puesto:</b>
-                                        </small>
-                                    </div>
+                                            <small>
+                                                <b>Puesto:</b>
+                                            </small>
+                                        </div>
                                     )}
                                     {this.state.user?.roles.map(role => {
-                                        if(role != "ROLE_USER") {
+                                        if (role != "ROLE_USER") {
                                             return (
                                                 <>
                                                     <span
                                                         className="btn btn-sm2 alert-info cursor-normal"
-                                                        key={role}
                                                     >
                                                         {role.substring(5)}
                                                     </span>{' '}
@@ -131,8 +129,23 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                         }
                                     })}
                                     <br />
-                                </div>
-                            </div>
+                                </Column>
+                            </Row>
+                            <Row>
+                                <Column size={6}>
+                                    <Row extraClass="mt-2">
+                                        <Column size={6}>
+                                            <button
+                                                className="btn btn-danger round mt-2 w-100"
+                                                onClick={this.onClickChangePassword}
+                                            >
+                                                Cambiar contraseña
+								            </button>
+                                        </Column>
+                                        <Column size={6} />
+                                    </Row>
+                                </Column>
+                            </Row>
                         </div>
                     </div>
                 </div>
