@@ -5,7 +5,8 @@ import { Router } from '@scripts/router';
 import Layout from '@components/layout';
 import EditableTextField from '@components/editableTextField';
 import Column from '@components/grid/column';
-import Row from '@scripts/components/grid/row';
+import Row from '@components/grid/row';
+import Button from '@components/buttons/button';
 
 interface ProfileStateI {
     user: UserI | null;
@@ -68,15 +69,15 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
         this.setState(newState);
     };
 
-    onClickChangePassword = (e: React.MouseEvent) => {
-        console.log("fff");
+    onClickChangePassword = () => {
+        
     };
 
     render(): JSX.Element {
         return (
             <Layout title="perfil">
                 <div className="container mt-5">
-                    <div className="card round main-2">
+                    <div className="card round">
                         <div className="card-body">
                             <Row>
                                 <Column size={6}>
@@ -115,19 +116,20 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                             </small>
                                         </div>
                                     )}
-                                    {this.state.user?.roles.map(role => {
-                                        if (role != "ROLE_USER") {
-                                            return (
-                                                <>
-                                                    <span
-                                                        className="btn btn-sm2 alert-info cursor-normal"
-                                                    >
-                                                        {role.substring(5)}
-                                                    </span>{' '}
-                                                </>
-                                            );
-                                        }
-                                    })}
+                                    <ul className="list-group list-group-horizontal">
+                                        {this.state.user?.roles.map(role => {
+                                            if (role != "ROLE_USER") {
+                                                console.log(role);
+                                                return (
+                                                    <li key={role} className="list-group-item border-0 p-1">
+                                                        <span className="btn btn-sm2 alert-info cursor-normal">
+                                                            {role.substring(5)}
+                                                        </span>
+                                                    </li>
+                                                );
+                                            }
+                                        })}
+                                    </ul>
                                     <br />
                                 </Column>
                             </Row>
@@ -135,12 +137,13 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                 <Column size={6}>
                                     <Row extraClass="mt-2">
                                         <Column size={6}>
-                                            <button
-                                                className="btn btn-danger round mt-2 w-100"
+                                            <Button
+                                                color="danger"
+                                                content="Cambiar contraseña"
+                                                extraClass="w-100"
+                                                name="changeClassButton"
                                                 onClick={this.onClickChangePassword}
-                                            >
-                                                Cambiar contraseña
-								            </button>
+                                            />
                                         </Column>
                                         <Column size={6} />
                                     </Row>

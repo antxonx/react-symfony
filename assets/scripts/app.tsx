@@ -13,7 +13,7 @@ import Authentication from '@services/authentication';
 import Nav from '@components/nav';
 import Error404 from '@pages/error404';
 import Logout from '@pages/logout';
-import Loader from './components/loader';
+import Loader from './components/loader/loader';
 
 class App extends React.Component<{}, { loggedIn: boolean | null; }>{
 

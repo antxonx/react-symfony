@@ -1,10 +1,10 @@
 import Authentication from '@services/authentication';
-import SubmitButton from '@components/submitButton';
+import SubmitButton from '@components/form/submitButton';
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import Layout from '@components/layout';
-import TextInput from '@components/textInput';
+import TextInput from '@components/form/textInput';
 
 declare type LoginFields = "username" | "password";
 
