@@ -109,19 +109,26 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                         onTextFieldCacel={this.onTextFieldCalcel}
                                         wait={!this.state.user}
                                     />
-                                    <b className="field-title">puesto:</b>
-                                    <br />
+                                    {this.state.user && this.state.user.roles && (
+                                        <div className="w-100">
+                                        <small>
+                                            <b>Puesto:</b>
+                                        </small>
+                                    </div>
+                                    )}
                                     {this.state.user?.roles.map(role => {
-                                        return (
-                                            <>
-                                                <span
-                                                    className="btn btn-sm2 alert-info cursor-normal"
-                                                    key={role}
-                                                >
-                                                    {role.substring(5)}
-                                                </span>{' '}
-                                            </>
-                                        );
+                                        if(role != "ROLE_USER") {
+                                            return (
+                                                <>
+                                                    <span
+                                                        className="btn btn-sm2 alert-info cursor-normal"
+                                                        key={role}
+                                                    >
+                                                        {role.substring(5)}
+                                                    </span>{' '}
+                                                </>
+                                            );
+                                        }
                                     })}
                                     <br />
                                 </div>
