@@ -1,12 +1,12 @@
 import React from 'react';
 
-interface LoaderHProps {
+interface LoaderHPropsI {
     position: "left" | "right" | "center";
 }
 
-export default class LoaderH extends React.Component<LoaderHProps, {}> {
+export default class LoaderH extends React.Component<LoaderHPropsI, {}> {
 
-    constructor (props: LoaderHProps) {
+    constructor (props: LoaderHPropsI) {
         super(props);
     }
     render = (): JSX.Element => {

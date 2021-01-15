@@ -8,12 +8,12 @@ import TextInput from '@components/form/textInput';
 
 declare type LoginFields = "username" | "password";
 
-interface LoginProps {
+interface LoginPropsI {
     logged: boolean;
     onloggedinchange: (logged: boolean) => void;
 }
 
-interface LoginState {
+interface LoginStateI {
     username: string;
     password: string;
     error: boolean;
@@ -25,8 +25,8 @@ interface LoginState {
     };
 }
 
-export default class Login extends React.Component<LoginProps, LoginState>{
-    constructor (props: LoginProps) {
+export default class Login extends React.Component<LoginPropsI, LoginStateI>{
+    constructor (props: LoginPropsI) {
         super(props);
         this.state = {
             username: "",
