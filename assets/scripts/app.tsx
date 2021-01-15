@@ -40,7 +40,7 @@ class App extends React.Component<{}, AppStateI>{
             loggedIn: loggedIn,
             payload: Authentication.getPayload(),
         });
-        if (this.state.payload) {
+        if (this.state.payload && this.state.loggedIn) {
             let diff = (this.state.payload.exp - Math.floor(Date.now() / 1000));
             diff = (diff < 0) ? 0 : diff;
             setTimeout(() => {

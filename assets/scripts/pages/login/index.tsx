@@ -5,6 +5,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import Layout from '@components/layout';
 import TextInput from '@components/form/textInput';
+import HandleResponse from '@scripts/services/handleResponse';
 
 declare type LoginFields = "username" | "password";
 
@@ -19,6 +20,7 @@ interface LoginStateI {
     error: boolean;
     loading: boolean;
     isLoggedIn: boolean;
+    errorMsg: string|null;
     errors: {
         username: boolean;
         password: boolean;
@@ -34,6 +36,7 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
             error: false,
             loading: false,
             isLoggedIn: this.props.logged,
+            errorMsg: null,
             errors: {
                 username: false,
                 password: false,
@@ -73,7 +76,10 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
             onSuccess: () => {
                 window.location.href = "/";
             },
-            onError: () => {
+            onError: (err: any) => {
+                this.setState({
+                    errorMsg: HandleResponse.error(err)!.message,
+                });
                 this.changeStateValue("error", true);
                 this.changeStateValue("isLoggedIn", false);
                 this.changeStateValue("loading", false);
@@ -105,7 +111,7 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
                                     <hr className="divide" />
                                     {this.state.error ? (
                                         <div className="alert alert-danger round text-center">
-                                            Nombre de usuario o contraseña incorrecta
+                                            {this.state.errorMsg}
                                         </div>
                                     ) : <></>}
                                     <form onSubmit={this.handleSubmit}>

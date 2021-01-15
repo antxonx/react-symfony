@@ -1,5 +1,6 @@
 import { Router } from '@scripts/router';
 import axios from 'axios';
+import HandleResponse from '@services/handleResponse';
 
 export interface UserI {
     username: string;
@@ -30,7 +31,8 @@ export default class Authentication {
                 .then(() => {
                     result = true;
                 })
-                .catch(() => {
+                .catch((err) => {
+                    HandleResponse.error(err);
                     result = false;
                 });
         }
@@ -76,7 +78,7 @@ export default class Authentication {
         username: string;
         password: string;
         onSuccess: () => void;
-        onError?: () => void;
+        onError?: (err: any) => void;
         finally?: () => void;
     }) => {
         axios.post((new Router(process.env.BASE_ROUTE)).apiGet("api_login_check"), {
@@ -88,9 +90,7 @@ export default class Authentication {
                 options.onSuccess();
             })
             .catch(err => {
-                console.error(err);
-                err.respose && err.respose.data && console.error(err.respose.data);
-                options.onError && options.onError();
+                options.onError && options.onError(err);
             })
             .finally(() => {
                 options.finally && options.finally();
@@ -117,8 +117,7 @@ export default class Authentication {
                 console.info("refreshed token");
             })
             .catch(err => {
-                console.error(err);
-                err.respose && err.respose.data && console.error(err.respose.data);
+                HandleResponse.error(err);
             });
     };
 }
