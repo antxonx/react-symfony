@@ -21,7 +21,7 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                 <NavLink
                     exact
                     className="navbar-brand"
-                    to={this.props.router.get("home")}
+                    to={this.props.router.get("dashboard")}
                 >Sistema</NavLink>
                 <button
                     className="navbar-toggler"
@@ -41,7 +41,7 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                             <NavLink
                                 exact
                                 className="nav-link"
-                                to={this.props.router.get("home")}
+                                to={this.props.router.get("dashboard")}
                                 children="Dashboard"
                             />
                         </li>

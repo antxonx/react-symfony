@@ -11,7 +11,7 @@ export default class Error404 extends React.Component {
                     <h4>404</h4>
                     <hr />
                         No se encontró la pagina. <br />
-                    <Link to={(new Router()).get("home")}>Ir al inicio</Link>
+                    <Link to={(new Router()).get("dashboard")}>Ir al inicio</Link>
                 </div>
             </Layout>
         );

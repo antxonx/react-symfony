@@ -96,7 +96,7 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
         return (
             <Layout title="Inicar sesión">
                 {this.state.isLoggedIn ? (
-                    <Redirect to={(new Router()).get("home")} />
+                    <Redirect to={(new Router()).get("dashboard")} />
                 ) : (
                         <div className="vertical-center w-100">
                             <div className="card mx-auto wd-40-wm-95 mt-5 round shadow-lg">
