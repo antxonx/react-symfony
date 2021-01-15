@@ -1,5 +1,5 @@
 import React from 'react';
-import LoaderH from './loader/loaderH';
+import LoaderH from '@components/loader/loaderH';
 
 interface EditableTextFieldPropsI {
     value?: string;

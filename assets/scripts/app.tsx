@@ -13,7 +13,7 @@ import Authentication from '@services/authentication';
 import Nav from '@components/nav';
 import Error404 from '@pages/error404';
 import Logout from '@pages/logout';
-import Loader from './components/loader/loader';
+import Loader from '@components/loader/loader';
 
 class App extends React.Component<{}, { loggedIn: boolean | null; }>{
 
@@ -27,16 +27,16 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
         this.router = new Router(process.env.BASE_ROUTE);
     }
 
-    async checkLogin() {
+    checkLogin = async () => {
         let loggedIn = await Authentication.isLoggedIn();
         this.setState({
             loggedIn: loggedIn
         });
-    }
+    };
 
-    componentDidMount() {
+    componentDidMount = () => {
         this.checkLogin();
-    }
+    };
 
     handleLoggedInChange = (logged: boolean) => {
         this.setState({
@@ -44,7 +44,7 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
         });
     };
 
-    render(): JSX.Element {
+    render = (): JSX.Element => {
         return (
             <>
                 <BrowserRouter>
@@ -80,7 +80,7 @@ class App extends React.Component<{}, { loggedIn: boolean | null; }>{
                 </BrowserRouter>
             </>
         );
-    }
+    };
 }
 
 ReactDOM.render(

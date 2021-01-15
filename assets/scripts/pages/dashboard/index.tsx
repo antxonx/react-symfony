@@ -2,7 +2,7 @@ import Layout from '@components/layout';
 import React from 'react';
 
 export default class Dashboard extends React.Component {
-    render(): JSX.Element {
+    render = (): JSX.Element => {
         return (
             <Layout title="dashboard">
                 <div className="container card card-body mt-5 round">
@@ -10,5 +10,5 @@ export default class Dashboard extends React.Component {
                 </div>
             </Layout>
         );
-    }
+    };
 }

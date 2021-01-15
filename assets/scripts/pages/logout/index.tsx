@@ -1,5 +1,4 @@
-import { Router } from '@scripts/router';
-import Authentication from '@scripts/services/authentication';
+import Authentication from '@services/authentication';
 import React from 'react';
 
 export default class Logout extends React.Component {

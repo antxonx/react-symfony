@@ -6,7 +6,7 @@ interface LoaderHProps {
 
 export default class LoaderH extends React.Component<LoaderHProps, {}> {
 
-    constructor(props: LoaderHProps) {
+    constructor (props: LoaderHProps) {
         super(props);
     }
     render = (): JSX.Element => {

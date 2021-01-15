@@ -10,7 +10,7 @@ export default class Layout extends React.Component<LayoutPropsI, {}> {
         super(props);
     }
 
-    render(): JSX.Element {
+    render = (): JSX.Element => {
         return (
             <>
                 {this.props.title ? (
@@ -24,5 +24,5 @@ export default class Layout extends React.Component<LayoutPropsI, {}> {
                 </main>
             </>
         );
-    }
+    };
 }
