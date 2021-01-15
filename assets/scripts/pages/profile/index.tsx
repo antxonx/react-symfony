@@ -88,7 +88,7 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
         });
     };
 
-    render(): JSX.Element {
+    render = (): JSX.Element => {
         return (
             <Layout title="perfil">
                 <div className="container mt-5">
@@ -173,7 +173,7 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                                 this.setState({
                                                     passwordModalOpen: false,
                                                 });
-                                            }}/>
+                                            }} />
                                         </Suspense>
                                     )}
                                 </Modal>
@@ -183,5 +183,5 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                 </div>
             </Layout>
         );
-    }
+    };
 }

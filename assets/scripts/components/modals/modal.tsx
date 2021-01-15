@@ -1,7 +1,6 @@
 import React from 'react';
 import ButtonClose from '../buttons/buttonClose';
-import Loader from '../loader/loader';
-import LoaderH from '../loader/loaderH';
+import LoaderH from '@components/loader/loaderH';
 
 interface ModalPropsI {
     show: boolean;
@@ -23,7 +22,7 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
     render = (): JSX.Element => {
         return (
             <div
-                className={"modal-component" + (this.props.show?" show":"") }
+                className={"modal-component" + (this.props.show ? " show" : "")}
             >
                 <div
                     className="modal-component-content"

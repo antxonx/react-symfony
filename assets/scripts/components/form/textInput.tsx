@@ -16,7 +16,7 @@ export default class TextInput extends React.Component<TextInputPropsI, {}> {
         super(props);
     }
 
-    public render = (): JSX.Element => {
+    render = (): JSX.Element => {
         return (
             <div className="form-group">
                 <input

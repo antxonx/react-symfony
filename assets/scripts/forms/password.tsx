@@ -1,6 +1,6 @@
 import TextInput from '@components/form/textInput';
-import ErrorAlert from '@scripts/components/alerts/errorAlert';
-import SubmitButton from '@scripts/components/form/submitButton';
+import ErrorAlert from '@components/alerts/errorAlert';
+import SubmitButton from '@components/form/submitButton';
 import { Router } from '@scripts/router';
 import axios from 'axios';
 import React from 'react';

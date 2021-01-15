@@ -6,7 +6,7 @@ interface ErrorAlertI {
 }
 
 export default class ErrorAlert extends React.Component<ErrorAlertI, {}> {
-    constructor(props: ErrorAlertI) {
+    constructor (props: ErrorAlertI) {
         super(props);
     }
 
@@ -16,6 +16,6 @@ export default class ErrorAlert extends React.Component<ErrorAlertI, {}> {
                 {this.props.title && <h5>this.props.title</h5>}
                 {this.props.text}
             </div>
-        )
-    }
+        );
+    };
 }

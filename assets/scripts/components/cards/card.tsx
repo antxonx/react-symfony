@@ -8,9 +8,9 @@ export default class Card extends React.Component<CardPropsI, {}> {
 
     private round: boolean;
 
-    constructor(props: CardPropsI) {
+    constructor (props: CardPropsI) {
         super(props);
-        if(this.props.round === undefined) {
+        if (this.props.round === undefined) {
             this.round = true;
         } else {
             this.round = this.props.round;
@@ -19,11 +19,11 @@ export default class Card extends React.Component<CardPropsI, {}> {
 
     render = (): JSX.Element => {
         return (
-            <div className={"card" + (this.round?" round":"")}>
+            <div className={"card" + (this.round ? " round" : "")}>
                 <div className="card-body">
                     {this.props.children}
                 </div>
             </div>
-        )
-    }
+        );
+    };
 }

@@ -8,7 +8,7 @@ export default class Nav extends React.Component<{ router: Router; }, {}> {
         super(props);
     }
 
-    render(): JSX.Element {
+    render = (): JSX.Element => {
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <NavLink
@@ -57,5 +57,5 @@ export default class Nav extends React.Component<{ router: Router; }, {}> {
                 </div>
             </nav>
         );
-    }
+    };
 }

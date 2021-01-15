@@ -11,7 +11,7 @@ export interface HeadI {
 }
 
 export default class Head extends React.Component {
-    public render(): JSX.Element {
+    render = (): JSX.Element => {
         return ReactDOM.createPortal(this.props.children, headRoot);
-    }
+    };
 }
