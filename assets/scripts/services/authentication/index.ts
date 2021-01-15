@@ -109,4 +109,16 @@ export default class Authentication {
             return JSON.parse(atob(token.split(".")[ 1 ])) as TokenPayloadI;
         }
     };
+
+    public static refreshToken = () => {
+        axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"))
+            .then(res => {
+                Authentication.setCookie(CookiesNames.AUTH_COOKIE_NAME, res.data.token);
+                console.info("refreshed token");
+            })
+            .catch(err => {
+                console.error(err);
+                err.respose && err.respose.data && console.error(err.respose.data);
+            });
+    };
 }

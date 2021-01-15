@@ -14,6 +14,7 @@ import Nav from '@components/nav';
 import Error404 from '@pages/error404';
 import Logout from '@pages/logout';
 import Loader from '@components/loader/loader';
+import { diffieHellman } from 'crypto';
 
 interface AppStateI {
     loggedIn: boolean | null;
@@ -39,7 +40,16 @@ class App extends React.Component<{}, AppStateI>{
             loggedIn: loggedIn,
             payload: Authentication.getPayload(),
         });
-        console.log(this.state);
+        if(this.state.payload) {
+            let diff = (this.state.payload.exp - Math.floor(Date.now()/1000));
+            diff = (diff < 0)?0:diff
+            setTimeout(() => {
+                Authentication.refreshToken();
+                this.setState({
+                    payload: Authentication.getPayload(),
+                });
+            }, diff * 1000);
+        }
     };
 
     componentDidMount = () => {
