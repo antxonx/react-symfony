@@ -6,7 +6,7 @@ import axios from 'axios';
 import React from 'react';
 
 interface PasswordFormPropsI {
-
+    onSuccess: () => void;
 }
 
 interface PasswordFormStateI {
@@ -68,7 +68,6 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
         if (anyError) return;
         Object.keys(this.state.inputs).forEach(key => {
             inputError = inputError || (this.state.inputs[ key as "old" | "new" | "confirmNew" ] === "");
-            console.log(`${key} -> ${inputError}`);
         });
         this.setState({
             errors: {
@@ -89,13 +88,16 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
             });
             axios.patch((new Router(process.env.BASE_URL)).apiGet("user_profile_change_password"), this.state.inputs)
                 .then(res => {
-                    console.log(res);
+                    console.log(res.data);
+                    this.props.onSuccess();
                 })
                 .catch(err => {
                     console.error(err);
                     console.error(err.response.data);
-                })
-                .finally(() => {
+                    this.setState({
+                        error: true,
+                        errorMsg: err.response.data,
+                    });
                     this.setState({
                         loading: false,
                     });

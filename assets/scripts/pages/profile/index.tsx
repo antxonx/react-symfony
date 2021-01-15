@@ -169,7 +169,11 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                                 >
                                     {this.state.passwordModalOpen && (
                                         <Suspense fallback={<LoaderH position="center" />}>
-                                            <PasswordForm />
+                                            <PasswordForm onSuccess={() => {
+                                                this.setState({
+                                                    passwordModalOpen: false,
+                                                });
+                                            }}/>
                                         </Suspense>
                                     )}
                                 </Modal>
