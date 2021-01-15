@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Constraints\Json;
 
 /**
  * @Route("/api/user")
@@ -34,17 +33,23 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/profile", name="user_profile", methods={"GET"}, options={"expose"=true})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @Route("/refresh_token", name="user_refresh_token", methods={"GET"}, options={"expose"=true})
      */
-    public function me(): JsonResponse
+    public function refreshToken(JWTTokenManagerInterface $JWTManager): JsonResponse
+    {
+        return new JsonResponse(["token" => $JWTManager->create($this->security->getUser())]);
+    }
+
+    /**
+     * @Route("/profile", name="user_profile", methods={"GET"}, options={"expose"=true})
+     */
+    public function profile(): JsonResponse
     {
         return new JsonResponse($this->security->getUser());
     }
 
     /**
      * @Route("/profile/password/", name="user_profile_change_password", methods={"PATCH"}, options={"expose"=true})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function updatePassword(Request $request): JsonResponse
     {
@@ -70,7 +75,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/profile/{id}", name="user_profile_edit", methods={"PUT", "PATCH"}, options={"expose"=true})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function edit(Request $request, JWTTokenManagerInterface $JWTManager): JsonResponse
     {
