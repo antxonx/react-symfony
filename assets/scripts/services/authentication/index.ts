@@ -9,6 +9,13 @@ export interface UserI {
     name: string;
 }
 
+export interface TokenPayloadI {
+    username: string;
+    roles: string[];
+    iat: number;
+    exp: number;
+}
+
 enum CookiesNames {
     AUTH_COOKIE_NAME = "jwtAuthToken"
 }
@@ -19,7 +26,7 @@ export default class Authentication {
         let result = false;
         const token = Authentication.getCookie(CookiesNames.AUTH_COOKIE_NAME).trim();
         if (token !== "") {
-            await axios.get(( new Router(process.env.BASE_ROUTE)).apiGet("index_check_login"), { headers: { Authorization: `Bearer ${token}` } })
+            await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("index_check_login"), { headers: { Authorization: `Bearer ${token}` } })
                 .then(() => {
                     result = true;
                 })
@@ -72,7 +79,7 @@ export default class Authentication {
         onError?: () => void;
         finally?: () => void;
     }) => {
-        axios.post(( new Router(process.env.BASE_ROUTE)).apiGet("api_login_check"), {
+        axios.post((new Router(process.env.BASE_ROUTE)).apiGet("api_login_check"), {
             username: options.username,
             password: options.password
         })
@@ -92,5 +99,14 @@ export default class Authentication {
 
     public static logOut = () => {
         Authentication.deleteCookie(CookiesNames.AUTH_COOKIE_NAME);
+    };
+
+    public static getPayload = (): TokenPayloadI | null => {
+        const token = Authentication.getToken();
+        if (token == "") {
+            return null;
+        } else {
+            return JSON.parse(atob(token.split(".")[ 1 ])) as TokenPayloadI;
+        }
     };
 }
