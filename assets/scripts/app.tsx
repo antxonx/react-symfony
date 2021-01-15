@@ -40,9 +40,9 @@ class App extends React.Component<{}, AppStateI>{
             loggedIn: loggedIn,
             payload: Authentication.getPayload(),
         });
-        if(this.state.payload) {
-            let diff = (this.state.payload.exp - Math.floor(Date.now()/1000));
-            diff = (diff < 0)?0:diff
+        if (this.state.payload) {
+            let diff = (this.state.payload.exp - Math.floor(Date.now() / 1000));
+            diff = (diff < 0) ? 0 : diff;
             setTimeout(() => {
                 Authentication.refreshToken();
                 this.setState({
@@ -69,7 +69,11 @@ class App extends React.Component<{}, AppStateI>{
                     <Loader />
                 ) : (this.state.loggedIn ? (
                     <>
-                        <Nav router={this.router}></Nav>
+                        <Nav
+                            router={this.router}
+                            username={this.state.payload!.username}
+                            roles={this.state.payload!.roles}
+                        ></Nav>
                         <Switch>
                             <Route exact path={this.router.get("profile")} component={Profile} />
                             <Route exact path={this.router.get("home")} component={Dashboard} />
