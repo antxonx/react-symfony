@@ -1,20 +1,21 @@
 import '@fortawesome/fontawesome-free/js/all.min.js';
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import '@styles/app.scss';
 import { Router } from '@scripts/router';
 
 import Dashboard from '@pages/dashboard';
-import Profile from '@pages/profile';
+// import Profile from '@pages/profile';
 import Login from '@pages/login';
+
+const Profile = React.lazy(() => import('@pages/profile'));
 
 import Authentication, { TokenPayloadI } from '@services/authentication';
 import Nav from '@components/nav';
 import Error404 from '@pages/error404';
 import Logout from '@pages/logout';
 import Loader from '@components/loader/loader';
-import { diffieHellman } from 'crypto';
 
 interface AppStateI {
     loggedIn: boolean | null;
@@ -75,11 +76,12 @@ class App extends React.Component<{}, AppStateI>{
                             roles={this.state.payload!.roles}
                         ></Nav>
                         <Switch>
-                            <Route exact path={this.router.get("profile")} component={Profile} />
-                            <Route exact path={this.router.get("home")} component={Dashboard} />
-                            <Route exact path={this.router.get("login")}>
-                                <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
+                            <Route exact path={this.router.get("profile")}>
+                                <Suspense fallback={<Loader />}>
+                                    <Profile />
+                                </Suspense>
                             </Route>
+                            <Route exact path={this.router.get("home")} component={Dashboard} />
                             <Route exact path={this.router.get("logout")} component={Logout} />
                             <Route component={Error404} />
                         </Switch>
