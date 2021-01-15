@@ -7,6 +7,7 @@ interface TextInputPropsI {
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     errorMsg?: string;
     type?: string;
+    placeholder?: string;
 }
 
 export default class TextInput extends React.Component<TextInputPropsI, {}> {
@@ -24,6 +25,7 @@ export default class TextInput extends React.Component<TextInputPropsI, {}> {
                     name={this.props.name}
                     onChange={this.props.onChange}
                     onKeyDown={this.props.onKeyDown}
+                    placeholder={this.props.placeholder}
                 />
                 { this.props.error && this.props.errorMsg && (
                     <small><span className="text-danger">*{this.props.errorMsg}</span></small>
