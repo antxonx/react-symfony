@@ -88,12 +88,12 @@ class App extends React.Component<{}, AppStateI>{
                         <Suspense fallback={<Loader />}>
                             <Redirect to={this.router.get("login")} />
                             <Switch>
-
-                                <Route exact path={this.router.get("login")}>
+                                <Route exact path={this.router.get("dashboard")}>
+                                    <Redirect to={this.router.get("login")} />
+                                </Route>
+                                <Route>
                                     <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
                                 </Route>
-                                <Route component={Error404} />
-
                             </Switch>
                         </Suspense>
                     ))}
