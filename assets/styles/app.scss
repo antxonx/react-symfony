@@ -10,7 +10,8 @@ a {
     color: rgb(58, 60, 199);
 }
 
-b, h5 {
+b,
+h5 {
     color: #191734;
 }
 
@@ -55,26 +56,43 @@ b, h5 {
 }
 
 .btn-sm2 {
-  padding: 0 1rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  border-radius: 1.25rem;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 1.25rem;
 }
 
 .cursor-pointer {
-  cursor: pointer !important;
+    cursor: pointer !important;
 }
 
 .cursor-normal {
-  cursor: context-menu !important;
+    cursor: context-menu !important;
 }
 
-.input-group-prepend .btn, .input-group-append .btn {
+.input-group-prepend .btn,
+.input-group-append .btn {
     z-index: 0;
+}
+
+.hide-on-desktop {
+    display: none;
+}
+
+.hide-on-mobile {
+    display: block;
 }
 
 @media screen and (max-width: 900px) and (min-width: 300px) {
     .wd-40-wm-95 {
         width: 95% !important;
+    }
+
+    .hide-on-desktop {
+        display: block !important;
+    }
+
+    .hide-on-mobile {
+        display: none !important;
     }
 }

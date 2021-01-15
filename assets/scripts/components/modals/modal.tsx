@@ -1,6 +1,7 @@
 import React from 'react';
 import ButtonClose from '../buttons/buttonClose';
 import LoaderH from '@components/loader/loaderH';
+import Button from '../buttons/button';
 
 interface ModalPropsI {
     show: boolean;
@@ -33,7 +34,11 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
                     <div className="w-100 h-100 pt-2">
                         <h5 className="text-center">
                             {this.props.title}
-                            <ButtonClose onClick={this.props.onClose} float="right" />
+                            <ButtonClose 
+                            onClick={this.props.onClose} 
+                            float="right" 
+                            extraClass="hide-on-mobile"
+                            />
                         </h5>
                         {this.props.title && <hr />}
                         <div className="modal-component-body">
@@ -45,6 +50,12 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
                                     </>
                                 )}
                         </div>
+                        <Button
+                            color="danger"
+                            content="Cerrar"
+                            extraClass="w-100 mt-2 hide-on-desktop"
+                            onClick={this.props.onClose}
+                        />
                     </div>
                 </div>
             </div>

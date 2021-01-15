@@ -29,3 +29,11 @@
         }
     }
 }
+
+@media screen and (max-width: 900px) and (min-width: 300px) {
+    .modal-component {
+        .modal-component-content {
+            width: 100% !important;
+        }
+    }
+}

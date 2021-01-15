@@ -2,8 +2,8 @@ import '@fortawesome/fontawesome-free/js/all.min.js';
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import '@styles/app.scss';
 import { Router } from '@scripts/router';
+import '@styles/app.scss';
 
 const Profile = React.lazy(() => import('@pages/profile'));
 const Error404 = React.lazy(() => import('@pages/error404'));
@@ -65,39 +65,53 @@ class App extends React.Component<{}, AppStateI>{
     render = (): JSX.Element => {
         return (
             <>
-            <BrowserRouter>
-                {this.state.loggedIn == null ? (
-                    <Loader />
-                ) : (this.state.loggedIn ? (
-                    <Suspense fallback={<Loader />}>
-                        <Nav
-                            router={this.router}
-                            username={this.state.payload!.username}
-                            roles={this.state.payload!.roles}
-                        ></Nav>
-                        <Redirect to={(new Router()).get("dashboard")} />
-                        <Switch>
-                            <Route exact path={this.router.get("profile")} component={Profile} />
-                            <Route exact path={this.router.get("dashboard")} component={Dashboard} />
-                            <Route exact path={this.router.get("logout")} component={Logout} />
-                            <Route component={Error404} />
-
-                        </Switch>
-                    </Suspense>
-                ) : (
+                <BrowserRouter>
+                    {this.state.loggedIn == null ? (
+                        <Loader />
+                    ) : (this.state.loggedIn ? (
                         <Suspense fallback={<Loader />}>
-                            <Redirect to={this.router.get("login")} />
+                            <Nav
+                                router={this.router}
+                                username={this.state.payload!.username}
+                                roles={this.state.payload!.roles}
+                            ></Nav>
                             <Switch>
-                                <Route exact path={this.router.get("dashboard")}>
-                                    <Redirect to={this.router.get("login")} />
-                                </Route>
-                                <Route>
-                                    <Login logged={this.state.loggedIn} onloggedinchange={this.handleLoggedInChange} />
-                                </Route>
+                                <Route
+                                    exact
+                                    path={this.router.get("profile")}
+                                    component={Profile}
+                                />
+                                <Route
+                                    exact
+                                    path={this.router.get("dashboard")}
+                                    component={Dashboard}
+                                />
+                                <Route
+                                    exact
+                                    path={this.router.get("logout")}
+                                    component={Logout}
+                                />
+                                <Route component={Error404} />
+
                             </Switch>
                         </Suspense>
-                    ))}
-            </BrowserRouter>
+                    ) : (
+                            <Suspense fallback={<Loader />}>
+                                <Redirect to={this.router.get("login")} />
+                                <Switch>
+                                    <Route exact path={this.router.get("dashboard")}>
+                                        <Redirect to={this.router.get("login")} />
+                                    </Route>
+                                    <Route>
+                                        <Login
+                                            logged={this.state.loggedIn}
+                                            onloggedinchange={this.handleLoggedInChange}
+                                        />
+                                    </Route>
+                                </Switch>
+                            </Suspense>
+                        ))}
+                </BrowserRouter>
             </>
         );
     };

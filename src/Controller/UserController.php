@@ -58,10 +58,10 @@ class UserController extends AbstractController
             "username" => $this->security->getUser()->getUsername()
         ]);
         if (!$this->passwordEncoder->isPasswordValid($this->security->getUser(), $content->old)) {
-            return new JsonResponse("La contraseña es incorrecta", 400);
+            return new JsonResponse(["code" => 400, "message" => "La contraseña es incorrecta"], 400);
         }
         if ($content->new != $content->confirmNew) {
-            return new JsonResponse("Las contraseñas no coinciden", 400);
+            return new JsonResponse(["code" => 400, "message" => "Las contraseñas no coinciden"], 400);
         }
         $user->setPassword(
             $this->passwordEncoder->encodePassword(

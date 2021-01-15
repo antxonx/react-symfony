@@ -4,6 +4,7 @@ import SubmitButton from '@components/form/submitButton';
 import { Router } from '@scripts/router';
 import axios from 'axios';
 import React from 'react';
+import HandleResponse from '@scripts/services/handleResponse';
 
 interface PasswordFormPropsI {
     onSuccess: () => void;
@@ -92,11 +93,12 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
                     this.props.onSuccess();
                 })
                 .catch(err => {
-                    console.error(err);
-                    console.error(err.response.data);
+                    // console.error(err);
+                    // console.error(err.response.data);
                     this.setState({
                         error: true,
-                        errorMsg: err.response.data,
+                        // errorMsg: err.response.data,
+                        errorMsg: HandleResponse.error(err)!.message
                     });
                     this.setState({
                         loading: false,
