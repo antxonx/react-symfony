@@ -1,6 +1,8 @@
 import TextInput from '@components/form/textInput';
 import ErrorAlert from '@scripts/components/alerts/errorAlert';
 import SubmitButton from '@scripts/components/form/submitButton';
+import { Router } from '@scripts/router';
+import axios from 'axios';
 import React from 'react';
 
 interface PasswordFormPropsI {
@@ -82,7 +84,22 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
             });
             return;
         } else {
-            console.log(this.state.inputs);
+            this.setState({
+                loading: true,
+            });
+            axios.patch((new Router(process.env.BASE_URL)).apiGet("user_profile_change_password"), this.state.inputs)
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.error(err);
+                    console.error(err.response.data);
+                })
+                .finally(() => {
+                    this.setState({
+                        loading: false,
+                    });
+                });
         }
     };
 
