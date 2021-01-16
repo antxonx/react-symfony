@@ -6,16 +6,16 @@ interface JsonErrorResonse {
 };
 
 export default class HandleResponse {
-    public static error = (err: AxiosError): JsonErrorResonse|null => {
-        if(err.response) {
+    public static error = (err: AxiosError): JsonErrorResonse | null => {
+        if (err.response) {
             const error = err.response.data as JsonErrorResonse;
             let message = error.message;
             console.error(`${error.code}: ${error.message}`);
-            if(err.response.status == 401) {
+            if (err.response.status == 401) {
                 const errorMsg = error.message.toLowerCase();
-                if(errorMsg.includes("expired")) {
+                if (errorMsg.includes("expired")) {
                     message = "Ha caducado la sesión";
-                } else if(errorMsg.includes("invalid")) {
+                } else if (errorMsg.includes("invalid")) {
                     message = "Usuario y/o contraseña inválidos";
                 } else {
                     message = "Debes iniciar sesión";
@@ -30,5 +30,5 @@ export default class HandleResponse {
             console.error(err);
             return null;
         }
-    }
+    };
 }

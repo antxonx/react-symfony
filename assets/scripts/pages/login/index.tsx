@@ -20,7 +20,7 @@ interface LoginStateI {
     error: boolean;
     loading: boolean;
     isLoggedIn: boolean;
-    errorMsg: string|null;
+    errorMsg: string | null;
     errors: {
         username: boolean;
         password: boolean;
