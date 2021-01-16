@@ -48,8 +48,7 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
                 this.setState({ user: res.data });
             })
             .catch(err => {
-                console.error(err);
-                console.error(err.response.data.message);
+                HandleResponse.error(err, this.props.toasts);
             });
     };
 
@@ -62,7 +61,6 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
                 this.onTextFieldCalcel(name);
                 newState.user![ name as UserFields ] = value;
                 result = true;
-                Authentication.setToken(res.data);
                 if (name == "username") {
                     window.location.reload();
                 }

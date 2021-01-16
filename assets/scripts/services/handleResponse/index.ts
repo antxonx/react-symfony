@@ -41,13 +41,8 @@ export default class HandleResponse {
             return null;
         }
     };
-    public static success = (res: AxiosResponse, toasts: ToastEventsI | null) : string => {
-        let message: string;
-        if(res.data.message) {
-            message = res.data.message;
-        } else {
-            message = res.data;
-        }
+    public static success = (res: AxiosResponse, toasts: ToastEventsI | null): string => {
+        const message = res.data.message || res.data;
         toasts && (
             toasts.add({
                 id: Math.floor(Math.random() * 100000 + 1).toString(),
@@ -57,5 +52,5 @@ export default class HandleResponse {
             })
         );
         return message;
-    }
+    };
 }
