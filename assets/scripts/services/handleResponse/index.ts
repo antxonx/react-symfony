@@ -1,3 +1,4 @@
+import { ToastEventsI } from "@scripts/app";
 import { AxiosError } from "axios";
 
 interface JsonErrorResonse {
@@ -6,7 +7,7 @@ interface JsonErrorResonse {
 };
 
 export default class HandleResponse {
-    public static error = (err: AxiosError): JsonErrorResonse | null => {
+    public static error = (err: AxiosError, toasts: ToastEventsI | null = null): JsonErrorResonse | null => {
         if (err.response) {
             const error = err.response.data as JsonErrorResonse;
             let message = error.message;
@@ -22,6 +23,15 @@ export default class HandleResponse {
                 }
                 console.error(message);
             }
+            const id = Math.floor(Math.random() * 100000 + 1);
+            toasts && (
+                toasts.add({
+                    id: id.toString(),
+                    title: "Error",
+                    type: "danger",
+                    message: message,
+                })
+            );
             return {
                 code: error.code,
                 message: message

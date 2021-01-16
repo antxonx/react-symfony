@@ -1,0 +1,32 @@
+.toast- {
+    &container {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 50%;
+    }
+    &alert {
+        margin: 0.25rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 200ms, opacity 200ms linear;
+        &.show {
+            visibility: visible;
+            opacity: 1;
+            transition: visibility 200ms, opacity 200ms linear;
+        }
+    }
+
+    &success {
+        background-color: #008000c7;
+        color: #000000;
+    }
+    &danger {
+        background-color: #7b0000d1;
+        color: #ffffff;
+    }
+}

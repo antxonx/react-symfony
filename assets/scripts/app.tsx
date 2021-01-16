@@ -14,11 +14,18 @@ const Login = React.lazy(() => import('@pages/login'));
 import Authentication, { TokenPayloadI } from '@services/authentication';
 
 import Loader from '@components/loader/loader';
+import Toast, { ToastData } from './components/alerts/toast';
+import ToastContainer from './components/alerts/toastContainer';
 const Nav = React.lazy(() => import('@components/nav'));
 
 interface AppStateI {
     loggedIn: boolean | null;
     payload: TokenPayloadI | null;
+    toasts: ToastData[];
+}
+
+export interface ToastEventsI {
+    add: (toast: ToastData) => void;
 }
 
 class App extends React.Component<{}, AppStateI>{
@@ -30,6 +37,7 @@ class App extends React.Component<{}, AppStateI>{
         this.state = {
             loggedIn: null,
             payload: null,
+            toasts: [],
         };
         this.router = new Router(process.env.BASE_ROUTE);
     }
@@ -60,6 +68,34 @@ class App extends React.Component<{}, AppStateI>{
         this.setState({
             loggedIn: logged
         });
+    };
+
+    addToast = (toast: ToastData) => {
+        let toastList = this.state.toasts;
+        toastList.push(toast);
+        this.setState({
+            toasts: toastList,
+        });
+        setTimeout(() => {
+            this.removeToast(toast.id);
+        }, 1500);
+    };
+
+    removeToast = (id: string) => {
+        let toastList = this.state.toasts;
+        const index = toastList.findIndex((toast) => {
+            return toast.id === id;
+        });
+        toastList[ index ].show = false;
+        this.setState({
+            toasts: toastList,
+        });
+        setTimeout(() => {
+            toastList.splice(index, 1);
+            this.setState({
+                toasts: toastList,
+            });
+        }, 200);
     };
 
     render = (): JSX.Element => {
@@ -112,6 +148,14 @@ class App extends React.Component<{}, AppStateI>{
                             </Suspense>
                         ))}
                 </BrowserRouter>
+                <ToastContainer>
+                    {this.state.toasts.map((toast) => {
+                        toast.show = (toast.show === undefined) ? true : toast.show;
+                        return (
+                            <Toast key={toast.id} type={toast.type} message={toast.message} title={toast.title} show={toast.show} />
+                        );
+                    })}
+                </ToastContainer>
             </>
         );
     };
