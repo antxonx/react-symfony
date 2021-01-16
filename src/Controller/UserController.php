@@ -78,20 +78,24 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, JWTTokenManagerInterface $JWTManager): JsonResponse
     {
-        $content = json_decode($request->getContent());
-        $user = $this->rep->findOneBy(
-            ["username" => $this->security->getUser()->getUsername()]
-        );
-        if ($content->name == "username") {
-            $user->setUserName($content->value);
+        try {
+            $content = json_decode($request->getContent());
+            $user = $this->rep->findOneBy(
+                ["username" => $this->security->getUser()->getUsername()]
+            );
+            if ($content->name == "username") {
+                $user->setUserName($content->value);
+            }
+            if ($content->name == "email") {
+                $user->setEmail($content->value);
+            }
+            if ($content->name == "name") {
+                $user->setName($content->value);
+            }
+            $this->getDoctrine()->getManager()->flush();
+            return new JsonResponse("Dato actualizado");
+        } catch (\Exception $e) {
+            return new JsonResponse(["code" => 404, "message" => $e->getMessage()], 400);
         }
-        if ($content->name == "email") {
-            $user->setEmail($content->value);
-        }
-        if ($content->name == "name") {
-            $user->setName($content->value);
-        }
-        $this->getDoctrine()->getManager()->flush();
-        return new JsonResponse($JWTManager->create($user));
     }
 }

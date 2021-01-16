@@ -77,51 +77,53 @@ export default class EditableTextField extends React.Component<EditableTextField
 
     render = (): JSX.Element => {
         return (
-            <div className="editable-container">
-                {this.props.title && (
-                    <div className="w-100">
-                        <small>
-                            <b>{this.props.title}</b>
-                        </small>
-                    </div>
-                )}
-                {this.state.editig || this.props.wait ? (this.state.loading || this.props.wait ? (
-                    <LoaderH position="left" />
-                ) : (
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="input-group">
-                                <input
-                                    className={this.state.error ? "form-control form-control-sm is-invalid" : "form-control form-control-sm"}
-                                    value={this.state.newValue}
-                                    onChange={this.handleChange}
-                                />
-                                <div className="input-group-append btn-group-sm editable-buttons">
-                                    <button
-                                        type="button"
-                                        onClick={this.handleCnacelClick}
-                                        className="btn btn-info w-100"
-                                    >
-                                        <i className="fas fa-times"></i>
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-antxony w-100 round-right"
-                                        onClick={this.handleSubmit}
-                                    >
-                                        <i className="fas fa-check"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            {this.props.errorMsg ? (
-                                <small className="text-danger">{this.props.errorMsg}</small>
-                            ) : <></>}
-                        </form>
-                    )) : (
-                        <div className="editable-field-container">
-                            <span className="editable-field" onClick={this.handleClick}>{this.props.value}</span>
+            <form onSubmit={this.handleSubmit}>
+                <div className="editable-container">
+                    {this.props.title && (
+                        <div className="w-100">
+                            <small>
+                                <b>{this.props.title}</b>
+                            </small>
                         </div>
                     )}
-            </div>
+                    {this.state.editig || this.props.wait ? (this.state.loading || this.props.wait ? (
+                        <LoaderH position="left" />
+                    ) : (
+                            <>
+                                <div className="input-group">
+                                    <input
+                                        className={this.state.error ? "form-control form-control-sm is-invalid" : "form-control form-control-sm"}
+                                        value={this.state.newValue}
+                                        onChange={this.handleChange}
+                                    />
+                                    <div className="input-group-append btn-group-sm editable-buttons">
+                                        <button
+                                            type="button"
+                                            onClick={this.handleCnacelClick}
+                                            className="btn btn-info w-100"
+                                        >
+                                            <i className="fas fa-times"></i>
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="btn btn-antxony w-100 round-right"
+                                            onClick={this.handleSubmit}
+                                        >
+                                            <i className="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                {this.props.errorMsg ? (
+                                    <small className="text-danger">{this.props.errorMsg}</small>
+                                ) : <></>}
+                            </>
+                        )) : (
+                            <div className="editable-field-container">
+                                <span className="editable-field" onClick={this.handleClick}>{this.props.value}</span>
+                            </div>
+                        )}
+                </div>
+            </form>
         );
     };
 }

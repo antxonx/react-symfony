@@ -115,8 +115,11 @@ class App extends React.Component<{}, AppStateI>{
                                 <Route
                                     exact
                                     path={this.router.get("profile")}
-                                    component={Profile}
-                                />
+                                >
+                                    <Profile toasts={{
+                                        add: this.addToast,
+                                    }}/>
+                                </Route>
                                 <Route
                                     exact
                                     path={this.router.get("dashboard")}

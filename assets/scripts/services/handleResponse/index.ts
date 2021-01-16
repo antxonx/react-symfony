@@ -1,5 +1,5 @@
 import { ToastEventsI } from "@scripts/app";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 interface JsonErrorResonse {
     code: number;
@@ -41,4 +41,21 @@ export default class HandleResponse {
             return null;
         }
     };
+    public static success = (res: AxiosResponse, toasts: ToastEventsI | null) : string => {
+        let message: string;
+        if(res.data.message) {
+            message = res.data.message;
+        } else {
+            message = res.data;
+        }
+        toasts && (
+            toasts.add({
+                id: Math.floor(Math.random() * 100000 + 1).toString(),
+                title: "Bien",
+                type: "success",
+                message: message,
+            })
+        );
+        return message;
+    }
 }

@@ -10,8 +10,14 @@ import Button from '@components/buttons/button';
 import Modal from '@components/modals/modal';
 import LoaderH from '@components/loader/loaderH';
 import Card from '@components/cards/card';
+import HandleResponse from '@scripts/services/handleResponse';
+import { ToastEventsI } from '@scripts/app';
 
 const PasswordForm = React.lazy(() => import('@scripts/forms/password'));
+
+interface ProfilePropsI {
+    toasts: ToastEventsI;
+}
 
 interface ProfileStateI {
     user: UserI | null;
@@ -25,9 +31,9 @@ interface ProfileStateI {
 
 declare type UserFields = "username" | "email" | "name";
 
-export default class Profile extends React.Component<{}, ProfileStateI>{
+export default class Profile extends React.Component<ProfilePropsI, ProfileStateI>{
 
-    public constructor (props: {}) {
+    public constructor (props: ProfilePropsI) {
         super(props);
         this.state = {
             user: null,
@@ -52,6 +58,7 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
         let newState = { ...this.state };
         await axios.patch((new Router(process.env.BASE_URL).apiGet("user_profile_edit", { 'id': this.state.user?.id })), { name, value })
             .then(res => {
+                HandleResponse.success(res, this.props.toasts);
                 this.onTextFieldCalcel(name);
                 newState.user![ name as UserFields ] = value;
                 result = true;
@@ -61,9 +68,7 @@ export default class Profile extends React.Component<{}, ProfileStateI>{
                 }
             })
             .catch(err => {
-                console.error(err);
-                console.error(err.response.data);
-                newState.errors[ name as UserFields ] = err.response.data;
+                newState.errors[ name as UserFields ] = HandleResponse.error(err, this.props.toasts)?.message;
                 result = false;
             });
         this.setState(newState);
