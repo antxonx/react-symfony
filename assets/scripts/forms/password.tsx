@@ -89,15 +89,11 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
             });
             axios.patch((new Router(process.env.BASE_URL)).apiGet("user_profile_change_password"), this.state.inputs)
                 .then(res => {
-                    console.log(res.data);
                     this.props.onSuccess();
                 })
                 .catch(err => {
-                    // console.error(err);
-                    // console.error(err.response.data);
                     this.setState({
                         error: true,
-                        // errorMsg: err.response.data,
                         errorMsg: HandleResponse.error(err)!.message
                     });
                     this.setState({
