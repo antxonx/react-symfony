@@ -41,8 +41,10 @@ class App extends React.Component<{}, AppStateI>{
             payload: Authentication.getPayload(),
         });
         if (this.state.payload && this.state.loggedIn) {
-            let diff = (this.state.payload.exp - Math.floor(Date.now() / 1000));
+            let diff = (this.state.payload.exp - Math.floor(Date.now() / 1000) - 300);
             diff = (diff < 0) ? 0 : diff;
+            console.log(this.state.payload.exp);
+            console.log(diff);
             setTimeout(() => {
                 Authentication.refreshToken();
                 this.setState({
