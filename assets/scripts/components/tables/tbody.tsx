@@ -1,15 +1,11 @@
 import React from 'react';
-import { ThPropsI } from './thead';
+import { TbodyRows } from '@components/tables';
 
 interface TbodyPropsI {
     rows: TbodyRows[];
 }
 
-interface TbodyRows {
-    cells: ThPropsI[];
-    id: string;
-    [key: string]: any;
-}
+
 
 export default class Tbody extends React.Component<TbodyPropsI, {}> {
     constructor(props: TbodyPropsI) {

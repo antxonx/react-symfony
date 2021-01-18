@@ -121,8 +121,12 @@ class App extends React.Component<{}, AppStateI>{
                                 <Route
                                     exact
                                     path={this.router.get("users")}
-                                    component={Users}
-                                />
+                                    
+                                >
+                                    <Users toasts={{
+                                        add: this.addToast
+                                    }}/>
+                                    </Route>
                                 <Route
                                     exact
                                     path={this.router.get("profile")}

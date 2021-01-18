@@ -2,19 +2,18 @@ import Button from '@components/buttons/button';
 import Column from '@components/grid/column';
 import Row from '@components/grid/row';
 import Layout from '@components/layout';
-import React, { Suspense } from 'react';
-import Table from '@components/tables/table';
-import Thead, { ThPropsI } from '@components/tables/thead';
-import Tbody from '@components/tables/tbody';
+import React from 'react';
+import {Table, Thead, Tbody, ThPropsI} from '@components/tables';
 import { UserI } from '@services/authentication';
 import TableLoader from '@components/loader/tableLoader';
 import axios from '@services/axios';
 import { Router } from '@scripts/router';
 import HandleResponse from '@services/handleResponse';
+import { ToastEventsI } from '@scripts/app';
 
 
 interface UsersPropsI {
-
+    toasts: ToastEventsI;
 }
 
 interface UsersStateI {
@@ -58,7 +57,6 @@ export default class Users extends React.Component<UsersPropsI, UsersStateI> {
         });
         axios.get((new Router(process.env.BASE_URL)).apiGet("user_all"))
             .then(res => {
-                console.log(res.data);
                 this.setState({
                     users: res.data,
                 });
@@ -67,7 +65,7 @@ export default class Users extends React.Component<UsersPropsI, UsersStateI> {
                 });
             })
             .catch(err => {
-                HandleResponse.error(err);
+                HandleResponse.error(err, this.props.toasts);
             });
     };
 

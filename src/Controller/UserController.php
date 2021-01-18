@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Exception;
 
 /**
  * @Route("/api/user")
@@ -94,7 +95,7 @@ class UserController extends AbstractController
             }
             $this->getDoctrine()->getManager()->flush();
             return new JsonResponse("Dato actualizado");
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
         }
     }
@@ -108,7 +109,7 @@ class UserController extends AbstractController
         try {
             $users = $this->rep->findAll();
             return new JsonResponse($users);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
         }
     }

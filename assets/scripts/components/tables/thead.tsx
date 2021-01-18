@@ -1,12 +1,8 @@
 import React from 'react';
+import { ThPropsI } from '@components/tables';
 
 interface TheadPropsI {
     cells: ThPropsI[];
-}
-
-export interface ThPropsI {
-    name?: string;
-    [ key: string ]: any;
 }
 
 export default class Thead extends React.Component<TheadPropsI, {}> {
