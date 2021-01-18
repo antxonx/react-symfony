@@ -3,7 +3,7 @@ import Column from '@components/grid/column';
 import Row from '@components/grid/row';
 import Layout from '@components/layout';
 import React from 'react';
-import {Table, Thead, Tbody, ThPropsI} from '@components/tables';
+import { Table, Thead, Tbody, ThPropsI } from '@components/tables';
 import { UserI } from '@services/authentication';
 import TableLoader from '@components/loader/tableLoader';
 import axios from '@services/axios';
