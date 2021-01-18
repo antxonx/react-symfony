@@ -3,12 +3,12 @@ import Column from '@components/grid/column';
 import Layout from '@components/layout';
 import Panel, { PanelPropsI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
-import { Router } from '@scripts/router';
 import { UserI } from '@services/authentication';
 import React from 'react';
 export default class Users extends Panel<UserI> {
     constructor (props: PanelPropsI) {
-        super(props, [
+        super(props);
+        this.header = [
             {
                 children: "Id",
                 style: {
@@ -21,7 +21,7 @@ export default class Users extends Panel<UserI> {
             }, {
                 children: "Correo"
             }
-        ]);
+        ];
     }
 
     componentDidMount = () => {

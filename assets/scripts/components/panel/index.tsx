@@ -16,20 +16,20 @@ export default class Panel<PT> extends React.Component<PanelPropsI, {
     loading: boolean;
     entities: PT[];
 }> {
-    protected readonly header: ThPropsI[];
+    protected header: ThPropsI[];
 
     protected router: Router;
 
     protected route: string;
 
-    constructor (props: PanelPropsI, header: ThPropsI[]) {
+    constructor (props: PanelPropsI) {
         super(props);
         this.route = "";
         this.state = {
             loading: false,
             entities: [],
         };
-        this.header = header;
+        this.header = [];
         this.router = new Router(process.env.BASE_URL);
     }
 
@@ -55,13 +55,13 @@ export default class Panel<PT> extends React.Component<PanelPropsI, {
 
     protected setRoute = (route: string) => {
         this.route = route;
-    }
+    };
 
     protected setEntities = (entities: PT[]) => {
         this.setState({
             entities: entities,
         });
-    }
+    };
 
     protected update = () => {
         this.setLoading();
