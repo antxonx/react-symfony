@@ -104,11 +104,24 @@ class UserController extends AbstractController
      * @Route("", name="user_all", methods={"GET"}, options={"expose" = true})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function getUsers(): JsonResponse
+    public function getUsers(Request $request): JsonResponse
     {
         try {
-            $users = $this->rep->findAll();
-            return new JsonResponse($users);
+            $result = [];
+            $params = json_decode(json_encode($request->query->all()));
+            $entities = $this->rep->getBy($params);
+            $total = $params->page * 10;
+            $showed = (($total > $entities->count()) ? $entities->count() : $total);
+            $maxPages = ceil($entities->count() / 10);
+            foreach($entities as $entity) {
+                $result[] = $entity;
+            }
+            return new JsonResponse([
+                "entities" => $result,
+                "maxPages" => $maxPages,
+                "showed" => $showed,
+                "total" => $entities->count()
+            ]);
         } catch (Exception $e) {
             return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
         }

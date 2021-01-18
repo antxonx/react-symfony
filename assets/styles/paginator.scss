@@ -1,0 +1,21 @@
+.page-item {
+  font-weight: 600;
+
+  &.disabled {
+    .page-link {
+      color: #797979;
+      border: 1px solid #9abcc1;
+    }
+  }
+
+  .page-link {
+    background-color: #efefff !important;
+    color: black;
+    border: 1px solid #9abcc1;
+    cursor: pointer;
+
+    &:hover {
+      color: #3c5cab;
+    }
+  }
+}

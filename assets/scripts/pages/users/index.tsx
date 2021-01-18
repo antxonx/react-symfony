@@ -11,6 +11,7 @@ export default class Users extends Panel<UserI> {
         this.header = [
             {
                 children: "Id",
+                className: "text-right",
                 style: {
                     width: "100px"
                 }
@@ -22,10 +23,10 @@ export default class Users extends Panel<UserI> {
                 children: "Correo"
             }
         ];
+        this.route = "user_all";
     }
 
     componentDidMount = () => {
-        this.setRoute(this.router.apiGet("user_all"));
         this.update();
     };
 
@@ -35,7 +36,7 @@ export default class Users extends Panel<UserI> {
 
     render = (): JSX.Element => {
         return (
-            <Layout>
+            <Layout title="Usuarios">
                 <this.MainBar>
                     <Column size={3}>
                         <Button
@@ -47,13 +48,14 @@ export default class Users extends Panel<UserI> {
                     </Column>
                 </this.MainBar>
                 <this.MainTable head={this.header}>
-                    <Tbody rows={this.state.entities.map(user => {
+                    <Tbody rows={this.state.requestResult.entities.map(user => {
                         return {
                             id: user.id.toString(),
                             cells: [
                                 {
                                     name: "id",
-                                    children: <b>{user.id}</b>
+                                    children: <b>{user.id}</b>,
+                                    className: "text-right",
                                 },
                                 {
                                     name: "username",
