@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import axios from '@services/axios';
-import Authentication, { UserI } from '@services/authentication';
+import { UserI } from '@services/authentication';
 import { Router } from '@scripts/router';
 import Layout from '@components/layout';
 import EditableTextField from '@components/editable/editableTextField';
