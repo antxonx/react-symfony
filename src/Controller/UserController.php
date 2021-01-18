@@ -95,7 +95,21 @@ class UserController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
             return new JsonResponse("Dato actualizado");
         } catch (\Exception $e) {
-            return new JsonResponse(["code" => 404, "message" => $e->getMessage()], 400);
+            return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * @Route("", name="user_all", methods={"GET"}, options={"expose" = true})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function getUsers(): JsonResponse
+    {
+        try {
+            $users = $this->rep->findAll();
+            return new JsonResponse($users);
+        } catch (\Exception $e) {
+            return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
         }
     }
 }

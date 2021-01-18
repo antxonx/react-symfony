@@ -4,12 +4,14 @@ import Row from '@components/grid/row';
 import Layout from '@components/layout';
 import React, { Suspense } from 'react';
 import Table from '@components/tables/table';
-import Thead from '@components/tables/thead';
-// import Tbody from '@components/tables/tbody';
+import Thead, { ThPropsI } from '@components/tables/thead';
+import Tbody from '@components/tables/tbody';
 import { UserI } from '@services/authentication';
-import Loader from '@components/loader/loader';
+import TableLoader from '@components/loader/tableLoader';
+import axios from '@services/axios';
+import { Router } from '@scripts/router';
+import HandleResponse from '@services/handleResponse';
 
-const Tbody = React.lazy(() => import('@components/tables/tbody'));
 
 interface UsersPropsI {
 
@@ -21,12 +23,29 @@ interface UsersStateI {
 }
 
 export default class Users extends React.Component<UsersPropsI, UsersStateI> {
+
+    protected readonly header: ThPropsI[];
+
     constructor (props: UsersPropsI) {
         super(props);
         this.state = {
             users: [],
-            laoding: true,
+            laoding: false,
         };
+        this.header = [
+            {
+                children: "Id",
+                style: {
+                    width: "100px"
+                }
+            }, {
+                children: "Usuario"
+            }, {
+                children: "Nombre"
+            }, {
+                children: "Correo"
+            }
+        ];
     }
 
     handleAddUser = () => {
@@ -35,29 +54,27 @@ export default class Users extends React.Component<UsersPropsI, UsersStateI> {
 
     componentDidMount = () => {
         this.setState({
-            users: [
-                {
-                    name: "Juan",
-                    username: "juanito",
-                    id: 1,
-                    email: "juanito@juan.com",
-                    roles: [ "ROLE_USER" ]
-                },
-                {
-                    name: "Pedor",
-                    username: "pedrito",
-                    id: 2,
-                    email: "pedrito@juan.com",
-                    roles: [ "ROLE_USER" ]
-                },
-            ]
+            laoding: true,
         });
+        axios.get((new Router(process.env.BASE_URL)).apiGet("user_all"))
+            .then(res => {
+                console.log(res.data);
+                this.setState({
+                    users: res.data,
+                });
+                this.setState({
+                    laoding: false,
+                });
+            })
+            .catch(err => {
+                HandleResponse.error(err);
+            });
     };
 
     render = (): JSX.Element => {
         return (
             <Layout title="Usuarios">
-                <Row extraClass="my-2">
+                <Row extraClass="my-2 mx-1">
                     <Column size={3}>
                         <Button
                             color="primary"
@@ -67,50 +84,37 @@ export default class Users extends React.Component<UsersPropsI, UsersStateI> {
                         />
                     </Column>
                 </Row>
-                <Suspense fallback={<Loader />}>
-                    <Table>
-                        <Thead cells={[
-                            {
-                                children: "Id",
-                                style: {
-                                    width: "100px"
-                                }
-                            }, {
-                                children: "Usuario"
-                            }, {
-                                children: "Nombre"
-                            }, {
-                                children: "Correo"
-                            }
-                        ]}
-                        />
-                        <Tbody rows={this.state.users.map(user => {
-                            return {
-                                id: user.id.toString(),
-                                cells: [
-                                    {
-                                        name: "id",
-                                        children: user.id
-                                    },
-                                    {
-                                        name: "username",
-                                        children: user.username
-                                    },
-                                    {
-                                        name: "name",
-                                        children: user.name
-                                    },
-                                    {
-                                        name: "email",
-                                        children: user.email
-                                    },
-                                ]
-                            };
-                        })}
-                        />
 
-                    </Table>
-                </Suspense>
+                <Table>
+                    <Thead cells={this.header} />
+                    {this.state.laoding ?
+                        <TableLoader colSpan={this.header.length} /> : (
+                            <Tbody rows={this.state.users.map(user => {
+                                return {
+                                    id: user.id.toString(),
+                                    cells: [
+                                        {
+                                            name: "id",
+                                            children: <b>{user.id}</b>
+                                        },
+                                        {
+                                            name: "username",
+                                            children: <em>{user.username}</em>
+                                        },
+                                        {
+                                            name: "name",
+                                            children: <b>{user.name}</b>
+                                        },
+                                        {
+                                            name: "email",
+                                            children: user.email
+                                        },
+                                    ]
+                                };
+                            })}
+                            />
+                        )}
+                </Table>
             </Layout>
         );
     };
