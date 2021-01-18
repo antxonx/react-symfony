@@ -110,9 +110,9 @@ class UserController extends AbstractController
             $result = [];
             $params = json_decode(json_encode($request->query->all()));
             $entities = $this->rep->getBy($params);
-            $total = $params->page * 10;
+            $total = $params->page * $this->rep::MAX_ENTITIES;
             $showed = (($total > $entities->count()) ? $entities->count() : $total);
-            $maxPages = ceil($entities->count() / 10);
+            $maxPages = ceil($entities->count() / $this->rep::MAX_ENTITIES);
             foreach($entities as $entity) {
                 $result[] = $entity;
             }

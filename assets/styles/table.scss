@@ -44,14 +44,13 @@
                 border-left: 1px solid #dee2e6;
                 border-right: 1px solid #dee2e6;
                 border-bottom: 1px solid #dee2e6;
-            }
-
-            &:first-child {
-                border-left: none !important;
-            }
-
-            &:last-child {
-                border-right: none !important;
+                &:first-child {
+                    border-left: none !important;
+                }
+    
+                &:last-child {
+                    border-right: none !important;
+                }
             }
         }
     }

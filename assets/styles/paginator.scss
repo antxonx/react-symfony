@@ -1,5 +1,7 @@
 .page-item {
   font-weight: 600;
+  user-select: none;
+  -moz-user-select: none;
 
   &.disabled {
     .page-link {

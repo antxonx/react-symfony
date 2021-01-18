@@ -18,6 +18,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+
+    public const MAX_ENTITIES = 20;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -45,8 +48,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $query->getQuery();
         $paginator =  new Paginator($query);
         $paginator->getQuery()
-            ->setFirstResult(10 * ($params->page - 1))
-            ->setMaxResults(10);
+            ->setFirstResult(self::MAX_ENTITIES * ($params->page - 1))
+            ->setMaxResults(self::MAX_ENTITIES);
         return $paginator;
     }
 
