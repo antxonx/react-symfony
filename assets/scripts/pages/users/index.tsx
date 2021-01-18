@@ -5,8 +5,6 @@ import Panel, { PanelPropsI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import { Router } from '@scripts/router';
 import { UserI } from '@services/authentication';
-import axios from '@services/axios';
-import HandleResponse from '@services/handleResponse';
 import React from 'react';
 export default class Users extends Panel<UserI> {
     constructor (props: PanelPropsI) {
@@ -27,19 +25,8 @@ export default class Users extends Panel<UserI> {
     }
 
     componentDidMount = () => {
+        this.setRoute(this.router.apiGet("user_all"));
         this.update();
-    };
-
-    update = () => {
-        this.setLoading();
-        axios.get(this.router.apiGet("user_all"))
-            .then(res => {
-                this.setEntities(res.data);
-                this.unsetLoading();
-            })
-            .catch(err => {
-                HandleResponse.error(err, this.props.toasts);
-            });
     };
 
     handleAddUser = () => {
