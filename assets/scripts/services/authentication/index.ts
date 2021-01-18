@@ -27,7 +27,11 @@ export default class Authentication {
         let result = false;
         const token = Authentication.getCookie(CookiesNames.AUTH_COOKIE_NAME).trim();
         if (token !== "") {
-            await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("index_check_login"), { headers: { Authorization: `Bearer ${token}` } })
+            await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("index_check_login"), {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then(() => {
                     result = true;
                 })
@@ -113,7 +117,12 @@ export default class Authentication {
     };
 
     public static refreshToken = () => {
-        axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"))
+        axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"),
+            {
+                headers: {
+                    Authorization: `Bearer ${Authentication.getToken()}`
+                }
+            })
             .then(res => {
                 Authentication.setCookie(CookiesNames.AUTH_COOKIE_NAME, res.data.token);
                 console.info("refreshed token");
