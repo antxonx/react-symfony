@@ -1,6 +1,7 @@
 {
     "dashboard": "/",
     "profile": "/profile",
+    "users": "/users",
     "login": "/login",
     "logout": "/logout"
 }

@@ -93,7 +93,7 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
 
     render = (): JSX.Element => {
         return (
-            <Layout title="perfil">
+            <Layout title="Perfil">
                 <div className="container mt-5">
                     <Card>
                         <Row>

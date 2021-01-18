@@ -100,7 +100,7 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
 
     render = (): JSX.Element => {
         return (
-            <Layout title="Inicar sesión">
+            <Layout title="Inicar sesión" top={false}>
                 {this.state.isLoggedIn ? (
                     <Redirect to={(new Router()).get("dashboard")} />
                 ) : (

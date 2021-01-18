@@ -10,6 +10,7 @@ const Error404 = React.lazy(() => import('@pages/error404'));
 const Logout = React.lazy(() => import('@pages/logout'));
 const Dashboard = React.lazy(() => import('@pages/dashboard'));
 const Login = React.lazy(() => import('@pages/login'));
+const Users = React.lazy(() => import('@pages/users'));
 
 import Authentication, { TokenPayloadI } from '@services/authentication';
 
@@ -114,17 +115,22 @@ class App extends React.Component<{}, AppStateI>{
                             <Switch>
                                 <Route
                                     exact
+                                    path={this.router.get("dashboard")}
+                                    component={Dashboard}
+                                />
+                                <Route
+                                    exact
+                                    path={this.router.get("users")}
+                                    component={Users}
+                                />
+                                <Route
+                                    exact
                                     path={this.router.get("profile")}
                                 >
                                     <Profile toasts={{
                                         add: this.addToast,
-                                    }}/>
+                                    }} />
                                 </Route>
-                                <Route
-                                    exact
-                                    path={this.router.get("dashboard")}
-                                    component={Dashboard}
-                                />
                                 <Route
                                     exact
                                     path={this.router.get("logout")}

@@ -17,7 +17,7 @@ export default class Nav extends React.Component<NavPropsI, {}> {
 
     render = (): JSX.Element => {
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav className="navbar navbar-expand-lg navbar-light">
                 <NavLink
                     exact
                     className="navbar-brand"
@@ -45,6 +45,16 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                                 children="Dashboard"
                             />
                         </li>
+                        {this.props.roles.includes("ROLE_ADMIN") ? (
+                            <li className="nav-item" key="users">
+                                <NavLink
+                                    exact
+                                    className="nav-link"
+                                    to={this.props.router.get("users")}
+                                    children="Usuarios"
+                                />
+                            </li>
+                        ) : <></>}
 
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="#" id="dropdowUserMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

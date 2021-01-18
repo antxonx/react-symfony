@@ -106,7 +106,9 @@ export default class Authentication {
         if (token == "") {
             return null;
         } else {
-            return JSON.parse(atob(token.split(".")[ 1 ])) as TokenPayloadI;
+            let result = JSON.parse(atob(token.split(".")[ 1 ])) as TokenPayloadI;
+            result.roles = Object.values(result.roles);
+            return result;
         }
     };
 
