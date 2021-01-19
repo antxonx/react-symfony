@@ -67,6 +67,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
 
     handleSearch = (data: string) => {
         this.params.search = data;
+        this.params.page = 1;
         this.update();
     };
 

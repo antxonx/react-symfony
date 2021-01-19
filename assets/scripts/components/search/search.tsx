@@ -32,10 +32,11 @@ export default class Search extends React.Component<SearchPropsI, SearchStateI> 
     };
 
     handleEraseClick = () => {
+        let call = (this.state.value.trim() !== "");
         this.setState({
             value: "",
         });
-        this.props.callback("");
+        call && this.props.callback("");
     };
 
     render = (): JSX.Element => {

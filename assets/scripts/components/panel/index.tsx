@@ -121,7 +121,8 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
                     showed={this.state.requestResult.showed}
                     total={this.state.requestResult.total}
                     onClick={(page: number) => {
-                        this.update({ page: page });
+                        this.params.page = page
+                        this.update();
                     }}
                 />
             </>
