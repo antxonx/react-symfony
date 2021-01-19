@@ -6,6 +6,7 @@ import LoaderH from '@components/loader/loaderH';
 import RoleBadge from '@components/misc/roleBadge';
 import Modal from '@components/modals/modal';
 import Panel, { PanelPropsI } from '@components/panel';
+import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
 import { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
@@ -64,6 +65,11 @@ export default class Users extends Panel<UserI, UsersStateI> {
         this.update();
     };
 
+    handleSearch = (data: string) => {
+        this.params.search = data;
+        this.update();
+    };
+
     render = (): JSX.Element => {
         return (
             <Layout title="Usuarios">
@@ -75,6 +81,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
                             extraClass="w-100"
                             onClick={this.handleAddUser}
                         />
+                    </Column>
+                    <Column size={6}>
+                        <Search callback={this.handleSearch} />
                     </Column>
                 </this.MainBar>
                 <this.MainTable head={this.header}>
@@ -97,11 +106,11 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                 },
                                 {
                                     name: "email",
-                                    children: <ButtonAction type="mailto" content={user.email}/>
+                                    children: <ButtonAction type="mailto" content={user.email} />
                                 },
                                 {
                                     name: "role",
-                                    children: <RoleBadge role={user.roles[0]}/>
+                                    children: <RoleBadge role={user.roles[ 0 ]} />
                                 },
                             ]
                         };

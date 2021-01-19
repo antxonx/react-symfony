@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -44,7 +45,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $query = $this->createQueryBuilder("p")
             ->orderBy("p.name", "ASC");
-        //TODO: filters
+        if (isset($params->search) && $params->search != "") {
+            $sc = new Criteria();
+            $sc->where(Criteria::expr()->contains("p.username", $params->search));
+            $sc->orWhere(Criteria::expr()->contains("p.name", $params->search));
+            $sc->orWhere(Criteria::expr()->contains("p.email", $params->search));
+            $query->addCriteria($sc);
+        }
         $query->getQuery();
         $paginator =  new Paginator($query);
         $paginator->getQuery()
