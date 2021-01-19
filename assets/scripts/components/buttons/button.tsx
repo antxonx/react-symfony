@@ -1,6 +1,6 @@
 import React from 'react';
 
-enum buttonSizes {
+export enum buttonSizes {
     SMALL,
     MEDIUM,
     LARGE

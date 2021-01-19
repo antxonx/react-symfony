@@ -82,11 +82,18 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
         });
     };
 
-    protected setSubState = (state: ST) => {
+    protected setSubState = (state: {}) => {
         this.setState({
-            state: state,
+            state: {
+                ...this.state.state,
+                ...state,
+            },
         });
     };
+
+    protected getSubState = () => {
+        return this.state.state;
+    }
 
     protected update = (options?: { page?: number, silent?: boolean; }) => {
         this.params.page = options?.page || this.params.page;

@@ -1,7 +1,7 @@
 import React from 'react';
-import ButtonClose from '../buttons/buttonClose';
+import ButtonClose from '@components/buttons/buttonClose';
 import LoaderH from '@components/loader/loaderH';
-import Button from '../buttons/button';
+import Button from '@components/buttons/button';
 
 interface ModalPropsI {
     show: boolean;
@@ -16,8 +16,11 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
 
     private size: number;
 
+    private bodyOverflow: string;
+
     constructor (props: ModalPropsI) {
         super(props);
+        this.bodyOverflow = "";
         this.size = this.props.size || 50;
     }
 
@@ -28,7 +31,17 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
         );
     }
 
+    hideScroll = () => {
+        if(this.props.show) {
+            this.bodyOverflow = document.body.style.overflow;
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = this.bodyOverflow;
+        }
+    }
+
     render = (): JSX.Element => {
+        this.hideScroll();
         return (
             <div
                 className={"modal-component" + (this.props.show ? " show" : "")}

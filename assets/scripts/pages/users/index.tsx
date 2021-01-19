@@ -5,6 +5,7 @@ import Column from '@components/grid/column';
 import Layout from '@components/layout';
 import LoaderH from '@components/loader/loaderH';
 import RoleBadge from '@components/misc/roleBadge';
+import Alert, { AlertPropsI } from '@components/modals/alert';
 import Modal from '@components/modals/modal';
 import Panel, { PanelPropsI } from '@components/panel';
 import Search from '@components/search/search';
@@ -17,6 +18,7 @@ import React, { Suspense } from 'react';
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 interface UsersStateI {
     formModalOpen: boolean;
+    alert: AlertPropsI;
 }
 export default class Users extends Panel<UserI, UsersStateI> {
     constructor (props: PanelPropsI) {
@@ -52,19 +54,26 @@ export default class Users extends Panel<UserI, UsersStateI> {
 
     handleCloseModal = (_: string) => {
         this.setSubState({
-            formModalOpen: false,
+            formModalOpen: false
         });
     };
 
     handleAddUser = () => {
         this.setSubState({
-            formModalOpen: true,
+            formModalOpen: true
         });
     };
 
     componentDidMount = () => {
         this.setSubState({
             formModalOpen: false,
+            alert: {
+                id: 0,
+                message: <></>,
+                onAccept: this.handleAcceptDelete,
+                onCancel: this.handleCancelDelete,
+                show: false,
+            }
         });
         this.update();
     };
@@ -75,9 +84,35 @@ export default class Users extends Panel<UserI, UsersStateI> {
         this.update();
     };
 
-    handleDelete = (id: number) => {
+    handleDelete = (id: number, extra: JSX.Element) => {
         console.log(id);
-    }
+        this.setSubState({
+            alert: {
+                ...this.getSubState().alert,
+                ...{
+                    show: true,
+                    id: id,
+                    message: (<>¿Eliminar a {extra}?</>),
+                }
+            }
+        });
+    };
+
+    handleAcceptDelete = async (id: number) => {
+        console.log("accept delete " + id);
+        return true;
+    };
+
+    handleCancelDelete = (id: number) => {
+        this.setSubState({
+            alert: {
+                ...this.getSubState().alert,
+                ...{
+                    show: false
+                }
+            }
+        });
+    };
 
     render = (): JSX.Element => {
         return (
@@ -122,7 +157,12 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                     children: <RoleBadge role={user.roles[ 0 ]} />
                                 }, {
                                     name: "delte",
-                                    children: <ButtonDelete id={user.id} onClick={this.handleDelete}/>,
+                                    children:
+                                        (<ButtonDelete<number>
+                                            id={user.id}
+                                            extra={<b>{user.name} {'('}<em>{user.username}</em>{')'}</b>}
+                                            onClick={this.handleDelete}
+                                        />),
                                 },
                             ]
                         };
@@ -130,12 +170,12 @@ export default class Users extends Panel<UserI, UsersStateI> {
                     />
                 </this.MainTable>
                 <Modal
-                    show={this.state.state.formModalOpen}
+                    show={this.getSubState().formModalOpen}
                     onClose={this.handleCloseModal}
                     name="form"
                     size={30}
                     title="Contraseña"
-                    loading={!this.state.state.formModalOpen}
+                    loading={!this.getSubState().formModalOpen}
                 >
                     <Suspense fallback={<LoaderH position="center" />}>
                         <AddForm
@@ -143,6 +183,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                 HandleResponse.success(res, this.props.toasts);
                                 this.setSubState({
                                     formModalOpen: false,
+                                    alert: this.getSubState().alert,
                                 });
                                 this.update({ silent: true });
                             }}
@@ -152,6 +193,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
                         />
                     </Suspense>
                 </Modal>
+                <Alert<number>
+                    {...this.getSubState().alert}
+                />
             </Layout>
         );
     };

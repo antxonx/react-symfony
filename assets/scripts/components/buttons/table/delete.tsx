@@ -2,7 +2,8 @@ import React from 'react';
 
 interface ButtonDeletePropsI<PT> {
     id: PT;
-    onClick: (id: PT) => void;
+    extra?: JSX.Element; 
+    onClick: (id: PT, extra: JSX.Element) => void;
 }
 
 export default class ButtonDelete<T> extends React.Component<ButtonDeletePropsI<T>, {}> {
@@ -11,7 +12,7 @@ export default class ButtonDelete<T> extends React.Component<ButtonDeletePropsI<
     }
 
     handleClick = () => {
-        this.props.onClick(this.props.id);
+        this.props.onClick(this.props.id, this.props.extra || <></>);
     };
 
     render = (): JSX.Element => {
