@@ -41,7 +41,7 @@ export default class HandleResponse {
             return null;
         }
     };
-    public static success = (res: AxiosResponse, toasts: ToastEventsI | null): string => {
+    public static success = (res: AxiosResponse, toasts: ToastEventsI | null = null): string => {
         const message = res.data.message || res.data;
         toasts && (
             toasts.add({

@@ -3,6 +3,7 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Router } from '@scripts/router';
+import parse from 'html-react-parser';
 import '@styles/app.scss';
 
 const Profile = React.lazy(() => import('@pages/profile'));
@@ -79,7 +80,7 @@ class App extends React.Component<{}, AppStateI>{
         });
         setTimeout(() => {
             this.removeToast(toast.id);
-        }, 1500);
+        }, 2000);
     };
 
     removeToast = (id: string) => {
@@ -165,7 +166,9 @@ class App extends React.Component<{}, AppStateI>{
                     {this.state.toasts.map((toast) => {
                         toast.show = (toast.show === undefined) ? true : toast.show;
                         return (
-                            <Toast key={toast.id} type={toast.type} message={toast.message} title={toast.title} show={toast.show} />
+                            <Toast key={toast.id} type={toast.type} title={toast.title} show={toast.show}>
+                                {parse(toast.message)}
+                            </Toast>
                         );
                     })}
                 </ToastContainer>

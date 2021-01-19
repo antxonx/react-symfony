@@ -61,7 +61,7 @@ class ApiController extends AbstractController
     {
         $data = [
             'status' => $this->getStatusCode(),
-            'errors' => $errors,
+            'message' => $errors,
         ];
 
         return new JsonResponse($data, $this->getStatusCode(), $headers);
@@ -79,7 +79,7 @@ class ApiController extends AbstractController
     {
         $data = [
             'status' => $this->getStatusCode(),
-            'success' => $success,
+            'message' => $success,
         ];
 
         return new JsonResponse($data, $this->getStatusCode(), $headers);

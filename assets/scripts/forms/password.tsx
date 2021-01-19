@@ -64,11 +64,11 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
             errorMsg: "",
         });
         Object.keys(this.state.errors).forEach(key => {
-            anyError = anyError || this.state.errors[ key as "old" | "new" | "confirmNew" ];
+            anyError = anyError || this.state.errors[ key as PasswordFormFields ];
         });
         if (anyError) return;
         Object.keys(this.state.inputs).forEach(key => {
-            inputError = inputError || (this.state.inputs[ key as "old" | "new" | "confirmNew" ] === "");
+            inputError = inputError || (this.state.inputs[ key as PasswordFormFields ] === "");
         });
         this.setState({
             errors: {

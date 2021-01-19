@@ -4,7 +4,7 @@ import React from 'react';
 interface ToastPropsI {
     type: "success" | "danger";
     title?: string;
-    message: string;
+    message?: string;
     show: boolean;
 }
 
@@ -31,7 +31,7 @@ export default class Toast extends React.Component<ToastPropsI, {}> {
 
     render = (): JSX.Element => {
         return (
-            <div className={`card border-${this.props.type} round toast-alert toast-${this.props.type}` + (this.props.show?" show":"")}>
+            <div className={`border-${this.props.type} round toast-alert toast-${this.props.type}` + (this.props.show?" show":"")}>
                 {
                     this.props.title ? (
                         <h4>
@@ -42,7 +42,7 @@ export default class Toast extends React.Component<ToastPropsI, {}> {
                         </h4>
                     ) : <></>
                 }
-                {this.props.message}
+                {this.props.message || this.props.children}
             </div>
         );
     };

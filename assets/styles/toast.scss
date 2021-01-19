@@ -2,7 +2,7 @@
     &container {
         position: absolute;
         right: 0;
-        bottom: 0;
+        top: 0;
         width: 50%;
     }
     &alert {
@@ -22,11 +22,11 @@
     }
 
     &success {
-        background-color: #008000c7;
+        background-color: #24dc2461;
         color: #000000;
     }
     &danger {
-        background-color: #7b0000d1;
+        background-color: #c7000061;
         color: #ffffff;
     }
 }

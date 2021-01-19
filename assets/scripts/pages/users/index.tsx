@@ -1,11 +1,20 @@
 import Button from '@components/buttons/button';
 import Column from '@components/grid/column';
 import Layout from '@components/layout';
+import LoaderH from '@components/loader/loaderH';
+import Modal from '@components/modals/modal';
 import Panel, { PanelPropsI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import { UserI } from '@services/authentication';
-import React from 'react';
-export default class Users extends Panel<UserI> {
+import HandleResponse from '@services/handleResponse';
+import { AxiosError, AxiosResponse } from 'axios';
+import React, { Suspense } from 'react';
+
+const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
+interface UsersStateI {
+    formModalOpen: boolean;
+}
+export default class Users extends Panel<UserI, UsersStateI> {
     constructor (props: PanelPropsI) {
         super(props);
         this.header = [
@@ -26,12 +35,23 @@ export default class Users extends Panel<UserI> {
         this.route = "user_all";
     }
 
-    componentDidMount = () => {
-        this.update();
+    handleCloseModal = (_: string) => {
+        this.setSubState({
+            formModalOpen: false,
+        });
     };
 
     handleAddUser = () => {
-        console.log("add");
+        this.setSubState({
+            formModalOpen: true,
+        });
+    };
+
+    componentDidMount = () => {
+        this.setSubState({
+            formModalOpen: false,
+        });
+        this.update();
     };
 
     render = (): JSX.Element => {
@@ -74,6 +94,28 @@ export default class Users extends Panel<UserI> {
                     })}
                     />
                 </this.MainTable>
+                <Modal
+                    show={this.state.state.formModalOpen}
+                    onClose={this.handleCloseModal}
+                    name="form"
+                    size={30}
+                    title="Contraseña"
+                    loading={!this.state.state.formModalOpen}
+                >
+                    <Suspense fallback={<LoaderH position="center" />}>
+                        <AddForm
+                            onSuccess={(res: AxiosResponse) => {
+                                HandleResponse.success(res, this.props.toasts);
+                                this.setSubState({
+                                    formModalOpen: false,
+                                });
+                             }}
+                            onError={(err: AxiosError) => { 
+                                return HandleResponse.error(err, this.props.toasts)?.message;
+                            }}
+                        />
+                    </Suspense>
+                </Modal>
             </Layout>
         );
     };

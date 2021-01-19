@@ -20,9 +20,10 @@ interface RequestResult<RRT> {
     total: number;
 }
 
-export default class Panel<PT> extends React.Component<PanelPropsI, {
+export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
     loading: boolean;
     requestResult: RequestResult<PT>;
+    state: ST
 }> {
     protected header: ThPropsI[];
 
@@ -46,6 +47,7 @@ export default class Panel<PT> extends React.Component<PanelPropsI, {
                 showed: 0,
                 total: 0,
             },
+            state: {} as ST
         };
         this.header = [];
         this.params = {
@@ -77,6 +79,12 @@ export default class Panel<PT> extends React.Component<PanelPropsI, {
     protected setRequestResult = (result: RequestResult<PT>) => {
         this.setState({
             requestResult: result,
+        });
+    }
+
+    protected setSubState = (state: ST) => {
+        this.setState({
+            state: state,
         });
     }
 
