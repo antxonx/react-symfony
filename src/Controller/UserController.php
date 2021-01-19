@@ -101,6 +101,29 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/{id}", name="user_delete", methods={"DELETE"}, options={"expose" = true})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function delete(int $id): JsonResponse
+    {
+        try {
+            $user = $this->rep->findOneBy(
+                ["id" => $id]
+            );
+            if(!$user) {
+                throw new Exception("No se encontró a usuario");
+            }
+            $name = $user->getName();
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($user);
+            $em->flush();
+            return new JsonResponse(["message" => "Se ha eliminado al usuario <b>{$name}</b>"]);
+        } catch(Exception $e) {
+            return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
+        }
+    }
+
+    /**
      * @Route("", name="user_all", methods={"GET"}, options={"expose" = true})
      * @IsGranted("ROLE_ADMIN")
      */

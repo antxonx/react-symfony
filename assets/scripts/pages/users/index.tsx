@@ -1,5 +1,6 @@
 import ButtonAction from '@components/buttons/bottonAction';
 import Button from '@components/buttons/button';
+import ButtonDelete from '@components/buttons/table/delete';
 import Column from '@components/grid/column';
 import Layout from '@components/layout';
 import LoaderH from '@components/loader/loaderH';
@@ -41,6 +42,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 style: {
                     width: "1px",
                 },
+            }, {
+                children: <i className="fas fa-trash-alt mobile-2-desktop-1"></i>,
+                className: "icon-col",
             },
         ];
         this.route = "user_all";
@@ -70,6 +74,10 @@ export default class Users extends Panel<UserI, UsersStateI> {
         this.params.page = 1;
         this.update();
     };
+
+    handleDelete = (id: number) => {
+        console.log(id);
+    }
 
     render = (): JSX.Element => {
         return (
@@ -112,6 +120,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                 {
                                     name: "role",
                                     children: <RoleBadge role={user.roles[ 0 ]} />
+                                }, {
+                                    name: "delte",
+                                    children: <ButtonDelete id={user.id} onClick={this.handleDelete}/>,
                                 },
                             ]
                         };
