@@ -62,10 +62,10 @@ class UserFixtures extends Fixture
         for ($i = 0; $i < 50; $i++) {
             $username = $this->randomName($i);
             $user = (new User)
-                ->setUsername($username)
+                ->setUsername(strtolower($username))
                 ->setName(ucfirst($this->randomName($i)))
                 ->setRoles([])
-                ->setEmail($username);
+                ->setEmail($username . "@mail.com");
             $user->setPassword($this->passwordEncoder->encodePassword(
                 $user,
                 $this->randomName($i * 7 - 1, 10)

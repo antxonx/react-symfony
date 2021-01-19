@@ -23,7 +23,7 @@ interface RequestResult<RRT> {
 export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
     loading: boolean;
     requestResult: RequestResult<PT>;
-    state: ST
+    state: ST;
 }> {
     protected header: ThPropsI[];
 
@@ -33,7 +33,7 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
 
     protected params: {
         page: number;
-        [key: string]: string|number
+        [ key: string ]: string | number;
     };
 
     constructor (props: PanelPropsI) {
@@ -80,22 +80,22 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
         this.setState({
             requestResult: result,
         });
-    }
+    };
 
     protected setSubState = (state: ST) => {
         this.setState({
             state: state,
         });
-    }
+    };
 
-    protected update = (options?: {page?: number, silent?: boolean}) => {
+    protected update = (options?: { page?: number, silent?: boolean; }) => {
         this.params.page = options?.page || this.params.page;
-        if(!options?.silent)
+        if (!options?.silent)
             this.setLoading();
         axios.get(this.router.apiGet(this.route, this.params))
             .then(res => {
                 this.setRequestResult(res.data);
-                if(!options?.silent)
+                if (!options?.silent)
                     this.unsetLoading();
             })
             .catch(err => {
@@ -108,22 +108,22 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
     }>) => {
         return (
             <>
-            <Table>
-                <Thead cells={props.head} />
-                {this.state.loading ?
-                    <TableLoader colSpan={this.header.length} /> :
-                    props.children
-                }
-            </Table>
-            <Paginator
-                actual={this.params.page}
-                maxPages={this.state.requestResult.maxPages}
-                showed={this.state.requestResult.showed}
-                total={this.state.requestResult.total}
-                onClick={(page: number) => {
-                    this.update({page: page})
-                }}
-            />
+                <Table>
+                    <Thead cells={props.head} />
+                    {this.state.loading ?
+                        <TableLoader colSpan={this.header.length} /> :
+                        props.children
+                    }
+                </Table>
+                <Paginator
+                    actual={this.params.page}
+                    maxPages={this.state.requestResult.maxPages}
+                    showed={this.state.requestResult.showed}
+                    total={this.state.requestResult.total}
+                    onClick={(page: number) => {
+                        this.update({ page: page });
+                    }}
+                />
             </>
         );
     };

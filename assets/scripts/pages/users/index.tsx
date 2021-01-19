@@ -1,7 +1,9 @@
+import ButtonAction from '@components/buttons/bottonAction';
 import Button from '@components/buttons/button';
 import Column from '@components/grid/column';
 import Layout from '@components/layout';
 import LoaderH from '@components/loader/loaderH';
+import RoleBadge from '@components/misc/roleBadge';
 import Modal from '@components/modals/modal';
 import Panel, { PanelPropsI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
@@ -29,8 +31,16 @@ export default class Users extends Panel<UserI, UsersStateI> {
             }, {
                 children: "Nombre"
             }, {
-                children: "Correo"
-            }
+                children: "Correo",
+                style: {
+                    width: "1px",
+                },
+            }, {
+                children: "Puesto",
+                style: {
+                    width: "1px",
+                },
+            },
         ];
         this.route = "user_all";
     }
@@ -87,7 +97,11 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                 },
                                 {
                                     name: "email",
-                                    children: user.email
+                                    children: <ButtonAction type="mailto" content={user.email}/>
+                                },
+                                {
+                                    name: "role",
+                                    children: <RoleBadge role={user.roles[0]}/>
                                 },
                             ]
                         };
@@ -109,9 +123,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                 this.setSubState({
                                     formModalOpen: false,
                                 });
-                                this.update({silent: true});
-                             }}
-                            onError={(err: AxiosError) => { 
+                                this.update({ silent: true });
+                            }}
+                            onError={(err: AxiosError) => {
                                 return HandleResponse.error(err, this.props.toasts)?.message;
                             }}
                         />

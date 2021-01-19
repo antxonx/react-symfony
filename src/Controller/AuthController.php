@@ -25,6 +25,7 @@ class AuthController extends ApiController
         $password = $request->get('password');
         $email = $request->get('email');
         $name = $request->get('name');
+        $roles = $request->get('roles');
         try {
             if (empty($username) || empty($password) || empty($email) || empty($name)) {
                 throw new \Exception("Datos incompletos.");
@@ -34,6 +35,7 @@ class AuthController extends ApiController
             $user->setEmail($email);
             $user->setUsername($username);
             $user->setName($name);
+            $user->setRoles($roles);
             $em->persist($user);
             $em->flush();
             return $this->setStatusCode(201)->respondWithSuccess(sprintf('Usuario %s creado.', $user->getUsername()));
