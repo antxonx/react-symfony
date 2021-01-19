@@ -88,13 +88,15 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
         });
     }
 
-    protected update = (page = 1) => {
-        this.params.page = page;
-        this.setLoading();
+    protected update = (options?: {page?: number, silent?: boolean}) => {
+        this.params.page = options?.page || this.params.page;
+        if(!options?.silent)
+            this.setLoading();
         axios.get(this.router.apiGet(this.route, this.params))
             .then(res => {
                 this.setRequestResult(res.data);
-                this.unsetLoading();
+                if(!options?.silent)
+                    this.unsetLoading();
             })
             .catch(err => {
                 HandleResponse.error(err, this.props.toasts);
@@ -118,7 +120,9 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
                 maxPages={this.state.requestResult.maxPages}
                 showed={this.state.requestResult.showed}
                 total={this.state.requestResult.total}
-                onClick={this.update}
+                onClick={(page: number) => {
+                    this.update({page: page})
+                }}
             />
             </>
         );

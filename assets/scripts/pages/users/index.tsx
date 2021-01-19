@@ -109,6 +109,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                 this.setSubState({
                                     formModalOpen: false,
                                 });
+                                this.update({silent: true});
                              }}
                             onError={(err: AxiosError) => { 
                                 return HandleResponse.error(err, this.props.toasts)?.message;
