@@ -14,7 +14,7 @@ import HandleResponse from '@scripts/services/handleResponse';
 import { ToastEventsI } from '@scripts/app';
 import RoleBadge from '@components/misc/roleBadge';
 
-const PasswordForm = React.lazy(() => import('@scripts/forms/password'));
+const PasswordForm = React.lazy(() => import('@scripts/forms/user/password'));
 
 interface ProfilePropsI {
     toasts: ToastEventsI;
@@ -56,20 +56,23 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
     onTextFieldEdit = async (name: string, value: string): Promise<boolean> => {
         let result = false;
         let newState = { ...this.state };
-        await axios.patch((new Router(process.env.BASE_URL).apiGet("user_profile_edit", { 'id': this.state.user?.id })), { name, value })
-            .then(res => {
-                HandleResponse.success(res, this.props.toasts);
-                this.onTextFieldCalcel(name);
-                newState.user![ name as UserFields ] = value;
-                result = true;
-                if (name == "username") {
-                    window.location.reload();
-                }
-            })
-            .catch(err => {
-                newState.errors[ name as UserFields ] = HandleResponse.error(err, this.props.toasts)?.message;
-                result = false;
-            });
+        try {
+            const res = await axios.patch(
+                (new Router(process.env.BASE_URL).apiGet(
+                    "user_profile_edit", {
+                    'id': this.state.user?.id
+                })), { name, value });
+            HandleResponse.success(res, this.props.toasts);
+            this.onTextFieldCalcel(name);
+            newState.user![ name as UserFields ] = value;
+            result = true;
+            if (name == "username") {
+                window.location.reload();
+            }
+        } catch (err) {
+            newState.errors[ name as UserFields ] = HandleResponse.error(err, this.props.toasts)?.message;
+            result = false;
+        }
         this.setState(newState);
         return result;
     };
@@ -139,7 +142,7 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
                                         if (role != "ROLE_USER") {
                                             return (
                                                 <li key={role} className="list-group-item border-0 p-1">
-                                                    <RoleBadge role={role}/>
+                                                    <RoleBadge role={role} />
                                                 </li>
                                             );
                                         }
@@ -171,7 +174,8 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
                                 >
                                     {this.state.passwordModalOpen && (
                                         <Suspense fallback={<LoaderH position="center" />}>
-                                            <PasswordForm onSuccess={() => {
+                                            <PasswordForm onSuccess={(res) => {
+                                                HandleResponse.success(res, this.props.toasts);
                                                 this.setState({
                                                     passwordModalOpen: false,
                                                 });

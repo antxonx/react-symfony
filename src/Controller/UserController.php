@@ -71,7 +71,7 @@ class UserController extends AbstractController
             )
         );
         $this->getDoctrine()->getManager()->flush();
-        return new JsonResponse("ok");
+        return new JsonResponse("Contraseña actualizada");
     }
 
     /**
