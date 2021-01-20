@@ -5,14 +5,14 @@ import Column from '@components/grid/column';
 import Layout from '@components/layout';
 import LoaderH from '@components/loader/loaderH';
 import RoleBadge from '@components/misc/roleBadge';
-import Alert, { AlertPropsI } from '@components/modals/alert';
+import Alert, { AlertPropsI, FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
 import Modal from '@components/modals/modal';
 import Panel, { PanelPropsI } from '@components/panel';
 import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
 import { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
-import { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { Suspense } from 'react';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
@@ -98,9 +98,22 @@ export default class Users extends Panel<UserI, UsersStateI> {
         });
     };
 
-    handleAcceptDelete = async (id: number) => {
-        console.log("accept delete " + id);
-        return true;
+    handleAcceptDelete = async (id: number): Promise<FinishedAlertState> => {
+        let message: string;
+        let type: FinishedStateTypes;
+        let res;
+        try {
+            res = await axios.delete(this.router.apiGet("user_delete", {id: id}));
+            type = FinishedStateTypes.SUCCESS;
+            message = HandleResponse.success(res, this.props.toasts);
+        } catch (err) {
+            type = FinishedStateTypes.ERROR;
+            message = HandleResponse.error(err, this.props.toasts)!.message;
+        }
+        return {
+            type: type,
+            message: message,
+        };
     };
 
     handleCancelDelete = (id: number) => {

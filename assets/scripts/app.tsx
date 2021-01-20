@@ -79,7 +79,7 @@ class App extends React.Component<{}, AppStateI>{
             toasts: toastList,
         });
         setTimeout(() => {
-            this.removeToast(toast.id);
+            // this.removeToast(toast.id);
         }, 2000);
     };
 
