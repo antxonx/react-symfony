@@ -100,13 +100,13 @@ export default class EditableTextField extends React.Component<EditableTextField
                                         <button
                                             type="button"
                                             onClick={this.handleCnacelClick}
-                                            className="btn btn-info w-100"
+                                            className="btn btn-secondary w-100"
                                         >
                                             <i className="fas fa-times"></i>
                                         </button>
                                         <button
                                             type="submit"
-                                            className="btn btn-antxony w-100 round-right"
+                                            className="btn btn-primary w-100 round-right"
                                             onClick={this.handleSubmit}
                                         >
                                             <i className="fas fa-check"></i>
