@@ -43,10 +43,10 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
 
     hideScroll = () => {
         if (this.props.show) {
-            this.bodyOverflow = document.body.style.overflow;
-            document.body.style.overflow = "hidden";
+            this.bodyOverflow = document.body.style.overflowY;
+            document.body.style.overflowY = "hidden";
         } else {
-            document.body.style.overflow = "scroll";
+            document.body.style.overflowY = this.bodyOverflow;//"scroll";
         }
     };
 

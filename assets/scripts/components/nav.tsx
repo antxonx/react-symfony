@@ -42,20 +42,24 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                                 exact
                                 className="nav-link"
                                 to={this.props.router.get("dashboard")}
-                                children="Dashboard"
+                                children="Inicio"
                             />
                         </li>
                         {this.props.roles.includes("ROLE_ADMIN") ? (
-                            <li className="nav-item" key="users">
-                                <NavLink
-                                    exact
-                                    className="nav-link"
-                                    to={this.props.router.get("users")}
-                                    children="Usuarios"
-                                />
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" id="dropdowSystemMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Sistema
+                                </a>
+                                <div className="dropdown-menu" aria-labelledby="dropdowSystemMenu">
+                                    <NavLink
+                                        exact
+                                        className="dropdown-item"
+                                        to={this.props.router.get("users")}
+                                        children="Usuarios"
+                                    />
+                                </div>
                             </li>
                         ) : <></>}
-
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="#" id="dropdowUserMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {this.props.username}

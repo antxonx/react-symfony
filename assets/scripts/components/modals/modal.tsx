@@ -33,10 +33,10 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
 
     hideScroll = () => {
         if (this.props.show) {
-            this.bodyOverflow = document.body.style.overflow;
-            document.body.style.overflow = "hidden";
+            this.bodyOverflow = document.body.style.overflowY;
+            document.body.style.overflowY = "hidden";
         } else {
-            document.body.style.overflow = this.bodyOverflow;
+            document.body.style.overflowY = this.bodyOverflow;
         }
     };
 
