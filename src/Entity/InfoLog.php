@@ -17,7 +17,7 @@ use Exception;
  * @ORM\Entity(repositoryClass=InfoLogRepository::class)
  * @ORM\HasLifecycleCallbacks
  */
-class InfoLog
+class InfoLog implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -257,5 +257,20 @@ class InfoLog
         $this->user = $user;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "id" => $this->getId(),
+            "userName" => (($this->getUser())?$this->getUser()->getName():"Desconocido"),
+            "createdAt" => $this->getCreatedAt()->format("d/m/Y H:i"),
+            "route" => $this->getRoute(),
+            "message" => $this->getMessage(),
+            "method" => $this->getMethod(),
+            "clientIp" => $this->getClientip(),
+            "level" => $this->getLevel(),
+            "system" => $this->getSystem(),
+        ];
     }
 }

@@ -1,9 +1,13 @@
 import React from 'react';
 
-export default class Table extends React.Component {
+interface TablePropsI {
+    extraClass?: string;
+}
+export default class Table extends React.Component<TablePropsI, {}> {
+
     render = (): JSX.Element => {
         return (
-            <table className="table table-sm table-striped2 w-100 table-hover2 table-bordered2 mobile">
+            <table className={"table table-sm table-striped2 w-100 table-hover2 table-bordered2 mobile" + (this.props.extraClass ? " " + this.props.extraClass : "")}>
                 {this.props.children}
             </table>
         );

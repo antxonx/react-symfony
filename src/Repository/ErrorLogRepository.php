@@ -40,7 +40,6 @@ class ErrorLogRepository extends ServiceEntityRepository
      * conseguir por filtrado
      *
      * @param mixed $params
-     * @return array
      * @throws QueryException
      */
     public function getBy($params)
@@ -48,7 +47,7 @@ class ErrorLogRepository extends ServiceEntityRepository
         $page = ((isset($params->page)) ? $params->page : 1);
         // Create our query
         $query = $this->createQueryBuilder('p')
-            ->orderBy("p." . $params->ordercol, $params->orderorder);
+            ->orderBy("p.id", "DESC");
         if (isset($params->user) && $params->user > 0) {
             $userCriteria = new Criteria();
             $userCriteria->where(Criteria::expr()->eq("p.user", $params->user));
@@ -78,7 +77,7 @@ class ErrorLogRepository extends ServiceEntityRepository
             ->setFirstResult(self::MAX_PER_PAGE * ($page - 1)) // Offset
             ->setMaxResults(self::MAX_PER_PAGE); // Limit
 
-        return array('paginator' => $paginator, 'query' => $query);
+        return $paginator;
     }
 
     // /**

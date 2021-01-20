@@ -36,19 +36,12 @@ class InfoLogRepository extends ServiceEntityRepository
         parent::__construct($registry, InfoLog::class);
     }
 
-    /**
-     * conseguir por filtrado
-     *
-     * @param mixed $params
-     * @return array
-     * @throws QueryException
-     */
     public function getBy($params)
     {
         $page = ((isset($params->page)) ? $params->page : 1);
         // Create our query
         $query = $this->createQueryBuilder('p')
-            ->orderBy("p." . $params->ordercol, $params->orderorder);
+            ->orderBy("p.id", "DESC");
         if (isset($params->user) && $params->user > 0) {
             $userCriteria = new Criteria();
             $userCriteria->where(Criteria::expr()->eq("p.user", $params->user));

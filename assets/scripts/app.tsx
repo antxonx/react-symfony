@@ -12,6 +12,7 @@ const Logout = React.lazy(() => import('@pages/logout'));
 const Dashboard = React.lazy(() => import('@pages/dashboard'));
 const Login = React.lazy(() => import('@pages/login'));
 const Users = React.lazy(() => import('@pages/users'));
+const Logger = React.lazy(() => import('@pages/logger'));
 
 import Authentication, { TokenPayloadI } from '@services/authentication';
 
@@ -133,6 +134,14 @@ class App extends React.Component<{}, AppStateI>{
                                     path={this.router.get("profile")}
                                 >
                                     <Profile toasts={{
+                                        add: this.addToast,
+                                    }} />
+                                </Route>
+                                <Route
+                                    exact
+                                    path={this.router.get("logger")}
+                                >
+                                    <Logger toasts={{
                                         add: this.addToast,
                                     }} />
                                 </Route>

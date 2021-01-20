@@ -19,7 +19,7 @@ export default class SubmitButton extends React.Component<SubmitButtonPropsI, {}
                         <span className="sr-only">cargando...</span>
                     </button>
                 ) : (
-                        <button className="btn btn-success mt-2 round w-100" type="submit">
+                        <button className="btn btn-primary mt-2 round w-100" type="submit">
                             {this.props.text}
                         </button>
                     )}

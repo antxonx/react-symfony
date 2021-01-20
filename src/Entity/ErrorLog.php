@@ -17,7 +17,7 @@ use Exception;
  * @ORM\Entity(repositoryClass=ErrorLogRepository::class)
  * @ORM\HasLifecycleCallbacks
  */
-class ErrorLog
+class ErrorLog implements \JsonSerializable
 {
     /**
      * @ORM\Id()
@@ -313,5 +313,22 @@ class ErrorLog
         $this->user = $user;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "id" => $this->getId(),
+            "userName" => (($this->getUser())?$this->getUser()->getName():"Desconocido"),
+            "createdAt" => $this->getCreatedAt()->format("d/m/Y H:i"),
+            "route" => $this->getRoute(),
+            "message" => $this->getMessage(),
+            "method" => $this->getMethod(),
+            "clientIp" => $this->getClientip(),
+            "level" => $this->getLevel(),
+            "system" => $this->getSystem(),
+            "file" => $this->getFile(),
+            "line" => $this->getLine(),
+        ];
     }
 }

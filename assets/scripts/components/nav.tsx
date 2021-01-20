@@ -57,6 +57,17 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                                         to={this.props.router.get("users")}
                                         children="Usuarios"
                                     />
+                                    {this.props.roles.includes("ROLE_DEV") ? (
+                                        <>
+                                            <div className="dropdown-divider"></div>
+                                            <NavLink
+                                                exact
+                                                className="dropdown-item"
+                                                to={this.props.router.get("logger")}
+                                                children="Registro"
+                                            />
+                                        </>
+                                    ) : <></>}
                                 </div>
                             </li>
                         ) : <></>}

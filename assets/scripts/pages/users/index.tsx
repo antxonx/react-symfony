@@ -144,7 +144,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                         <Search callback={this.handleSearch} />
                     </Column>
                 </this.MainBar>
-                <this.MainTable head={this.header}>
+                <this.MainTable>
                     <Tbody rows={this.state.requestResult.entities.map(user => {
                         return {
                             id: user.id.toString(),

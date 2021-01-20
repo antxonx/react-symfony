@@ -42,6 +42,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/refresh_token", name="user_refresh_token", methods={"GET"}, options={"expose"=true})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function refreshToken(JWTTokenManagerInterface $JWTManager): JsonResponse
     {
@@ -50,6 +51,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/profile", name="user_profile", methods={"GET"}, options={"expose"=true})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function profile(): JsonResponse
     {
@@ -64,6 +66,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/profile/password/", name="user_profile_change_password", methods={"PATCH"}, options={"expose"=true})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function updatePassword(Request $request): JsonResponse
     {
@@ -95,6 +98,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/profile/{id}", name="user_profile_edit", methods={"PUT", "PATCH"}, options={"expose"=true})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function edit(Request $request): JsonResponse
     {

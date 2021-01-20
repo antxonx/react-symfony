@@ -20,7 +20,7 @@ interface RequestResult<RRT> {
     total: number;
 }
 
-export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
+export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI, {
     loading: boolean;
     requestResult: RequestResult<PT>;
     state: ST;
@@ -30,6 +30,8 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
     protected router: Router;
 
     protected route: string;
+
+    protected tableExtraClass: string;
 
     protected params: {
         page: number;
@@ -54,6 +56,7 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
             page: 1
         };
         this.router = new Router(process.env.BASE_URL);
+        this.tableExtraClass = "";
     }
 
     protected MainBar = (props: React.PropsWithChildren<{}>) => {
@@ -102,6 +105,7 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
         axios.get(this.router.apiGet(this.route, this.params))
             .then(res => {
                 this.setRequestResult(JSON.parse(HandleResponse.success(res)));
+                console.log(JSON.parse(HandleResponse.success(res)));
                 if (!options?.silent)
                     this.unsetLoading();
             })
@@ -110,13 +114,11 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
             });
     };
 
-    protected MainTable = (props: React.PropsWithChildren<{
-        head: ThPropsI[];
-    }>) => {
+    protected MainTable = (props: React.PropsWithChildren<{}>) => {
         return (
             <>
-                <Table>
-                    <Thead cells={props.head} />
+                <Table extraClass={this.tableExtraClass}>
+                    <Thead cells={this.header} />
                     {this.state.loading ?
                         <TableLoader colSpan={this.header.length} /> :
                         props.children
