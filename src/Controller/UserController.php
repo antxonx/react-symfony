@@ -99,20 +99,28 @@ class UserController extends AbstractController
     public function edit(Request $request): JsonResponse
     {
         try {
+            $what = "";
             $content = json_decode($request->getContent());
             $user = $this->rep->findOneBy(
                 ["username" => $this->security->getUser()->getUsername()]
             );
             if ($content->name == "username") {
                 $user->setUserName($content->value);
+                $what = "usuario";
             }
             if ($content->name == "email") {
                 $user->setEmail($content->value);
+                $what = "correo";
             }
             if ($content->name == "name") {
                 $user->setName($content->value);
+                $what = "nombre";
             }
-            return $this->response->success("Dato actualizado");
+            $whatCap = ucfirst($what);
+            return $this->response->success(
+                "<b>{$whatCap}</b> actualizado",
+                "El usuario <b>{$user->getName()}</b> (<em>{$user->getUsername()}</em>) ha actualizado su {$what}"
+            );
         } catch (Exception $e) {
             return $this->response->error($e);
         }
@@ -132,8 +140,9 @@ class UserController extends AbstractController
                 throw new Exception("No se encontró a usuario");
             }
             $name = $user->getName();
+            $username = $user->getUsername();
             $this->getDoctrine()->getManager()->remove($user);
-            return $this->response->success("Se ha eliminado al usuario <b>{$name}</b>");
+            return $this->response->success("Se ha eliminado al usuario <b>{$name}</b> (<em>{$username}</em>)");
         } catch (Exception $e) {
             return $this->response->error($e);
         }
