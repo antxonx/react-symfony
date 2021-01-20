@@ -12,6 +12,7 @@ import LoaderH from '@components/loader/loaderH';
 import Card from '@components/cards/card';
 import HandleResponse from '@scripts/services/handleResponse';
 import { ToastEventsI } from '@scripts/app';
+import RoleBadge from '@components/misc/roleBadge';
 
 const PasswordForm = React.lazy(() => import('@scripts/forms/password'));
 
@@ -138,9 +139,7 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
                                         if (role != "ROLE_USER") {
                                             return (
                                                 <li key={role} className="list-group-item border-0 p-1">
-                                                    <span className="btn btn-sm2 alert-info cursor-normal">
-                                                        {role.substring(5)}
-                                                    </span>
+                                                    <RoleBadge role={role}/>
                                                 </li>
                                             );
                                         }

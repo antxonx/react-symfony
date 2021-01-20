@@ -6,17 +6,24 @@ interface RoleBadgePropsI {
 
 export default class RoleBadge extends React.Component<RoleBadgePropsI, {}> {
 
-    private devIcon: JSX.Element = <i className="fas fa-cross mobile-2-desktop-1"></i>;
+    private readonly devIcon: JSX.Element;
 
     constructor (props: RoleBadgePropsI) {
         super(props);
+        this.devIcon = (
+            <span>
+                &nbsp;&nbsp;
+                <i className="fas fa-cross mobile-2-desktop-1"></i>
+                &nbsp;&nbsp;
+            </span>
+        );
     }
 
     render = (): JSX.Element => {
         let badgeClass: string;
         switch (this.props.role) {
             case "ROLE_DEV":
-                badgeClass = "";
+                badgeClass = " badge-light";
                 break;
             case "ROLE_ADMIN":
                 badgeClass = " badge-primary";
