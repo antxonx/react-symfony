@@ -153,7 +153,7 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
         }
         return (
             <div className={"modal-component" + (this.props.show ? " show" : "")}>
-                <div className="modal-component-content alert">
+                <div className="modal-component-content modal-alert">
                     <div className="pt-3 pl-3">
                         {icon}
                     </div>

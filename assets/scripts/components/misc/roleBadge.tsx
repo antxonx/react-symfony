@@ -19,14 +19,14 @@ export default class RoleBadge extends React.Component<RoleBadgePropsI, {}> {
                 badgeClass = "";
                 break;
             case "ROLE_ADMIN":
-                badgeClass = " alert-primary";
+                badgeClass = " badge-primary";
                 break;
             default:
-                badgeClass = " alert-light";
+                badgeClass = " badge-light";
                 break;
         }
         return (
-            <span className={"btn btn-sm2 w-100" + badgeClass}>
+            <span className={"badge round w-100" + badgeClass}>
                 {
                     this.props.role === "ROLE_DEV" ?
                         this.devIcon :
