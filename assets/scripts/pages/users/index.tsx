@@ -103,12 +103,13 @@ export default class Users extends Panel<UserI, UsersStateI> {
         let type: FinishedStateTypes;
         let res;
         try {
-            res = await axios.delete(this.router.apiGet("user_delete", {id: id}));
+            res = await axios.delete(this.router.apiGet("user_delete", { id: id }));
             type = FinishedStateTypes.SUCCESS;
-            message = HandleResponse.success(res, this.props.toasts);
+            message = HandleResponse.success(res);
+            this.update({ silent: true });
         } catch (err) {
             type = FinishedStateTypes.ERROR;
-            message = HandleResponse.error(err, this.props.toasts)!.message;
+            message = HandleResponse.error(err)!.message;
         }
         return {
             type: type,

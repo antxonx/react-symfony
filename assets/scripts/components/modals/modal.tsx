@@ -26,19 +26,19 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
 
     handleClick = () => {
         (
-            (this.props.name && this.props.onClose(this.props.name)) || 
+            (this.props.name && this.props.onClose(this.props.name)) ||
             this.props.onClose("_")
         );
-    }
+    };
 
     hideScroll = () => {
-        if(this.props.show) {
+        if (this.props.show) {
             this.bodyOverflow = document.body.style.overflow;
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = this.bodyOverflow;
         }
-    }
+    };
 
     render = (): JSX.Element => {
         this.hideScroll();

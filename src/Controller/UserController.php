@@ -110,7 +110,7 @@ class UserController extends AbstractController
             $user = $this->rep->findOneBy(
                 ["id" => $id]
             );
-            if(!$user) {
+            if (!$user) {
                 throw new Exception("No se encontró a usuario");
             }
             $name = $user->getName();
@@ -118,7 +118,7 @@ class UserController extends AbstractController
             $em->remove($user);
             $em->flush();
             return new JsonResponse(["message" => "Se ha eliminado al usuario <b>{$name}</b>"]);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
         }
     }
@@ -136,7 +136,7 @@ class UserController extends AbstractController
             $total = $params->page * $this->rep::MAX_ENTITIES;
             $showed = (($total > $entities->count()) ? $entities->count() : $total);
             $maxPages = ceil($entities->count() / $this->rep::MAX_ENTITIES);
-            foreach($entities as $entity) {
+            foreach ($entities as $entity) {
                 $result[] = $entity;
             }
             return new JsonResponse([

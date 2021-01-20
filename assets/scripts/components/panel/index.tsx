@@ -93,7 +93,7 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
 
     protected getSubState = () => {
         return this.state.state;
-    }
+    };
 
     protected update = (options?: { page?: number, silent?: boolean; }) => {
         this.params.page = options?.page || this.params.page;
@@ -128,7 +128,7 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
                     showed={this.state.requestResult.showed}
                     total={this.state.requestResult.total}
                     onClick={(page: number) => {
-                        this.params.page = page
+                        this.params.page = page;
                         this.update();
                     }}
                 />

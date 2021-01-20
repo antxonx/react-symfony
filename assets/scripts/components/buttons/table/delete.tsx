@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ButtonDeletePropsI<PT> {
     id: PT;
-    extra?: JSX.Element; 
+    extra?: JSX.Element;
     onClick: (id: PT, extra: JSX.Element) => void;
 }
 

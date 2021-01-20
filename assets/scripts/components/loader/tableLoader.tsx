@@ -16,7 +16,7 @@ export default class TableLoader extends React.Component<TableLoaderPropsI, {}> 
             <tbody>
                 <tr>
                     <td colSpan={this.props.colSpan}>
-                        <Loader noAbs={true}/>
+                        <Loader noAbs={true} />
                     </td>
                 </tr>
             </tbody>

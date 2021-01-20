@@ -40,7 +40,7 @@ class AuthController extends ApiController
             $em->flush();
             return $this->setStatusCode(201)->respondWithSuccess(sprintf('Usuario %s creado.', $user->getUsername()));
         } catch (UniqueConstraintViolationException $e) {
-            if(strpos($e->getMessage(), User::FK_USERNAME) !== false){
+            if (strpos($e->getMessage(), User::FK_USERNAME) !== false) {
                 $message = "El usuario <b>{$username}</b> ya existe.";
             } elseif (strpos($e->getMessage(), User::FK_MAIL)) {
                 $message = "El correo <b>{$email}</b> ya está en uso.";

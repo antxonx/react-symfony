@@ -6,7 +6,7 @@ interface LoaderPropsI {
 
 export default class Loader extends React.Component<LoaderPropsI, {}> {
 
-    constructor(props: LoaderPropsI) {
+    constructor (props: LoaderPropsI) {
         super(props);
     }
 

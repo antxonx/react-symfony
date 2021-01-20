@@ -10,7 +10,7 @@ export interface ThPropsI {
 export interface TbodyRows {
     cells: ThPropsI[];
     id: string;
-    [key: string]: any;
+    [ key: string ]: any;
 }
 
 export const Table = table;

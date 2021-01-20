@@ -31,7 +31,7 @@ export default class Toast extends React.Component<ToastPropsI, {}> {
 
     render = (): JSX.Element => {
         return (
-            <div className={`border-${this.props.type} round toast-alert toast-${this.props.type}` + (this.props.show?" show":"")}>
+            <div className={`border-${this.props.type} round toast-alert toast-${this.props.type}` + (this.props.show ? " show" : "")}>
                 {
                     this.props.title ? (
                         <h4>
