@@ -46,7 +46,7 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
     componentDidMount = () => {
         axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_profile"))
             .then(res => {
-                this.setState({ user: res.data });
+                this.setState({ user: JSON.parse(HandleResponse.success(res)) as UserI });
             })
             .catch(err => {
                 HandleResponse.error(err, this.props.toasts);

@@ -101,7 +101,7 @@ export default class Panel<PT, ST> extends React.Component<PanelPropsI, {
             this.setLoading();
         axios.get(this.router.apiGet(this.route, this.params))
             .then(res => {
-                this.setRequestResult(res.data);
+                this.setRequestResult(JSON.parse(HandleResponse.success(res)));
                 if (!options?.silent)
                     this.unsetLoading();
             })

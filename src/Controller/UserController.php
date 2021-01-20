@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Exception;
+use Antxony\Handler\Response;
 
 /**
  * @Route("/api/user")
@@ -26,11 +26,18 @@ class UserController extends AbstractController
 
     protected UserPasswordEncoderInterface $passwordEncoder;
 
-    public function __construct(Security $security, UserRepository $rep, UserPasswordEncoderInterface $passwordEncoder)
-    {
+    protected Response $response;
+
+    public function __construct(
+        Security $security,
+        UserRepository $rep,
+        UserPasswordEncoderInterface $passwordEncoder,
+        Response $response
+    ) {
         $this->security = $security;
         $this->rep = $rep;
         $this->passwordEncoder = $passwordEncoder;
+        $this->response = $response;
     }
 
     /**
@@ -46,7 +53,13 @@ class UserController extends AbstractController
      */
     public function profile(): JsonResponse
     {
-        return new JsonResponse($this->security->getUser());
+        try {
+            return $this->response->successNoLog(
+                json_encode($this->security->getUser())
+            );
+        } catch (Exception $e) {
+            return $this->response->error($e);
+        }
     }
 
     /**
@@ -54,30 +67,36 @@ class UserController extends AbstractController
      */
     public function updatePassword(Request $request): JsonResponse
     {
-        $content = json_decode($request->getContent());
-        $user = $this->rep->findOneBy([
-            "username" => $this->security->getUser()->getUsername()
-        ]);
-        if (!$this->passwordEncoder->isPasswordValid($this->security->getUser(), $content->old)) {
-            return new JsonResponse(["code" => 400, "message" => "La contraseña es incorrecta"], 400);
+        try {
+            $content = json_decode($request->getContent());
+            $user = $this->rep->findOneBy([
+                "username" => $this->security->getUser()->getUsername()
+            ]);
+            if (!$this->passwordEncoder->isPasswordValid($this->security->getUser(), $content->old)) {
+                throw new Exception("La contraseña es incorrecta");
+            }
+            if ($content->new != $content->confirmNew) {
+                throw new Exception("Las contraseñas no coinciden");
+            }
+            $user->setPassword(
+                $this->passwordEncoder->encodePassword(
+                    $user,
+                    $content->new
+                )
+            );
+            return $this->response->success(
+                "Contraseña actualizada",
+                "El usuario <b>{$user->getName()}</b>(<em>{$user->getUsername()}</em>) ha actualizado su contraseña"
+            );
+        } catch (Exception $e) {
+            return $this->response->error($e);
         }
-        if ($content->new != $content->confirmNew) {
-            return new JsonResponse(["code" => 400, "message" => "Las contraseñas no coinciden"], 400);
-        }
-        $user->setPassword(
-            $this->passwordEncoder->encodePassword(
-                $user,
-                $content->new
-            )
-        );
-        $this->getDoctrine()->getManager()->flush();
-        return new JsonResponse("Contraseña actualizada");
     }
 
     /**
      * @Route("/profile/{id}", name="user_profile_edit", methods={"PUT", "PATCH"}, options={"expose"=true})
      */
-    public function edit(Request $request, JWTTokenManagerInterface $JWTManager): JsonResponse
+    public function edit(Request $request): JsonResponse
     {
         try {
             $content = json_decode($request->getContent());
@@ -93,10 +112,9 @@ class UserController extends AbstractController
             if ($content->name == "name") {
                 $user->setName($content->value);
             }
-            $this->getDoctrine()->getManager()->flush();
-            return new JsonResponse("Dato actualizado");
+            return $this->response->success("Dato actualizado");
         } catch (Exception $e) {
-            return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
+            return $this->response->error($e);
         }
     }
 
@@ -114,12 +132,10 @@ class UserController extends AbstractController
                 throw new Exception("No se encontró a usuario");
             }
             $name = $user->getName();
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($user);
-            $em->flush();
-            return new JsonResponse(["message" => "Se ha eliminado al usuario <b>{$name}</b>"]);
+            $this->getDoctrine()->getManager()->remove($user);
+            return $this->response->success("Se ha eliminado al usuario <b>{$name}</b>");
         } catch (Exception $e) {
-            return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
+            return $this->response->error($e);
         }
     }
 
@@ -139,14 +155,14 @@ class UserController extends AbstractController
             foreach ($entities as $entity) {
                 $result[] = $entity;
             }
-            return new JsonResponse([
+            return $this->response->successNoLog(json_encode([
                 "entities" => $result,
                 "maxPages" => $maxPages,
                 "showed" => $showed,
-                "total" => $entities->count()
-            ]);
+                "total" => $entities->count(),
+            ]));
         } catch (Exception $e) {
-            return new JsonResponse(["code" => 400, "message" => $e->getMessage()], 400);
+            return $this->response->error($e);
         }
     }
 }
