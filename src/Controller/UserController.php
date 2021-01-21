@@ -170,7 +170,7 @@ class UserController extends AbstractController
             if(!$user) {
                 throw new Exception("No se pudo encontrar al usuario");
             }
-            if(trim($content->value) === "") {
+            if(!is_array($content->value) && trim($content->value) === "") {
                 throw new Exception("El valor no puede estar vacío");
             }
             if ($content->name == "username") {
@@ -184,6 +184,10 @@ class UserController extends AbstractController
             if ($content->name == "name") {
                 $user->setName($content->value);
                 $what = "nombre";
+            }
+            if ($content->name == "roles") {
+                $user->setRoles($content->value);
+                $what = "puesto";
             }
             $whatCap = ucfirst($what);
             return $this->response->success(

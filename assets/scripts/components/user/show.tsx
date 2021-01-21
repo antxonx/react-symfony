@@ -1,3 +1,4 @@
+import EditableCheckField from '@components/editable/editableCheckField';
 import EditableTextField from '@components/editable/editableTextField';
 import Column from '@components/grid/column';
 import Row from '@components/grid/row';
@@ -18,6 +19,7 @@ interface UserShowStateI {
         username?: string;
         name?: string;
         email?: string;
+        roles?: string;
     };
 }
 
@@ -28,14 +30,14 @@ export default class UserShow extends React.Component<UserShowPropsI, UserShowSt
     constructor (props: UserShowPropsI) {
         super(props);
         this.state = {
-            user: {...this.props.user},
+            user: { ...this.props.user },
             errors: {},
         };
     }
 
     onTextFieldCalcel = (name: string) => {
         let newState = { ...this.state };
-        delete newState.errors[ name as UserFields ];
+        delete newState.errors[ name as UserFields | "roles" ];
         this.setState(newState);
     };
 
@@ -48,7 +50,7 @@ export default class UserShow extends React.Component<UserShowPropsI, UserShowSt
                     (new Router(process.env.BASE_URL)).apiGet(
                         "user_edit", {
                         'id': this.state.user.id
-                    }), {name, value});
+                    }), { name, value });
                 HandleResponse.success(res);
                 this.onTextFieldCalcel(name);
                 newState.user[ name as UserFields ] = value;
@@ -65,7 +67,45 @@ export default class UserShow extends React.Component<UserShowPropsI, UserShowSt
         }
     };
 
+    onCheckFieldEdit = async (name: string, value: string[]): Promise<boolean> => {
+        if (this.state.user.roles != []) {
+            let newState = { ...this.state };
+            let result: boolean;
+            try {
+                const res = await axios.patch(
+                    (new Router(process.env.BASE_URL)).apiGet(
+                        "user_edit", {
+                        'id': this.state.user.id
+                    }), { name, value });
+                HandleResponse.success(res);
+                this.onTextFieldCalcel(name);
+                newState.user.roles = value;
+                this.props.callback && this.props.callback();
+                result = true;
+            } catch (err) {
+                newState.errors.roles = HandleResponse.error(err)?.message;
+                result = false;
+            }
+            this.setState(newState);
+            return result;
+        } else {
+            return true;
+        }
+    };
+
     render = (): JSX.Element => {
+        const options = [
+            { value: "ROLE_ADMIN", showValue: "admin" },
+            { value: "ROLE_COMMON", showValue: "común" },
+        ];
+        let roles = this.state.user.roles.slice();
+        roles.splice(roles.findIndex(role => role === "ROLE_USER"), 1);
+        const userRoles = roles.map(role => {
+            return {
+                value: role,
+                showValue: role.substring(5).toLowerCase(),
+            };
+        });
         return (
             <Row>
                 <Column size={6}>
@@ -93,6 +133,15 @@ export default class UserShow extends React.Component<UserShowPropsI, UserShowSt
                         title="Nombre"
                         errorMsg={this.state.errors.name}
                         onTextFieldEdit={this.onTextfieldEdit}
+                        onTextFieldCacel={this.onTextFieldCalcel}
+                    />
+                    <EditableCheckField
+                        data={userRoles}
+                        options={options}
+                        name="roles"
+                        title="Puesto"
+                        errorMsg={this.state.errors.roles}
+                        onTextFieldEdit={this.onCheckFieldEdit}
                         onTextFieldCacel={this.onTextFieldCalcel}
                     />
                 </Column>

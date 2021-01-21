@@ -161,17 +161,17 @@ export default class Users extends Panel<UserI, UsersStateI> {
         });
     };
 
-    handleRowClick = (e: React.MouseEvent<HTMLTableCellElement>) => {
-        const row = e.currentTarget.closest("tr")!;
+    showUser = async (id: number) => {
         const toShow = this.getEntities().find((user) => {
-            return user.id == +row.dataset.id!;
+            return user.id == id;
         }) as UserI;
-        console.log(toShow);
         this.modalContent = (
             <UserShow
+                key={toShow.id}
                 user={toShow}
-                callback={() => {
-                    this.update({ silent: true });
+                callback={async () => {
+                    await this.update({ silent: true });
+                    // this.modalContent = <></>;
                 }}
             />
         );
@@ -181,6 +181,30 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 size: 70,
             },
         });
+    }
+
+    handleRowClick = (e: React.MouseEvent<HTMLTableCellElement>) => {
+        const row = e.currentTarget.closest("tr")!;
+        this.showUser(+row.dataset.id!);
+        // const toShow = this.getEntities().find((user) => {
+        //     return user.id == +row.dataset.id!;
+        // }) as UserI;
+        // this.modalContent = (
+        //     <UserShow
+        //         key={toShow.id}
+        //         user={toShow}
+        //         callback={() => {
+        //             this.update({ silent: true });
+        //             this.modalContent = <></>;
+        //         }}
+        //     />
+        // );
+        // this.setSubState({
+        //     modal: {
+        //         show: true,
+        //         size: 70,
+        //     },
+        // });
     };
 
     render = (): JSX.Element => {
