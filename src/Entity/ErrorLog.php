@@ -317,10 +317,11 @@ class ErrorLog implements \JsonSerializable
 
     public function jsonSerialize()
     {
+        $createdAt = strftime("%d %b %Y, %R", $this->getCreatedAt()->getTimestamp());
         return [
             "id" => $this->getId(),
             "userName" => (($this->getUser())?$this->getUser()->getName():"Desconocido"),
-            "createdAt" => $this->getCreatedAt()->format("d/m/Y H:i"),
+            "createdAt" => $createdAt,
             "route" => $this->getRoute(),
             "message" => $this->getMessage(),
             "method" => $this->getMethod(),
