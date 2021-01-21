@@ -49,7 +49,7 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
                 <div
                     className="modal-component-content"
                     style={{
-                        width: `${this.size}%`,
+                        width: `${this.props.size || 50}%`,
                     }}
                 >
                     <div className="w-100 h-100 pt-2">

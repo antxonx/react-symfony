@@ -119,7 +119,7 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
                                         name: "info",
                                         children: (
                                             <div id={"info-" + _log.id} className="collapse full-cont">
-                                                    <Log log={log} />
+                                                <Log log={log} />
                                             </div>
                                         ),
                                         colSpan: 5,

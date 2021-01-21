@@ -94,7 +94,7 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
         });
     };
 
-    protected getSubState = () => {
+    protected getSubState = (): ST => {
         return this.state.state;
     };
 
@@ -127,6 +127,10 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
             </div>
         );
     };
+
+    protected getEntities = (): PT[] => {
+        return this.state.requestResult.entities;
+    }
 
     protected MainTable = (props: React.PropsWithChildren<{}>) => {
         return (

@@ -16,11 +16,18 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { Suspense } from 'react';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
+const UserShow = React.lazy(() => import('@components/user/show'));
 interface UsersStateI {
-    formModalOpen: boolean;
+    modal: {
+        show: boolean;
+        size: number;
+    };
     alert: AlertPropsI;
 }
 export default class Users extends Panel<UserI, UsersStateI> {
+
+    protected modalContent: JSX.Element;
+
     constructor (props: PanelPropsI) {
         super(props);
         this.header = [
@@ -50,23 +57,50 @@ export default class Users extends Panel<UserI, UsersStateI> {
             },
         ];
         this.route = "user_all";
+        this.modalContent = <LoaderH position="center" />;
     }
 
     handleCloseModal = (_: string) => {
         this.setSubState({
-            formModalOpen: false
+            modal: {
+                ...this.getSubState().modal,
+                show: false,
+            },
         });
     };
 
     handleAddUser = () => {
+        this.modalContent = (
+            <AddForm
+                onSuccess={(res: AxiosResponse) => {
+                    HandleResponse.success(res, this.props.toasts);
+                    this.setSubState({
+                        modal: {
+                            ...this.getSubState().modal,
+                            show: false,
+                        },
+                    });
+                    this.update({ silent: true });
+                }}
+                onError={(err: AxiosError) => {
+                    return HandleResponse.error(err, this.props.toasts)?.message;
+                }}
+            />
+        );
         this.setSubState({
-            formModalOpen: true
+            modal: {
+                show: true,
+                size: 30,
+            }
         });
     };
 
     componentDidMount = () => {
         this.setSubState({
-            formModalOpen: false,
+            modal: {
+                show: false,
+                size: 50,
+            },
             alert: {
                 id: 0,
                 message: <></>,
@@ -127,6 +161,21 @@ export default class Users extends Panel<UserI, UsersStateI> {
         });
     };
 
+    handleRowClick = (e: React.MouseEvent<HTMLTableCellElement>) => {
+        const row = e.currentTarget.closest("tr")!;
+        const toShow = this.getEntities().find((user) => {
+            return user.id == +row.dataset.id!;
+        }) as UserI;
+        console.log(toShow);
+        this.modalContent = (<UserShow {...toShow} />);
+        this.setSubState({
+            modal: {
+                show: true,
+                size: 70,
+            },
+        });
+    };
+
     render = (): JSX.Element => {
         return (
             <Layout title="Usuarios">
@@ -144,36 +193,50 @@ export default class Users extends Panel<UserI, UsersStateI> {
                     </Column>
                 </this.MainBar>
                 <this.MainTable>
-                    <Tbody rows={this.state.requestResult.entities.map(user => {
+                    <Tbody rows={this.getEntities().map(user => {
                         return {
                             id: user.id.toString(),
+                            "data-id": user.id.toString(),
                             cells: [
                                 {
-                                    name: "id",
+                                    key: "id",
+                                    "data-name": "id",
                                     children: <b>{user.id}</b>,
-                                    className: "text-right",
+                                    className: "text-right cursor-pointer",
+                                    onClick: this.handleRowClick,
                                 },
                                 {
-                                    name: "username",
-                                    children: <em>{user.username}</em>
+                                    key: "username",
+                                    "data-name": "username",
+                                    children: <em>{user.username}</em>,
+                                    className: "cursor-pointer",
+                                    onClick: this.handleRowClick,
                                 },
                                 {
-                                    name: "name",
-                                    children: <b>{user.name}</b>
+                                    key: "name",
+                                    "data-name": "name",
+                                    children: <b>{user.name}</b>,
+                                    className: "cursor-pointer",
+                                    onClick: this.handleRowClick,
                                 },
                                 {
-                                    name: "email",
+                                    key: "email",
+                                    "data-name": "email",
                                     children: <ButtonAction type="mailto" content={user.email} />
                                 },
                                 {
-                                    name: "role",
-                                    children: <RoleBadge role={user.roles[ 0 ]} />
+                                    key: "role",
+                                    "data-name": "role",
+                                    children: <RoleBadge role={user.roles[ 0 ]} />,
+                                    className: "cursor-pointer",
+                                    onClick: this.handleRowClick,
                                 }, {
-                                    name: "delte",
+                                    key: "delete",
+                                    "data-name": "delete",
                                     children:
                                         (<ButtonDelete<number>
                                             id={user.id}
-                                            extra={<b>{user.name} {'('}<em>{user.username}</em>{')'}</b>}
+                                            extra={<b>{user.name}{' ('}<em>{user.username}</em>{')'}</b>}
                                             onClick={this.handleDelete}
                                         />),
                                 },
@@ -183,27 +246,14 @@ export default class Users extends Panel<UserI, UsersStateI> {
                     />
                 </this.MainTable>
                 <Modal
-                    show={this.getSubState().formModalOpen}
                     onClose={this.handleCloseModal}
                     name="form"
-                    size={30}
                     title="Contraseña"
-                    loading={!this.getSubState().formModalOpen}
+                    loading={false}
+                    {...this.getSubState().modal}
                 >
                     <Suspense fallback={<LoaderH position="center" />}>
-                        <AddForm
-                            onSuccess={(res: AxiosResponse) => {
-                                HandleResponse.success(res, this.props.toasts);
-                                this.setSubState({
-                                    formModalOpen: false,
-                                    alert: this.getSubState().alert,
-                                });
-                                this.update({ silent: true });
-                            }}
-                            onError={(err: AxiosError) => {
-                                return HandleResponse.error(err, this.props.toasts)?.message;
-                            }}
-                        />
+                        {this.modalContent}
                     </Suspense>
                 </Modal>
                 <Alert<number>
