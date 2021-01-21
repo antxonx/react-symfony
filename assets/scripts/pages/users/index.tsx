@@ -85,7 +85,6 @@ export default class Users extends Panel<UserI, UsersStateI> {
     };
 
     handleDelete = (id: number, extra: JSX.Element) => {
-        console.log(id);
         this.setSubState({
             alert: {
                 ...this.getSubState().alert,

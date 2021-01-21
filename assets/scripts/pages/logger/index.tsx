@@ -2,7 +2,7 @@ import Column from '@components/grid/column';
 import Layout from '@components/layout';
 import Panel, { PanelPropsI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
-import { Children } from 'react';
+import parser from 'html-react-parser';
 
 enum LogMethods {
     GET = "GET",
@@ -104,7 +104,6 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
     }
 
     handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target);
         switch (e.target.value) {
             case LogNames.INFO:
                 this.route = LogRoutes.INFO;
@@ -138,7 +137,7 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
             dateclass = "badge-light";
         }
         return (
-            <span className={"badge w-100 " + dateclass}>
+            <span className={"badge w-100 round " + dateclass}>
                 {props.children}
             </span>
         );
@@ -165,7 +164,7 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
                 break;
         }
         return (
-            <span className={"badge w-100 " + badgeClass}>
+            <span className={"badge w-100 round " + badgeClass}>
                 {props.method || props.children}
             </span>
         );
@@ -197,20 +196,23 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
                                 {
                                     name: "id",
                                     children: <b>{log.id}</b>,
-                                    className: "text-right",
+                                    className: "text-right cursor-pointer",
                                 }, {
                                     name: "date",
-                                    children: <this.CreationDate system={log.system} level={log.level} children={log.createdAt} />
+                                    children: <this.CreationDate system={log.system} level={log.level} children={log.createdAt} />,
+                                    className: "cursor-pointer",
                                 }, {
                                     name: "method",
-                                    children: <this.MethodBadge method={log.method}/>
+                                    children: <this.MethodBadge method={log.method}/>,
+                                    className: "cursor-pointer",
                                 }, {
                                     name: "route",
-                                    children: <>{log.route}</>
+                                    children: <>{log.route}</>,
+                                    className: "cursor-pointer",
                                 }, {
                                     name: "message",
-                                    children: <>{log.message}</>,
-                                    className: "text-truncate"
+                                    children: <>{parser(log.message)}</>,
+                                    className: "text-truncate cursor-pointer",
                                 }
                             ]
                         };

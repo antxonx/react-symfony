@@ -98,42 +98,62 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
         return this.state.state;
     };
 
-    protected update = (options?: { page?: number, silent?: boolean; }) => {
+    protected update = async (options?: { page?: number, silent?: boolean; }) => {
         this.params.page = options?.page || this.params.page;
         if (!options?.silent)
             this.setLoading();
-        axios.get(this.router.apiGet(this.route, this.params))
-            .then(res => {
-                this.setRequestResult(JSON.parse(HandleResponse.success(res)));
-                console.log(JSON.parse(HandleResponse.success(res)));
-                if (!options?.silent)
-                    this.unsetLoading();
-            })
-            .catch(err => {
-                HandleResponse.error(err, this.props.toasts);
-            });
+        try {
+            const res = await axios.get(this.router.apiGet(this.route, this.params));
+            this.setRequestResult(JSON.parse(HandleResponse.success(res)));
+            if (!options?.silent)
+                this.unsetLoading();
+        } catch (err) {
+            HandleResponse.error(err, this.props.toasts);
+        }
+    };
+
+    protected NoRegisters = (): JSX.Element => {
+        return (
+            <div className="alert alert-dark container mt-5 round">
+                No hay registos.
+            </div>
+        );
+    };
+
+    protected NoRoute = (): JSX.Element => {
+        return (
+            <div className="alert alert-dark container mt-5 round">
+                No se ha seleccionado una ruta.
+            </div>
+        );
     };
 
     protected MainTable = (props: React.PropsWithChildren<{}>) => {
         return (
             <>
-                <Table extraClass={this.tableExtraClass}>
-                    <Thead cells={this.header} />
-                    {this.state.loading ?
-                        <TableLoader colSpan={this.header.length} /> :
-                        props.children
-                    }
-                </Table>
-                <Paginator
-                    actual={this.params.page}
-                    maxPages={this.state.requestResult.maxPages}
-                    showed={this.state.requestResult.showed}
-                    total={this.state.requestResult.total}
-                    onClick={(page: number) => {
-                        this.params.page = page;
-                        this.update();
-                    }}
-                />
+                {this.route.trim() === "" ? <this.NoRoute /> :
+                    (this.state.requestResult.entities.length === 0 && !this.state.loading) ? <this.NoRegisters /> : (
+                        <>
+                            <Table extraClass={this.tableExtraClass}>
+                                <Thead cells={this.header} />
+                                {this.state.loading ?
+                                    <TableLoader colSpan={this.header.length} /> :
+                                    props.children
+                                }
+                            </Table>
+                            <Paginator
+                                actual={this.params.page}
+                                maxPages={this.state.requestResult.maxPages}
+                                showed={this.state.requestResult.showed}
+                                total={this.state.requestResult.total}
+                                onClick={(page: number) => {
+                                    this.params.page = page;
+                                    this.update();
+                                }}
+                            />
+                        </>
+                    )
+                }
             </>
         );
     };

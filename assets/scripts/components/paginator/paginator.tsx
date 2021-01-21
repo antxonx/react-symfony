@@ -27,7 +27,6 @@ export default class Paginator extends React.Component<PaginatorPropsI, {}>{
 
     handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        console.log(+(e.target as HTMLAnchorElement).getAttribute("page-index")!);
         this.props.onClick(+(e.target as HTMLAnchorElement).getAttribute("page-index")!);
     };
 
