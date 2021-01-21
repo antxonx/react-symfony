@@ -167,7 +167,14 @@ export default class Users extends Panel<UserI, UsersStateI> {
             return user.id == +row.dataset.id!;
         }) as UserI;
         console.log(toShow);
-        this.modalContent = (<UserShow {...toShow} />);
+        this.modalContent = (
+            <UserShow
+                user={toShow}
+                callback={() => {
+                    this.update({ silent: true });
+                }}
+            />
+        );
         this.setSubState({
             modal: {
                 show: true,

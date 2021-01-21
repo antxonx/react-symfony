@@ -108,6 +108,9 @@ class UserController extends AbstractController
             $user = $this->rep->findOneBy(
                 ["username" => $this->security->getUser()->getUsername()]
             );
+            if(trim($content->value) === "") {
+                throw new Exception("El valor no puede estar vacío");
+            }
             if ($content->name == "username") {
                 $user->setUserName($content->value);
                 $what = "usuario";
@@ -148,6 +151,46 @@ class UserController extends AbstractController
             $this->getDoctrine()->getManager()->remove($user);
             return $this->response->success("Se ha eliminado al usuario <b>{$name}</b> (<em>{$username}</em>)");
         } catch (Exception $e) {
+            return $this->response->error($e);
+        }
+    }
+
+    /**
+     * @Route("/{id}", name="user_edit", methods={"PUT", "PATCH"}, options={"expose" = true})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function update(int $id, Request $request): JsonResponse
+    {
+        try {
+            $what = "";
+            $content = json_decode($request->getContent());
+            $user = $this->rep->findOneBy(
+                ['id' => $id]
+            );
+            if(!$user) {
+                throw new Exception("No se pudo encontrar al usuario");
+            }
+            if(trim($content->value) === "") {
+                throw new Exception("El valor no puede estar vacío");
+            }
+            if ($content->name == "username") {
+                $user->setUserName($content->value);
+                $what = "usuario";
+            }
+            if ($content->name == "email") {
+                $user->setEmail($content->value);
+                $what = "correo";
+            }
+            if ($content->name == "name") {
+                $user->setName($content->value);
+                $what = "nombre";
+            }
+            $whatCap = ucfirst($what);
+            return $this->response->success(
+                "<b>{$whatCap}</b> actualizado",
+                "Se ha cambiado el <b>{$what}</b> para el usaurio <b>{$user->getName()}</b> (<em>{$user->getUsername()}</em>)"
+            );
+        } catch(Exception $e) {
             return $this->response->error($e);
         }
     }
