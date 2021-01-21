@@ -118,6 +118,25 @@ h5 {
     text-align: center;
 }
 
+.full-cont {
+    width: 100%;
+    float: left;
+    .card {
+        box-shadow: 5px 5px 10px #888888;
+        transition: 1s box-shadow;
+    }
+    &.show {
+        margin-bottom: 5px;
+        .card {
+            box-shadow: 5px 5px 30px #888888;
+            transition: 0.5s box-shadow;
+        }
+    }
+    &.collapsing {
+        margin-bottom: 0;
+    }
+}
+
 @media screen and (max-width: 900px) and (min-width: 300px) {
     .wd-40-wm-95 {
         width: 95% !important;

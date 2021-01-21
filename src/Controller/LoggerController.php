@@ -57,6 +57,10 @@ class LoggerController extends AbstractController
             $maxPages = ceil($entities->count() / $this->iRep::MAX_PER_PAGE);
             foreach ($entities as $entity) {
                 $result[] = $entity;
+                $result[] = [
+                    "id" => $entity->getId(),
+                    "infoField" => true
+                ];
             }
             return $this->response->successNoLog(
                 json_encode([
@@ -87,6 +91,10 @@ class LoggerController extends AbstractController
             $maxPages = ceil($entities->count() / $this->eRep::MAX_PER_PAGE);
             foreach ($entities as $entity) {
                 $result[] = $entity;
+                $result[] = [
+                    "id" => $entity->getId(),
+                    "infoField" => true
+                ];
             }
             return $this->response->successNoLog(
                 json_encode([

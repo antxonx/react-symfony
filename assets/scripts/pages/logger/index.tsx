@@ -1,68 +1,10 @@
 import Column from '@components/grid/column';
 import Layout from '@components/layout';
+import Log, { LogI, LogRoutes, LogNames, logTypes, LogMethods, InfoLogI, ErrorLogI } from '@components/log';
+import Method from '@components/log/method';
 import Panel, { PanelPropsI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
-
-enum LogMethods {
-    GET = "GET",
-    POST = "POST",
-    PUT = "PUT",
-    PATCH = "PATCH",
-    DELETE = "DELETE",
-}
-
-enum logTypes {
-    NOTICE = "NOTICE",
-    INFO = "INFO",
-    ERROR = "ERROR",
-    WARNING = "WARNING",
-    CRITICL = "CRITICAL",
-    ALERT = "ALERT",
-    EMERGENCY = "EMERGENCY",
-    API = "API",
-}
-
-enum LogNames {
-    INFO = "info",
-    ERROR = "error"
-}
-
-enum LogRoutes {
-    UNDEFINED = "",
-    INFO = "logger_info_list",
-    ERROR = "logger_error_list"
-}
-
-interface LogI {
-    [ key: string ]: string;
-}
-
-interface InfoLogI {
-    id: number;
-    userName: string;
-    createdAt: string;
-    route: string;
-    message: string;
-    method: LogMethods;
-    clientIp: string;
-    level: logTypes;
-    system: boolean;
-}
-
-interface ErrorLogI {
-    id: number;
-    userName: string;
-    createdAt: string;
-    file: string;
-    line: number;
-    route: string;
-    message: string;
-    method: LogMethods;
-    clientIp: string;
-    level: logTypes;
-    system: boolean;
-}
 
 interface LoggerStateI { }
 
@@ -118,54 +60,33 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
         this.update();
     };
 
+    getTypeColor = (type: logTypes) => {
+        let color: string;
+        switch (type) {
+            case logTypes.WARNING:
+            case logTypes.API:
+                color = "warning";
+                break;
+            case logTypes.INFO:
+                color = "info";
+                break;
+            default:
+                color = "danger";
+                break;
+        }
+        return color;
+    };
+
     CreationDate = (props: React.PropsWithChildren<{ system: boolean; level: logTypes; }>): JSX.Element => {
         let dateclass: string;
         if (props.system) {
-            switch (props.level) {
-                case logTypes.WARNING:
-                case logTypes.API:
-                    dateclass = "badge-warning";
-                    break;
-                case logTypes.INFO:
-                    dateclass = "badge-info";
-                    break;
-                default:
-                    dateclass = "badge-danger";
-                    break;
-            }
+            dateclass = "badge-" + this.getTypeColor(props.level);
         } else {
             dateclass = "badge-light";
         }
         return (
             <span className={"badge w-100 round " + dateclass}>
                 {props.children}
-            </span>
-        );
-    };
-
-    MethodBadge = (props: React.PropsWithChildren<{ method: LogMethods; }>): JSX.Element => {
-        let badgeClass: string;
-        switch (props.method) {
-            case LogMethods.GET:
-                badgeClass = "badge-success";
-                break;
-            case LogMethods.POST:
-                badgeClass = "badge-primary";
-                break;
-            case LogMethods.PUT:
-            case LogMethods.PATCH:
-                badgeClass = "badge-warning";
-                break;
-            case LogMethods.DELETE:
-                badgeClass = "badge-danger";
-                break;
-            default:
-                badgeClass = "badge-light";
-                break;
-        }
-        return (
-            <span className={"badge w-100 round " + badgeClass}>
-                {props.method || props.children}
             </span>
         );
     };
@@ -188,34 +109,57 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
                     </Column>
                 </this.MainBar>
                 <this.MainTable>
-                    <Tbody rows={this.state.requestResult.entities.map(_log => {
-                        const log = (_log as unknown) as ErrorLogI;
-                        return {
-                            id: log.id.toString(),
-                            cells: [
-                                {
-                                    name: "id",
-                                    children: <b>{log.id}</b>,
-                                    className: "text-right cursor-pointer",
-                                }, {
-                                    name: "date",
-                                    children: <this.CreationDate system={log.system} level={log.level} children={log.createdAt} />,
-                                    className: "cursor-pointer",
-                                }, {
-                                    name: "method",
-                                    children: <this.MethodBadge method={log.method}/>,
-                                    className: "cursor-pointer",
-                                }, {
-                                    name: "route",
-                                    children: <>{log.route}</>,
-                                    className: "cursor-pointer",
-                                }, {
-                                    name: "message",
-                                    children: <>{parser(log.message)}</>,
-                                    className: "text-truncate cursor-pointer",
-                                }
-                            ]
-                        };
+                    <Tbody rows={...this.state.requestResult.entities.map((_log, i) => {
+                        if (_log.infoField) {
+                            const log = (this.state.requestResult.entities[ i - 1 ] as unknown) as ErrorLogI | InfoLogI;
+                            return {
+                                id: "info-" + _log.id,
+                                cells: [
+                                    {
+                                        name: "info",
+                                        children: (
+                                            <div id={"info-" + _log.id} className="collapse full-cont">
+                                                    <Log log={log} />
+                                            </div>
+                                        ),
+                                        colSpan: 5,
+                                        className: "p-0"
+                                    }
+                                ]
+                            };
+                        } else {
+                            const log = (_log as unknown) as ErrorLogI | InfoLogI;
+                            return {
+                                id: log.id.toString(),
+                                "data-toggle": "collapse",
+                                "data-target": "#info-" + log.id,
+                                "aria-expanded": "false",
+                                "aria-controls": "info-" + log.id,
+                                cells: [
+                                    {
+                                        name: "id",
+                                        children: <b>{log.id}</b>,
+                                        className: "text-right cursor-pointer",
+                                    }, {
+                                        name: "date",
+                                        children: <this.CreationDate system={log.system} level={log.level} children={log.createdAt} />,
+                                        className: "cursor-pointer",
+                                    }, {
+                                        name: "method",
+                                        children: <Method method={log.method} />,
+                                        className: "cursor-pointer",
+                                    }, {
+                                        name: "route",
+                                        children: <>{log.route}</>,
+                                        className: "cursor-pointer",
+                                    }, {
+                                        name: "message",
+                                        children: <>{parser(log.message)}</>,
+                                        className: "text-truncate cursor-pointer",
+                                    }
+                                ]
+                            };
+                        }
                     })}
                     />
                 </this.MainTable>

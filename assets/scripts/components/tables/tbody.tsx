@@ -19,10 +19,10 @@ export default class Tbody extends React.Component<TbodyPropsI, {}> {
                     let rowCopy = { ...row };
                     rowCopy.cells = [];
                     return (
-                        <tr 
-                        key={row.id} 
-                        {...rowCopy} 
-                        id={ (this.props.idStart || "row-") + row.id}
+                        <tr
+                            key={row.id}
+                            {...rowCopy}
+                            id={(this.props.idStart || "row-") + row.id}
                         >
                             {row.cells.map(cell => <td key={cell.name} {...cell} />)}
                         </tr>
