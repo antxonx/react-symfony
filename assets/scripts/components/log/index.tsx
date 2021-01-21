@@ -94,7 +94,7 @@ export default class Log extends React.Component<LogPropsI, {}> {
             <div className="container mx-auto card my-5 round">
                 <div className="card-body">
 
-                    <Row>
+                    <Row extraClass="hide-on-mobile">
                         <Column extraClass="text-left">
                             <b>{this.props.log.id}</b>
                         </Column>
@@ -105,6 +105,23 @@ export default class Log extends React.Component<LogPropsI, {}> {
                             <Method method={this.props.log.method} no100={true} />
                         </Column>
                     </Row>
+                    <div className="hide-on-desktop">
+                        <Row>
+                            <Column extraClass="text-left">
+                                <b>{this.props.log.id}</b>
+                            </Column>
+                            <Column extraClass="text-right">
+                                <Method method={this.props.log.method} no100={true} />
+                            </Column>
+                        </Row>
+                        <Row style={{
+                            transform: "translateY(-1.5rem)"
+                        }}>
+                            <Column extraClass="text-center">
+                                <b><em>{this.props.log.createdAt}</em></b>
+                            </Column>
+                        </Row>
+                    </div>
                     <hr className="divide" />
                     <div className="p-2 text-muted">
                         <h5 className="text-center">
