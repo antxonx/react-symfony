@@ -4,7 +4,11 @@
         padding: 5px 10px;
         .editable-field {
             color: rgb(95, 95, 95);
-            text-decoration: underline;
+            text-decoration: underline dashed 1px;
+            font-style: italic;
+            &.empty {
+                color: rgb(107, 41, 41);
+            }
             &:hover {
                 text-decoration: underline;
                 color: rgb(54, 54, 54);

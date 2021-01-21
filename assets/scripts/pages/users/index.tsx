@@ -61,6 +61,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
     }
 
     handleCloseModal = (_: string) => {
+        this.modalContent = <></>;
         this.setSubState({
             modal: {
                 ...this.getSubState().modal,
@@ -161,17 +162,17 @@ export default class Users extends Panel<UserI, UsersStateI> {
         });
     };
 
-    showUser = async (id: number) => {
+    handleRowClick = (e: React.MouseEvent<HTMLTableCellElement>) => {
+        const row = e.currentTarget.closest("tr")!;
         const toShow = this.getEntities().find((user) => {
-            return user.id == id;
+            return user.id == +row.dataset.id!;
         }) as UserI;
         this.modalContent = (
             <UserShow
                 key={toShow.id}
                 user={toShow}
-                callback={async () => {
-                    await this.update({ silent: true });
-                    // this.modalContent = <></>;
+                callback={() => {
+                    this.update({ silent: true });
                 }}
             />
         );
@@ -181,30 +182,6 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 size: 70,
             },
         });
-    }
-
-    handleRowClick = (e: React.MouseEvent<HTMLTableCellElement>) => {
-        const row = e.currentTarget.closest("tr")!;
-        this.showUser(+row.dataset.id!);
-        // const toShow = this.getEntities().find((user) => {
-        //     return user.id == +row.dataset.id!;
-        // }) as UserI;
-        // this.modalContent = (
-        //     <UserShow
-        //         key={toShow.id}
-        //         user={toShow}
-        //         callback={() => {
-        //             this.update({ silent: true });
-        //             this.modalContent = <></>;
-        //         }}
-        //     />
-        // );
-        // this.setSubState({
-        //     modal: {
-        //         show: true,
-        //         size: 70,
-        //     },
-        // });
     };
 
     render = (): JSX.Element => {

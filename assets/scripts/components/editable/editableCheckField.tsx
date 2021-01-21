@@ -181,7 +181,7 @@ export default class EditableCheckField extends React.Component<EditableCheckFie
                                         </li>
                                     );
                                 }) : (<li
-                                    className="editable-field"
+                                    className="editable-field empty"
                                     onClick={this.handleClick}
                                 >
                                     Vacío
