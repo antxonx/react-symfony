@@ -95,8 +95,7 @@ export default class UserShow extends React.Component<UserShowPropsI, UserShowSt
 
     render = (): JSX.Element => {
         const options = [
-            { value: "ROLE_ADMIN", showValue: "admin" },
-            { value: "ROLE_COMMON", showValue: "común" },
+            { value: "ROLE_ADMIN", showValue: "admin" }
         ];
         let roles = this.state.user.roles.slice();
         const index = roles.findIndex(role => role === "ROLE_USER"); 
@@ -117,6 +116,7 @@ export default class UserShow extends React.Component<UserShowPropsI, UserShowSt
                         errorMsg={this.state.errors.username}
                         onTextFieldEdit={this.onTextfieldEdit}
                         onTextFieldCacel={this.onTextFieldCalcel}
+                        onKeyDown={(e) => e.key.match(/\s/) && e.preventDefault()}
                     />
                     <EditableTextField
                         value={this.state.user.email}

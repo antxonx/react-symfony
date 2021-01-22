@@ -59,12 +59,6 @@ export default class Add extends React.Component<AddPropsI, AddStateI> {
         this.setState(current);
     };
 
-    handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key.match(/\s/)) {
-            e.preventDefault();
-        }
-    };
-
     handleSubmit = (e: React.FormEvent) => {
         let errors = {
             username: false,
@@ -144,7 +138,7 @@ export default class Add extends React.Component<AddPropsI, AddStateI> {
                     onChange={this.handleChange}
                     error={this.state.errors.username}
                     errorMsg="Ingresa un nombre de usuario"
-                    onKeyDown={this.handleKeyDown}
+                    onKeyDown={(e) => e.key.match(/\s/) && e.preventDefault()}
                 />
                 <TextInput
                     name="name"

@@ -46,7 +46,8 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
             this.bodyOverflow = document.body.style.overflowY;
             document.body.style.overflowY = "hidden";
         } else {
-            document.body.style.overflowY = this.bodyOverflow;//"scroll";
+            if(document.querySelectorAll(".modal-component.show").length > +this.props.show)
+                document.body.style.overflowY = this.bodyOverflow;
         }
     };
 

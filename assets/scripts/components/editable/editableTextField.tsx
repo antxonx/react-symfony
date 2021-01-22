@@ -9,6 +9,7 @@ interface EditableTextFieldPropsI {
     wait?: boolean;
     onTextFieldEdit?: (name: string, value: string) => Promise<boolean>;
     onTextFieldCacel?: (name: string) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 interface EditableFieldStatesI {
@@ -101,6 +102,7 @@ export default class EditableTextField extends React.Component<EditableTextField
                         className={"form-control form-control-sm" + (this.state.error ? " is-invalid" : "")}
                         value={this.state.newValue}
                         onChange={this.handleChange}
+                        onKeyDown={this.props.onKeyDown}
                     />
                     <div className="input-group-append btn-group btn-group-sm editable-buttons">
                         <button

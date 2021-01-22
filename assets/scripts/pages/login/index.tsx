@@ -92,12 +92,6 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
         this.changeStateValue(e.target.name, e.target.value);
     };
 
-    handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key.match(/\s/)) {
-            e.preventDefault();
-        }
-    };
-
     render = (): JSX.Element => {
         return (
             <Layout title="Inicar sesión" top={false}>
@@ -121,7 +115,7 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
                                             <TextInput
                                                 name="username"
                                                 onChange={this.handleChange}
-                                                onKeyDown={this.handleKeyDown}
+                                                onKeyDown={(e) => e.key.match(/\s/) && e.preventDefault()}
                                                 error={this.state.errors.username}
                                                 errorMsg="Ingresa un nombre de usaurio válido"
                                             />

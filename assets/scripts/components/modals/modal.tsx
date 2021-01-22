@@ -36,7 +36,8 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
             this.bodyOverflow = document.body.style.overflowY;
             document.body.style.overflowY = "hidden";
         } else {
-            document.body.style.overflowY = this.bodyOverflow;
+            if(document.querySelectorAll(".modal-component.show").length > +this.props.show)
+                document.body.style.overflowY = this.bodyOverflow;
         }
     };
 
