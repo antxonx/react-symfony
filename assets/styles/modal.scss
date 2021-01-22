@@ -6,7 +6,7 @@
     opacity: 0;
     transition: visibility 0.2s, opacity 0.2s linear;
     z-index: 20;
-    .modal-component-content {
+    &-content {
         margin-top: 10vh;
         margin-left: auto;
         margin-right: auto;
@@ -24,21 +24,21 @@
             padding: 0;
             margin-top: 25vh;
         }
+        &.show {
+            transform: scale(1);
+            transition: transform 0.2s linear;
+        }
     }
     &.show {
         visibility: visible;
         opacity: 1;
         transition: visibility 0.2s, opacity 0.2s linear;
-        .modal-component-content {
-            transform: scale(1);
-            transition: transform 0.2s linear;
-        }
     }
 }
 
 @media screen and (max-width: 900px) and (min-width: 300px) {
     .modal-component {
-        .modal-component-content {
+        &-content {
             width: 100% !important;
         }
     }
