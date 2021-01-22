@@ -18,7 +18,8 @@ export interface TokenPayloadI {
 }
 
 enum CookiesNames {
-    AUTH_COOKIE_NAME = "jwtAuthToken"
+    AUTH_COOKIE_NAME = "jwtAuthToken",
+    REAL_JWT_TOKEN = "jwtAuthTokenReal",
 }
 
 export default class Authentication {
@@ -103,6 +104,7 @@ export default class Authentication {
 
     public static logOut = () => {
         Authentication.deleteCookie(CookiesNames.AUTH_COOKIE_NAME);
+        Authentication.deleteCookie(CookiesNames.REAL_JWT_TOKEN);
     };
 
     public static getPayload = (): TokenPayloadI | null => {
@@ -131,4 +133,20 @@ export default class Authentication {
                 HandleResponse.error(err);
             });
     };
+
+    public static setImpersonation = (token: string) => {
+        const actualToken = Authentication.getToken();
+        Authentication.setCookie(CookiesNames.REAL_JWT_TOKEN, actualToken);
+        Authentication.setToken(token);
+    }
+
+    public static unsetIpersonation = () => {
+        const realToken =  Authentication.getCookie(CookiesNames.REAL_JWT_TOKEN);
+        Authentication.setToken(realToken);
+        Authentication.deleteCookie(CookiesNames.REAL_JWT_TOKEN);
+    }
+
+    public static isImpersonating = (): boolean => {
+        return Authentication.getCookie(CookiesNames.REAL_JWT_TOKEN) !== "";
+    }
 }

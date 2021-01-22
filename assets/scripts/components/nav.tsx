@@ -2,6 +2,7 @@ import React from "react";
 import 'bootstrap';
 import { NavLink } from 'react-router-dom';
 import { Router } from '@scripts/router';
+import Authentication from "@services/authentication";
 
 
 interface NavPropsI {
@@ -39,6 +40,22 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                 <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
                     <ul></ul>
                     <ul className="navbar-nav">
+                        {
+                            Authentication.isImpersonating() && (
+                                <li className="nav-item" key="unimpersonate">
+                                    <a
+                                        className="nav-link"
+                                        children="Desimpersonar"
+                                        href="#"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            Authentication.unsetIpersonation();
+                                            window.location.href = this.props.router.get("dashboard");
+                                        }}
+                                    />
+                                </li>
+                            )
+                        }
                         <li className="nav-item" key="dashboard">
                             <NavLink
                                 exact

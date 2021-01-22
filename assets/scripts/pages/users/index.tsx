@@ -12,7 +12,7 @@ import Panel, { PanelPropsI } from '@components/panel';
 import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
 import PasswordFormAdmin from '@scripts/forms/user/passwordAdmin';
-import { UserI } from '@services/authentication';
+import Authentication, { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { Suspense } from 'react';
@@ -220,13 +220,24 @@ export default class Users extends Panel<UserI, UsersStateI> {
         });
     }
 
-    handleImpersonateClick = (id: number) => {
+    handleImpersonateClick = async (id: number) => {
         let loadingStates = this.getSubState().impersonateLoading.slice();
-        console.log(id);
         loadingStates.push(id);
         this.setSubState({
             impersonateLoading: loadingStates,
-        })
+        });
+        try {
+            const res = await axios.get(this.router.apiGet("user_impersonate", {id: id}));
+            Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
+            window.location.href = this.router.get("dashboard");
+        } catch(err) {
+            HandleResponse.error(err, this.props.toasts);
+        }
+        let loadingStates2 = this.getSubState().impersonateLoading.slice();
+        loadingStates2.splice(loadingStates2.findIndex(x => x === id), 1);
+        this.setSubState({
+            impersonateLoading: loadingStates2,
+        });
     }
 
     render = (): JSX.Element => {

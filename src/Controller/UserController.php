@@ -143,7 +143,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/password/{id}", name="user_change_password", methods={"PATCH"}, options={"expose"=true})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_DEV")
      */
     public function updateUserPassword(int $id, Request $request): JsonResponse
     {
@@ -174,16 +174,20 @@ class UserController extends AbstractController
     }
 
     /**
-     * Undocumented function
-     *
-     * @param integer $id
-     * @param JWTTokenManagerInterface $jtw
-     * @return JsonResponse
+     * @Route("/impersonate/{id}", name="user_impersonate", methods={"GET"}, options={"expose" = true})
+     * @IsGranted("ROLE_DEV")
      */
     public function impersonate(int $id, JWTTokenManagerInterface $jtw): JsonResponse
     {
-        $user = $this->rep->find($id);
-        return new JsonResponse(["token" => $jtw->create($user)]);
+        try {
+            $user = $this->rep->find($id);
+            return $this->response->successNoLog(json_encode([
+                "token" => $jtw->create($user)
+            ]));
+        } catch (Exception $e) {
+            return $this->response->error($e);
+        }
+        // return new JsonResponse(["token" => $jtw->create($user)]);
     }
 
     /**

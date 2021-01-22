@@ -11,6 +11,9 @@ import Paginator from '@components/paginator/paginator';
 
 export interface PanelPropsI {
     toasts: ToastEventsI;
+    extra?: {
+        [key: string]: any;
+    }
 }
 
 interface RequestResult<RRT> {

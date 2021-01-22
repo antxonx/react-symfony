@@ -46,6 +46,18 @@ class App extends React.Component<{}, AppStateI>{
         this.router = new Router(process.env.BASE_ROUTE);
     }
 
+    refreshToken = () => {
+        let time = (this.state.payload!.exp - Math.floor(Date.now() / 1000) - 300);
+        time = (time < 0) ? 0 : time;
+        setTimeout(() => {
+            Authentication.refreshToken();
+            this.setState({
+                payload: Authentication.getPayload(),
+            });
+            this.refreshToken();
+        }, time * 1000);
+    };
+
     checkLogin = async () => {
         let loggedIn = await Authentication.isLoggedIn();
         this.setState({
@@ -53,14 +65,7 @@ class App extends React.Component<{}, AppStateI>{
             payload: Authentication.getPayload(),
         });
         if (this.state.payload && this.state.loggedIn) {
-            let diff = (this.state.payload.exp - Math.floor(Date.now() / 1000) - 300);
-            diff = (diff < 0) ? 0 : diff;
-            setTimeout(() => {
-                Authentication.refreshToken();
-                this.setState({
-                    payload: Authentication.getPayload(),
-                });
-            }, diff * 1000);
+            this.refreshToken();
         }
     };
 
@@ -126,28 +131,34 @@ class App extends React.Component<{}, AppStateI>{
                                                     path={this.router.get("dashboard")}
                                                     component={Dashboard}
                                                 />
-                                                <Route
-                                                    exact
-                                                    path={this.router.get("users")}
+                                                {this.state.payload?.roles.includes("ROLE_ADMIN") && (
+                                                    <Route
+                                                        exact
+                                                        path={this.router.get("users")}
 
-                                                >
-                                                    <Users toasts={{
-                                                        add: this.addToast
-                                                    }} />
-                                                </Route>
+                                                    >
+                                                        <Users 
+                                                        toasts={{
+                                                            add: this.addToast
+                                                        }}
+                                                        />
+                                                    </Route>
+                                                )}
+                                                {this.state.payload?.roles.includes("ROLE_DEV") && (
+                                                    <Route
+                                                        exact
+                                                        path={this.router.get("logger")}
+                                                    >
+                                                        <Logger toasts={{
+                                                            add: this.addToast,
+                                                        }} />
+                                                    </Route>
+                                                )}
                                                 <Route
                                                     exact
                                                     path={this.router.get("profile")}
                                                 >
                                                     <Profile toasts={{
-                                                        add: this.addToast,
-                                                    }} />
-                                                </Route>
-                                                <Route
-                                                    exact
-                                                    path={this.router.get("logger")}
-                                                >
-                                                    <Logger toasts={{
                                                         add: this.addToast,
                                                     }} />
                                                 </Route>
