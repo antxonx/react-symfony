@@ -1,6 +1,8 @@
 {
-    "home": "/",
-    "profile": "/profile",
+    "dashboard": "/",
     "login": "/login",
-    "logout": "/logout"
+    "logout": "/logout",
+    "profile": "/profile",
+    "users": "/users",
+    "logger": "/logger"
 }

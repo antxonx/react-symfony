@@ -1,0 +1,185 @@
+.table-striped2 {
+    tbody {
+        tr {
+            &:nth-child(odd) {
+                background-color: #e6e6fa57;
+
+                th,
+                td {
+                    border-left-color: #e6e6fa;
+                    border-right-color: #e6e6fa;
+                }
+            }
+        }
+    }
+}
+
+.table-hover2 {
+    tbody {
+        tr {
+            transition: background-color 300ms ease-in;
+
+            &:hover {
+                background-color: #e6e6fa;
+                transition: background-color 300ms ease-out;
+
+                td,
+                th {
+                    border-left-color: #dcd0ff;
+                    border-right-color: #dcd0ff;
+                }
+            }
+        }
+    }
+}
+
+.table-bordered2 {
+    thead {
+        tr {
+            border: none !important;
+
+            th,
+            td {
+                border-top: none !important;
+                border-left: 1px solid #dee2e6;
+                border-right: 1px solid #dee2e6;
+                border-bottom: 1px solid #dee2e6;
+                &:first-child {
+                    border-left: none !important;
+                }
+
+                &:last-child {
+                    border-right: none !important;
+                }
+            }
+        }
+    }
+    tbody {
+        tr {
+            border: none !important;
+
+            th,
+            td {
+                border-top: none !important;
+                border-left: 1px solid #dee2e6;
+                border-right: 1px solid #dee2e6;
+                border-bottom: none !important;
+
+                &:first-child {
+                    border-left: none !important;
+                }
+
+                &:last-child {
+                    border-right: none !important;
+                }
+            }
+        }
+    }
+}
+
+.table {
+    &.fixed {
+        table-layout: fixed;
+    }
+    thead {
+        font-style: italic;
+    }
+    tbody {
+        tr {
+            th,
+            td {
+                vertical-align: middle !important;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
+    }
+    .button-action {
+        cursor: pointer;
+        color: #3f7abe;
+        border: none;
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        background-color: transparent;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 1.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
+        &:hover {
+            color: #ffffff;
+            background-color: #3f7abe;
+            text-decoration: none;
+        }
+    }
+}
+
+@media screen and (max-width: 900px) and (min-width: 300px) {
+    .table {
+        tr {
+            border-top: solid 3px #dcd0ff !important;
+        }
+        th,
+        td {
+            font-size: 1rem;
+            min-height: 2rem;
+        }
+        .button-action {
+            color: #ffffff !important;
+            background-color: #3f7abe !important;
+            font-size: 1rem;
+        }
+        .btn-outline-dark {
+            color: #ffffff;
+            background-color: #343a40;
+        }
+        .btn-outline-danger {
+            color: #ffffff;
+            background-color: #dc3545;
+        }
+        .btn-outline-info {
+            color: #ffffff;
+            background-color: #17a2b8;
+        }
+        .btn-outline-secondary {
+            color: #ffffff;
+            background-color: #6c757d;
+        }
+    }
+    .mobile {
+        &.table-striped2 {
+            tr:nth-child(odd) {
+                background-color: #e6e6fa;
+            }
+            &.table-striped2-4 {
+                tr:nth-child(4n + 1) {
+                    background-color: #e6e6fa;
+                }
+            }
+            tbody {
+                display: block !important;
+                width: auto !important;
+                tr {
+                    display: block !important;
+                    width: auto !important;
+                    &:hover {
+                        background-color: initial;
+                    }
+                    th,
+                    td {
+                        display: block !important;
+                        width: auto !important;
+                        min-height: 3rem !important;
+                    }
+                }
+            }
+            thead {
+                display: none !important;
+            }
+        }
+    }
+}

@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -17,6 +19,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+
+    public const MAX_ENTITIES = 20;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -34,6 +39,25 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function getBy($params)
+    {
+        $query = $this->createQueryBuilder("p")
+            ->orderBy("p.name", "ASC");
+        if (isset($params->search) && $params->search != "") {
+            $sc = new Criteria();
+            $sc->where(Criteria::expr()->contains("p.username", $params->search));
+            $sc->orWhere(Criteria::expr()->contains("p.name", $params->search));
+            $sc->orWhere(Criteria::expr()->contains("p.email", $params->search));
+            $query->addCriteria($sc);
+        }
+        $query->getQuery();
+        $paginator =  new Paginator($query);
+        $paginator->getQuery()
+            ->setFirstResult(self::MAX_ENTITIES * ($params->page - 1))
+            ->setMaxResults(self::MAX_ENTITIES);
+        return $paginator;
     }
 
     // /**

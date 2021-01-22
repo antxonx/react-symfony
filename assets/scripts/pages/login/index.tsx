@@ -5,6 +5,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import Layout from '@components/layout';
 import TextInput from '@components/form/textInput';
+import HandleResponse from '@scripts/services/handleResponse';
 
 declare type LoginFields = "username" | "password";
 
@@ -19,6 +20,7 @@ interface LoginStateI {
     error: boolean;
     loading: boolean;
     isLoggedIn: boolean;
+    errorMsg: string | null;
     errors: {
         username: boolean;
         password: boolean;
@@ -34,6 +36,7 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
             error: false,
             loading: false,
             isLoggedIn: this.props.logged,
+            errorMsg: null,
             errors: {
                 username: false,
                 password: false,
@@ -73,7 +76,10 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
             onSuccess: () => {
                 window.location.href = "/";
             },
-            onError: () => {
+            onError: (err: any) => {
+                this.setState({
+                    errorMsg: HandleResponse.error(err)!.message,
+                });
                 this.changeStateValue("error", true);
                 this.changeStateValue("isLoggedIn", false);
                 this.changeStateValue("loading", false);
@@ -86,55 +92,53 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
         this.changeStateValue(e.target.name, e.target.value);
     };
 
-    handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key.match(/\s/)) {
-            e.preventDefault();
-        }
-    };
-
     render = (): JSX.Element => {
         return (
-            <Layout title="Inicar sesión">
-                {this.state.isLoggedIn ? (
-                    <Redirect to={(new Router()).get("home")} />
-                ) : (
-                        <div className="vertical-center w-100">
-                            <div className="card mx-auto wd-40-wm-95 mt-5 round shadow-lg">
-                                <div className="card-body">
-                                    <h5 className="h3 mb-3 font-weight-normal text-center">Inicia sesión</h5>
-                                    <hr className="divide" />
-                                    {this.state.error ? (
-                                        <div className="alert alert-danger round text-center">
-                                            Nombre de usuario o contraseña incorrecta
+            <Layout title="Inicar sesión" top={false}>
+                {
+                    this.state.isLoggedIn
+                        ? <Redirect to={(new Router()).get("dashboard")} />
+                        : (
+                            <div className="vertical-center w-100">
+                                <div className="card mx-auto wd-40-wm-95 mt-5 round shadow-lg">
+                                    <div className="card-body">
+                                        <h5 className="h3 mb-3 font-weight-normal text-center">Inicia sesión</h5>
+                                        <hr className="divide" />
+                                        {
+                                            this.state.error && (
+                                                <div className="alert alert-danger round text-center">
+                                                    {this.state.errorMsg}
+                                                </div>
+                                            )
+                                        }
+                                        <form onSubmit={this.handleSubmit}>
+                                            <TextInput
+                                                name="username"
+                                                onChange={this.handleChange}
+                                                onKeyDown={(e) => e.key.match(/\s/) && e.preventDefault()}
+                                                error={this.state.errors.username}
+                                                errorMsg="Ingresa un nombre de usaurio válido"
+                                            />
+                                            <TextInput
+                                                name="password"
+                                                type="password"
+                                                onChange={this.handleChange}
+                                                error={this.state.errors.password}
+                                                errorMsg="Ingresa una contraseña"
+                                            />
+                                            <SubmitButton text="Iniciar sesión" loading={this.state.loading} />
+                                        </form>
+                                        <hr />
+                                        <div className="text-center">
+                                            <small>
+                                                <Link to="/">Olvidé mi contraseña</Link>
+                                            </small>
                                         </div>
-                                    ) : <></>}
-                                    <form onSubmit={this.handleSubmit}>
-                                        <TextInput
-                                            name="username"
-                                            onChange={this.handleChange}
-                                            onKeyDown={this.handleKeyDown}
-                                            error={this.state.errors.username}
-                                            errorMsg="Ingresa un nombre de usaurio válido"
-                                        />
-                                        <TextInput
-                                            name="password"
-                                            type="password"
-                                            onChange={this.handleChange}
-                                            error={this.state.errors.password}
-                                            errorMsg="Ingresa una contraseña"
-                                        />
-                                        <SubmitButton text="Iniciar sesión" loading={this.state.loading} />
-                                    </form>
-                                    <hr />
-                                    <div className="text-center">
-                                        <small>
-                                            <Link to="/">Olvidé mi contraseña</Link>
-                                        </small>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )
+                }
             </Layout>
         );
     };

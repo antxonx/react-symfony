@@ -1,5 +1,6 @@
 import { Router } from '@scripts/router';
 import axios from 'axios';
+import HandleResponse from '@services/handleResponse';
 
 export interface UserI {
     username: string;
@@ -17,7 +18,8 @@ export interface TokenPayloadI {
 }
 
 enum CookiesNames {
-    AUTH_COOKIE_NAME = "jwtAuthToken"
+    AUTH_COOKIE_NAME = "jwtAuthToken",
+    REAL_JWT_TOKEN = "jwtAuthTokenReal",
 }
 
 export default class Authentication {
@@ -26,11 +28,16 @@ export default class Authentication {
         let result = false;
         const token = Authentication.getCookie(CookiesNames.AUTH_COOKIE_NAME).trim();
         if (token !== "") {
-            await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("index_check_login"), { headers: { Authorization: `Bearer ${token}` } })
+            await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("index_check_login"), {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then(() => {
                     result = true;
                 })
-                .catch(() => {
+                .catch((err) => {
+                    HandleResponse.error(err);
                     result = false;
                 });
         }
@@ -76,7 +83,7 @@ export default class Authentication {
         username: string;
         password: string;
         onSuccess: () => void;
-        onError?: () => void;
+        onError?: (err: any) => void;
         finally?: () => void;
     }) => {
         axios.post((new Router(process.env.BASE_ROUTE)).apiGet("api_login_check"), {
@@ -88,9 +95,7 @@ export default class Authentication {
                 options.onSuccess();
             })
             .catch(err => {
-                console.error(err);
-                err.respose && err.respose.data && console.error(err.respose.data);
-                options.onError && options.onError();
+                options.onError && options.onError(err);
             })
             .finally(() => {
                 options.finally && options.finally();
@@ -99,6 +104,7 @@ export default class Authentication {
 
     public static logOut = () => {
         Authentication.deleteCookie(CookiesNames.AUTH_COOKIE_NAME);
+        Authentication.deleteCookie(CookiesNames.REAL_JWT_TOKEN);
     };
 
     public static getPayload = (): TokenPayloadI | null => {
@@ -106,19 +112,41 @@ export default class Authentication {
         if (token == "") {
             return null;
         } else {
-            return JSON.parse(atob(token.split(".")[ 1 ])) as TokenPayloadI;
+            let result = JSON.parse(atob(token.split(".")[ 1 ])) as TokenPayloadI;
+            result.roles = Object.values(result.roles);
+            return result;
         }
     };
 
     public static refreshToken = () => {
-        axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"))
+        axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"),
+            {
+                headers: {
+                    Authorization: `Bearer ${Authentication.getToken()}`
+                }
+            })
             .then(res => {
                 Authentication.setCookie(CookiesNames.AUTH_COOKIE_NAME, res.data.token);
                 console.info("refreshed token");
             })
             .catch(err => {
-                console.error(err);
-                err.respose && err.respose.data && console.error(err.respose.data);
+                HandleResponse.error(err);
             });
     };
+
+    public static setImpersonation = (token: string) => {
+        const actualToken = Authentication.getToken();
+        Authentication.setCookie(CookiesNames.REAL_JWT_TOKEN, actualToken);
+        Authentication.setToken(token);
+    }
+
+    public static unsetIpersonation = () => {
+        const realToken =  Authentication.getCookie(CookiesNames.REAL_JWT_TOKEN);
+        Authentication.setToken(realToken);
+        Authentication.deleteCookie(CookiesNames.REAL_JWT_TOKEN);
+    }
+
+    public static isImpersonating = (): boolean => {
+        return Authentication.getCookie(CookiesNames.REAL_JWT_TOKEN) !== "";
+    }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import parser from 'html-react-parser';
 
 interface ErrorAlertI {
     title?: string;
@@ -14,7 +15,7 @@ export default class ErrorAlert extends React.Component<ErrorAlertI, {}> {
         return (
             <div className="alert alert-danger mt-2 round">
                 {this.props.title && <h5>this.props.title</h5>}
-                {this.props.text}
+                {parser(this.props.text)}
             </div>
         );
     };

@@ -1,21 +1,35 @@
-@import "bootstrap";
+@import "@styles/bootswatch";
 @import "@fortawesome/fontawesome-free";
+@import "@styles/scroll";
 @import "@styles/loader";
 @import "@styles/editable";
 @import "@styles/loaderH";
 @import "@styles/modal";
 @import "@styles/dropdown";
+@import "@styles/toast";
+@import "@styles/table";
+@import "@styles/paginator";
+@import "@styles/checkbox";
 
 a {
     color: rgb(58, 60, 199);
 }
 
-b, h5 {
+b,
+h5 {
     color: #191734;
 }
 
 .wd-40-wm-95 {
     width: 40%;
+}
+
+.ww-100 {
+    width: 100% !important;
+}
+
+.w-99 {
+    width: 99%;
 }
 
 .round {
@@ -27,8 +41,13 @@ b, h5 {
     border-bottom-right-radius: 1.25rem !important;
 }
 
+.round-left {
+    border-top-left-radius: 1.25rem !important;
+    border-bottom-left-radius: 1.25rem !important;
+}
+
 .divide {
-    border-top: 2px solid #395ba6;
+    border-top: 2px solid #2c3e50;
 }
 
 .form-control {
@@ -55,26 +74,86 @@ b, h5 {
 }
 
 .btn-sm2 {
-  padding: 0 1rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  border-radius: 1.25rem;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 1.25rem;
 }
 
 .cursor-pointer {
-  cursor: pointer !important;
+    cursor: pointer !important;
 }
 
 .cursor-normal {
-  cursor: context-menu !important;
+    cursor: context-menu !important;
 }
 
-.input-group-prepend .btn, .input-group-append .btn {
+.input-group-prepend .btn,
+.input-group-append .btn {
     z-index: 0;
+}
+
+.hide-on-desktop {
+    display: none;
+}
+
+.page-title {
+    position: absolute;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+    text-align: center;
+    top: 10px;
+    z-index: -1;
+}
+
+.erase-search {
+    position: absolute;
+    top: 6px;
+    right: 30px;
+    z-index: 10;
+}
+
+.icon-col {
+    width: 60px;
+    text-align: center;
+}
+
+.full-cont {
+    width: 100%;
+    float: left;
+    .card {
+        box-shadow: 5px 5px 10px #888888;
+        transition: 1s box-shadow;
+    }
+    &.show {
+        margin-bottom: 5px;
+        .card {
+            box-shadow: 5px 5px 30px #888888;
+            transition: 0.5s box-shadow;
+        }
+    }
+    &.collapsing {
+        margin-bottom: 0;
+    }
+}
+
+.font-aws {
+    font-family: "Font Awesome 5 Free", serif;
+    font-weight: 900;
+    font-style: normal;
 }
 
 @media screen and (max-width: 900px) and (min-width: 300px) {
     .wd-40-wm-95 {
         width: 95% !important;
+    }
+
+    .hide-on-desktop {
+        display: block !important;
+    }
+
+    .hide-on-mobile {
+        display: none !important;
     }
 }

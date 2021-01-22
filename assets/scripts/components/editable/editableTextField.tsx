@@ -1,5 +1,6 @@
 import React from 'react';
 import LoaderH from '@components/loader/loaderH';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface EditableTextFieldPropsI {
     value?: string;
@@ -9,6 +10,7 @@ interface EditableTextFieldPropsI {
     wait?: boolean;
     onTextFieldEdit?: (name: string, value: string) => Promise<boolean>;
     onTextFieldCacel?: (name: string) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 interface EditableFieldStatesI {
@@ -75,53 +77,83 @@ export default class EditableTextField extends React.Component<EditableTextField
         }
     };
 
+    EditableField = (): JSX.Element => {
+        let field: JSX.Element;
+        if (this.props.value?.trim() === "") {
+            field = (
+                <div className="editable-field-container empty">
+                    <span className="editable-field" onClick={this.handleClick}>Vacío</span>
+                </div>
+            );
+        } else {
+            field = (
+                <div className="editable-field-container">
+                    <span className="editable-field" onClick={this.handleClick}>{this.props.value}</span>
+                </div>
+            );
+        }
+        return field;
+    };
+
+    InputField = (): JSX.Element => {
+        return (
+            <>
+                <div className="input-group">
+                    <input
+                        className={"form-control form-control-sm" + (this.state.error ? " is-invalid" : "")}
+                        value={this.state.newValue}
+                        onChange={this.handleChange}
+                        onKeyDown={this.props.onKeyDown}
+                    />
+                    <div className="input-group-append btn-group btn-group-sm editable-buttons">
+                        <button
+                            type="button"
+                            onClick={this.handleCnacelClick}
+                            className="btn btn-secondary w-100"
+                        >
+                            <FontAwesomeIcon icon={['fas', 'times']} />
+                        </button>
+                        <button
+                            type="submit"
+                            className="btn btn-primary w-100 round-right"
+                            onClick={this.handleSubmit}
+                        >
+                            <FontAwesomeIcon icon={['fas', 'check']} />
+                        </button>
+                    </div>
+                </div>
+                {
+                    this.props.errorMsg && (
+                        <small className="text-danger">
+                            {this.props.errorMsg}
+                        </small>
+                    )
+                }
+            </>
+        );
+    };
+
     render = (): JSX.Element => {
         return (
-            <div className="editable-container">
-                {this.props.title && (
-                    <div className="w-100">
-                        <small>
-                            <b>{this.props.title}</b>
-                        </small>
-                    </div>
-                )}
-                {this.state.editig || this.props.wait ? (this.state.loading || this.props.wait ? (
-                    <LoaderH position="left" />
-                ) : (
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="input-group">
-                                <input
-                                    className={this.state.error ? "form-control form-control-sm is-invalid" : "form-control form-control-sm"}
-                                    value={this.state.newValue}
-                                    onChange={this.handleChange}
-                                />
-                                <div className="input-group-append btn-group-sm editable-buttons">
-                                    <button
-                                        type="button"
-                                        onClick={this.handleCnacelClick}
-                                        className="btn btn-info w-100"
-                                    >
-                                        <i className="fas fa-times"></i>
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-antxony w-100 round-right"
-                                        onClick={this.handleSubmit}
-                                    >
-                                        <i className="fas fa-check"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            {this.props.errorMsg ? (
-                                <small className="text-danger">{this.props.errorMsg}</small>
-                            ) : <></>}
-                        </form>
-                    )) : (
-                        <div className="editable-field-container">
-                            <span className="editable-field" onClick={this.handleClick}>{this.props.value}</span>
+            <form onSubmit={this.handleSubmit}>
+                <div className="editable-container">
+                    {this.props.title && (
+                        <div className="w-100">
+                            <small>
+                                <b>{this.props.title}</b>
+                            </small>
                         </div>
                     )}
-            </div>
+                    {(this.state.editig || this.props.wait)
+                        ? (
+                            (this.state.loading || this.props.wait)
+                                ? <LoaderH position="left" />
+                                : <this.InputField />
+                        )
+                        : <this.EditableField />
+                    }
+                </div>
+            </form>
         );
     };
 }

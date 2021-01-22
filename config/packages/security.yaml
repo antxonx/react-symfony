@@ -27,13 +27,22 @@ security:
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+            # switch_user:
+            #     role: ROLE_ALLOWED_TO_SWITCH
+            #     parameter: impersonate
+            access_denied_handler: App\Security\AccessDeniedHandler
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+            # switch_user: true
         main:
             anonymous: true
             # lazy: true
             # provider: app_user_provider
+            # provider: app_user_provider
+            # guard:
+            #     authenticators:
+            #         - lexik_jwt_authentication.jwt_token_authenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

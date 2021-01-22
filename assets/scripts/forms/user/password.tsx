@@ -2,11 +2,12 @@ import TextInput from '@components/form/textInput';
 import ErrorAlert from '@components/alerts/errorAlert';
 import SubmitButton from '@components/form/submitButton';
 import { Router } from '@scripts/router';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React from 'react';
+import HandleResponse from '@scripts/services/handleResponse';
 
 interface PasswordFormPropsI {
-    onSuccess: () => void;
+    onSuccess: (res: AxiosResponse) => void;
 }
 
 interface PasswordFormStateI {
@@ -63,11 +64,11 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
             errorMsg: "",
         });
         Object.keys(this.state.errors).forEach(key => {
-            anyError = anyError || this.state.errors[ key as "old" | "new" | "confirmNew" ];
+            anyError = anyError || this.state.errors[ key as PasswordFormFields ];
         });
         if (anyError) return;
         Object.keys(this.state.inputs).forEach(key => {
-            inputError = inputError || (this.state.inputs[ key as "old" | "new" | "confirmNew" ] === "");
+            inputError = inputError || (this.state.inputs[ key as PasswordFormFields ] === "");
         });
         this.setState({
             errors: {
@@ -87,16 +88,11 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
                 loading: true,
             });
             axios.patch((new Router(process.env.BASE_URL)).apiGet("user_profile_change_password"), this.state.inputs)
-                .then(res => {
-                    console.log(res.data);
-                    this.props.onSuccess();
-                })
+                .then(this.props.onSuccess)
                 .catch(err => {
-                    console.error(err);
-                    console.error(err.response.data);
                     this.setState({
                         error: true,
-                        errorMsg: err.response.data,
+                        errorMsg: HandleResponse.error(err)!.message
                     });
                     this.setState({
                         loading: false,

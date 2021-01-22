@@ -20,15 +20,6 @@
         transform: translateX(-90px) !important;
     }
 
-    .dropdown-item {
-        &:active,
-        &.active {
-            background-color: inherit;
-            color: black;
-            font-weight: bold;
-        }
-    }
-
     @media screen and (max-width: 900px) and (min-width: 300px) {
         .show {
             &.dropdown {
@@ -45,4 +36,8 @@
             transform: translateX(0px) !important;
         }
     }
+}
+
+.navbar {
+    padding: 0.5rem 0.5rem;
 }
