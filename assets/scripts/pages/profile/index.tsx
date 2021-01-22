@@ -135,7 +135,7 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
                                     wait={!this.state.user}
                                 />
                                 {
-                                    (this.state.user && this.state.user.roles) && (
+                                    (this.state.user && this.state.user.roles && this.state.user.roles.length > 1) && (
                                         <div className="w-100">
                                             <small>
                                                 <b>Puesto:</b>

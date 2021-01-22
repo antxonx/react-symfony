@@ -134,6 +134,35 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/password/{id}", name="user_change_password", methods={"PATCH"}, options={"expose"=true})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function updateUserPassword(int $id, Request $request): JsonResponse
+    {
+        try {
+            $content = json_decode($request->getContent());
+            $user = $this->rep->findOneBy([
+                "id" => $id
+            ]);
+            if ($content->new != $content->confirmNew) {
+                throw new Exception("Las contraseñas no coinciden");
+            }
+            $user->setPassword(
+                $this->passwordEncoder->encodePassword(
+                    $user,
+                    $content->new
+                )
+            );
+            return $this->response->success(
+                "Contraseña actualizada",
+                "Se ha actualizado la contraseña del usuario <b>{$user->getName()}</b>(<em>{$user->getUsername()}</em>)"
+            );
+        } catch (Exception $e) {
+            return $this->response->error($e);
+        }
+    }
+
+    /**
      * @Route("/{id}", name="user_delete", methods={"DELETE"}, options={"expose" = true})
      * @IsGranted("ROLE_ADMIN")
      */

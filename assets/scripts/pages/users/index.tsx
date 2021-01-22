@@ -1,5 +1,6 @@
 import ButtonAction from '@components/buttons/bottonAction';
 import Button from '@components/buttons/button';
+import Action from '@components/buttons/table/action';
 import ButtonDelete from '@components/buttons/table/delete';
 import Column from '@components/grid/column';
 import Layout from '@components/layout';
@@ -10,6 +11,7 @@ import Modal from '@components/modals/modal';
 import Panel, { PanelPropsI } from '@components/panel';
 import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
+import PasswordFormAdmin from '@scripts/forms/user/passwordAdmin';
 import { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
 import axios, { AxiosError, AxiosResponse } from 'axios';
@@ -51,6 +53,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 style: {
                     width: "1px",
                 },
+            }, {
+                children: <i className="fas fa-key mobile-2-desktop-1"></i>,
+                className: "icon-col",
             }, {
                 children: <i className="fas fa-trash-alt mobile-2-desktop-1"></i>,
                 className: "icon-col",
@@ -184,6 +189,28 @@ export default class Users extends Panel<UserI, UsersStateI> {
         });
     };
 
+    handlePasswordClick = (id: number) => {
+        this.modalContent = (
+            <PasswordFormAdmin
+            id={id}
+                onSuccess={(res) => {
+                    HandleResponse.success(res, this.props.toasts);
+                    this.setSubState({
+                        modal: {
+                            show: false,
+                        }
+                    })
+                }}
+            />
+        );
+        this.setSubState({
+            modal: {
+                show: true,
+                size: 50,
+            },
+        });
+    }
+
     render = (): JSX.Element => {
         return (
             <Layout title="Usuarios">
@@ -239,6 +266,16 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                         children: <RoleBadge role={user.roles[ 0 ]} />,
                                         className: "cursor-pointer",
                                         onClick: this.handleRowClick,
+                                    }, {
+                                        key: "password",
+                                        "data-name": "password",
+                                        children:
+                                            (<Action<number>
+                                                id={user.id}
+                                                color='danger'
+                                                icon={<i className="fas fa-key"></i>}
+                                                onClick={this.handlePasswordClick}
+                                            />),
                                     }, {
                                         key: "delete",
                                         "data-name": "delete",
