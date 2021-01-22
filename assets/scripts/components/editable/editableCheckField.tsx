@@ -104,8 +104,44 @@ export default class EditableCheckField extends React.Component<EditableCheckFie
         }
     };
 
-    render = (): JSX.Element => {
-        let options = this.props.options.map(option => {
+    EditableField = (): JSX.Element => {
+        let list: JSX.Element | JSX.Element[];
+        if (this.state.newData.length > 0) {
+            list = this.state.newData.map((val, i) => {
+                return (
+                    <li
+                        key={val.value}
+                        className="editable-field"
+                        onClick={this.handleClick}
+                    >
+                        {val.showValue || val.value}
+                    </li>
+                );
+            });
+        } else {
+            list = (
+                <li
+                    className="editable-field empty"
+                    onClick={this.handleClick}
+                >
+                    Vacío
+                </li>
+            );
+        }
+        return (
+            <ul
+                className="editable-field-container"
+                style={{
+                    listStyleType: "none",
+                }}
+            >
+                {list}
+            </ul>
+        );
+    };
+
+    InputField = (): JSX.Element => {
+        const options = this.props.options.map(option => {
             let checked = false;
             this.state.newData.forEach(dat => {
                 return checked ||= (option.value === dat.value);
@@ -116,79 +152,67 @@ export default class EditableCheckField extends React.Component<EditableCheckFie
             };
         });
         return (
+            <>
+                <div onChange={this.handleCheckChange}>
+                    {options.map(option => {
+                        return (
+                            <div className="form-check" key={option.value}>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id={option.value}
+                                    defaultChecked={option.checked}
+                                />
+                                <label
+                                    className="form-check-label"
+                                    htmlFor={option.value}>
+                                    {option.showValue || option.value}
+                                </label>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="btn-group btn-group-sm editable-buttons w-100">
+                    <button
+                        type="button"
+                        onClick={this.handleCnacelClick}
+                        className="btn btn-secondary w-100 round-left"
+                    >
+                        <i className="fas fa-times"></i>
+                    </button>
+                    <button
+                        type="submit"
+                        className="btn btn-primary w-100 round-right"
+                    >
+                        <i className="fas fa-check"></i>
+                    </button>
+                </div>
+            </>
+        );
+    };
+
+    render = (): JSX.Element => {
+        return (
             <form onSubmit={this.handleSubmit}>
                 <div className="editable-container">
-                    {this.props.title && (
-                        <div className="w-100">
-                            <small>
-                                <b>{this.props.title}</b>
-                            </small>
-                        </div>
-                    )}
-                    {this.state.editig || this.props.wait ? (
-                        this.state.loading || this.props.wait ? (
-                            <LoaderH position="left" />
-                        ) : (
-                                <>
-                                    <div onChange={this.handleCheckChange}>
-                                        {options.map(option => {
-                                            return (
-                                                <div className="form-check" key={option.value}>
-                                                    <input
-                                                        type="checkbox"
-                                                        className="form-check-input"
-                                                        id={option.value}
-                                                        defaultChecked={option.checked}
-                                                    />
-                                                    <label
-                                                        className="form-check-label"
-                                                        htmlFor={option.value}>
-                                                        {option.showValue || option.value}
-                                                    </label>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                    <div className="btn-group btn-group-sm editable-buttons w-100">
-                                        <button
-                                            type="button"
-                                            onClick={this.handleCnacelClick}
-                                            className="btn btn-secondary w-100 round-left"
-                                        >
-                                            <i className="fas fa-times"></i>
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="btn btn-primary w-100 round-right"
-                                        >
-                                            <i className="fas fa-check"></i>
-                                        </button>
-                                    </div>
-                                </>
+                    {
+                        this.props.title && (
+                            <div className="w-100">
+                                <small>
+                                    <b>{this.props.title}</b>
+                                </small>
+                            </div>
+                        )
+                    }
+                    {
+                        (this.state.editig || this.props.wait)
+                            ? (
+                                (this.state.loading || this.props.wait)
+                                    ? (<LoaderH position="left" />)
+                                    : (<this.InputField />)
                             )
-                    ) : (
-                            <ul className="editable-field-container" style={{
-                                listStyleType: "none",
-                            }}>
-                                {(this.state.newData.length > 0) ? this.state.newData.map((val, i) => {
-                                    return (
-                                        <li
-                                            key={val.value}
-                                            className="editable-field"
-                                            onClick={this.handleClick}
-                                        >
-                                            {val.showValue || val.value}
-                                        </li>
-                                    );
-                                }) : (<li
-                                    className="editable-field empty"
-                                    onClick={this.handleClick}
-                                >
-                                    Vacío
-                                </li>
-                                    )}
-                            </ul>
-                        )}
+                            : <this.EditableField />
+                    }
                 </div>
             </form>
         );

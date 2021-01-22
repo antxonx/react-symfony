@@ -99,17 +99,14 @@ export default class UserShow extends React.Component<UserShowPropsI, UserShowSt
             { value: "ROLE_COMMON", showValue: "común" },
         ];
         let roles = this.state.user.roles.slice();
-        console.log(roles);
         const index = roles.findIndex(role => role === "ROLE_USER"); 
-        (index >= 0) && roles.splice(index, 1);
-        console.log(roles);
+        (index >= 0) && roles.splice(index, 1);;
         const userRoles = roles.map(role => {
             return {
                 value: role,
                 showValue: role.substring(5).toLowerCase(),
             };
         });
-        console.log(userRoles);
         return (
             <Row>
                 <Column size={6}>
