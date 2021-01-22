@@ -62,7 +62,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 className: "icon-col border-right-0",
             }, {
                 key: "impersonate",
-                children: <FontAwesomeIcon icon={[ 'fas', 'user-alt' ]} />,
+                children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
                 className: "icon-col border-right-0 border-left-0",
             }, {
                 key: "delete",
@@ -191,11 +191,12 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 }}
             />
         );
+        const user = this.getEntities().find(us => us.id === +row.dataset.id!);
         this.setSubState({
             modal: {
-                title: "Usuario",
+                title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
                 show: true,
-                size: 70,
+                size: 50,
             },
         });
     };
@@ -214,11 +215,12 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 }}
             />
         );
+        const user = this.getEntities().find(us => us.id === id);
         this.setSubState({
             modal: {
-                title: "Contraseña",
+                title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
                 show: true,
-                size: 50,
+                size: 30,
             },
         });
     };
@@ -310,7 +312,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                                 key={"_action_" + user.id}
                                                 id={user.id}
                                                 color='info'
-                                                content={<FontAwesomeIcon icon={[ 'fas', 'user-alt' ]} />}
+                                                content={<FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />}
                                                 loading={this.getSubState().impersonateLoading.findIndex(x => x === user.id) >= 0}
                                                 onClick={this.handleImpersonateClick}
                                             />),

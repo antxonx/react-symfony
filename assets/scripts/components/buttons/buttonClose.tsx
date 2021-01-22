@@ -16,7 +16,7 @@ export default class ButtonClose extends React.Component<ButtonCloseI, {}> {
         return (
             <button
                 className={
-                    "btn text-muted" +
+                    "btn text-muted close-btn" +
                     (this.props.float ? " float-" + this.props.float : "") +
                     (this.props.extraClass ? " " + this.props.extraClass : "")
                 }

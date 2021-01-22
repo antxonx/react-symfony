@@ -6,6 +6,11 @@
     opacity: 0;
     transition: visibility 0.2s, opacity 0.2s linear;
     z-index: 20;
+    .close-btn {
+        position: absolute;
+        right: 0.5rem;
+        top: 0;
+    }
     .modal-component-content {
         margin-top: 10vh;
         margin-left: auto;
@@ -19,6 +24,7 @@
         padding-top: 0;
         transform: scale(0.7);
         transition: transform 0.2s linear;
+        position: relative;
         &.modal-alert {
             width: 50%;
             padding: 0;

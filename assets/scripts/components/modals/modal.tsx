@@ -2,6 +2,7 @@ import React from 'react';
 import ButtonClose from '@components/buttons/buttonClose';
 import LoaderH from '@components/loader/loaderH';
 import Button from '@components/buttons/button';
+import parser from 'html-react-parser';
 
 interface ModalPropsI {
     show: boolean;
@@ -48,7 +49,7 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
                 >
                     <div className="w-100 h-100 pt-2">
                         <h5 className="text-center">
-                            {this.props.title}
+                            {this.props.title && parser(this.props.title)}
                             <ButtonClose
                                 onClick={this.handleClick}
                                 float="right"
