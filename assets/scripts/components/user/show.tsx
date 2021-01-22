@@ -100,7 +100,7 @@ export default class UserShow extends React.Component<UserShowPropsI, UserShowSt
         ];
         let roles = this.state.user.roles.slice();
         const index = roles.findIndex(role => role === "ROLE_USER"); 
-        (index >= 0) && roles.splice(index, 1);;
+        (index >= 0) && roles.splice(index, 1);
         const userRoles = roles.map(role => {
             return {
                 value: role,
