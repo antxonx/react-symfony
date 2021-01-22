@@ -19,6 +19,7 @@ import Authentication, { TokenPayloadI } from '@services/authentication';
 import Loader from '@components/loader/loader';
 import Toast, { ToastData } from './components/alerts/toast';
 import ToastContainer from './components/alerts/toastContainer';
+import ErrorBoundary from '@components/error';
 const Nav = React.lazy(() => import('@components/nav'));
 
 interface AppStateI {
@@ -103,7 +104,7 @@ class App extends React.Component<{}, AppStateI>{
 
     render = (): JSX.Element => {
         return (
-            <>
+            <ErrorBoundary>
                 <BrowserRouter>
                     {
                         this.state.loggedIn == null
@@ -191,7 +192,7 @@ class App extends React.Component<{}, AppStateI>{
                         })
                     }
                 </ToastContainer>
-            </>
+            </ErrorBoundary>
         );
     };
 }
