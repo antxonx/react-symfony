@@ -143,7 +143,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/password/{id}", name="user_change_password", methods={"PATCH"}, options={"expose"=true})
-     * @IsGranted("ROLE_DEV")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function updateUserPassword(int $id, Request $request): JsonResponse
     {

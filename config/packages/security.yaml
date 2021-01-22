@@ -30,6 +30,7 @@ security:
             # switch_user:
             #     role: ROLE_ALLOWED_TO_SWITCH
             #     parameter: impersonate
+            access_denied_handler: App\Security\AccessDeniedHandler
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
