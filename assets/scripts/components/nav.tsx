@@ -7,8 +7,6 @@ import Authentication from "@services/authentication";
 
 interface NavPropsI {
     router: Router;
-    username: string;
-    roles: string[];
 }
 export default class Nav extends React.Component<NavPropsI, {}> {
 
@@ -17,6 +15,8 @@ export default class Nav extends React.Component<NavPropsI, {}> {
     }
 
     render = (): JSX.Element => {
+        const roles = Authentication.getRoles();
+        const username = Authentication.getUsername();
         return (
             <nav className="navbar navbar-expand-lg navbar-light">
                 <NavLink
@@ -65,7 +65,7 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                             />
                         </li>
                         {
-                            this.props.roles.includes("ROLE_ADMIN") && (
+                            roles.includes("ROLE_ADMIN") && (
                                 <li className="nav-item dropdown">
                                     <a
                                         className="nav-link dropdown-toggle"
@@ -86,7 +86,7 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                                             children="Usuarios"
                                         />
                                         {
-                                            this.props.roles.includes("ROLE_DEV") && (
+                                            roles.includes("ROLE_DEV") && (
                                                 <>
                                                     <div className="dropdown-divider"></div>
                                                     <NavLink
@@ -112,7 +112,7 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                                 aria-haspopup="true"
                                 aria-expanded="false"
                             >
-                                {this.props.username}
+                                {username}
                             </a>
                             <div className="dropdown-menu" aria-labelledby="dropdowUserMenu">
                                 <NavLink

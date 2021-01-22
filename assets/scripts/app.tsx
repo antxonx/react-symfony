@@ -24,7 +24,6 @@ const Nav = React.lazy(() => import('@components/nav'));
 
 interface AppStateI {
     loggedIn: boolean | null;
-    payload: TokenPayloadI | null;
     toasts: ToastData[];
 }
 
@@ -40,31 +39,28 @@ class App extends React.Component<{}, AppStateI>{
         super(props);
         this.state = {
             loggedIn: null,
-            payload: null,
             toasts: [],
         };
         this.router = new Router(process.env.BASE_ROUTE);
     }
 
     refreshToken = () => {
-        let time = (this.state.payload!.exp - Math.floor(Date.now() / 1000) - 300);
+        const payload = Authentication.getPayload();
+        let time = (payload!.exp - Math.floor(Date.now() / 1000) - 300);
         time = (time < 0) ? 0 : time;
         setTimeout(() => {
             Authentication.refreshToken();
-            this.setState({
-                payload: Authentication.getPayload(),
-            });
             this.refreshToken();
         }, time * 1000);
     };
 
     checkLogin = async () => {
         let loggedIn = await Authentication.isLoggedIn();
+
         this.setState({
             loggedIn: loggedIn,
-            payload: Authentication.getPayload(),
         });
-        if (this.state.payload && this.state.loggedIn) {
+        if (this.state.loggedIn) {
             this.refreshToken();
         }
     };
@@ -108,6 +104,7 @@ class App extends React.Component<{}, AppStateI>{
     };
 
     render = (): JSX.Element => {
+        const roles = Authentication.getRoles();
         return (
             <ErrorBoundary>
                 <BrowserRouter>
@@ -122,8 +119,6 @@ class App extends React.Component<{}, AppStateI>{
                                         <Suspense fallback={<Loader />}>
                                             <Nav
                                                 router={this.router}
-                                                username={this.state.payload!.username}
-                                                roles={this.state.payload!.roles}
                                             ></Nav>
                                             <Switch>
                                                 <Route
@@ -131,20 +126,20 @@ class App extends React.Component<{}, AppStateI>{
                                                     path={this.router.get("dashboard")}
                                                     component={Dashboard}
                                                 />
-                                                {this.state.payload?.roles.includes("ROLE_ADMIN") && (
+                                                {roles.includes("ROLE_ADMIN") && (
                                                     <Route
                                                         exact
                                                         path={this.router.get("users")}
 
                                                     >
-                                                        <Users 
-                                                        toasts={{
-                                                            add: this.addToast
-                                                        }}
+                                                        <Users
+                                                            toasts={{
+                                                                add: this.addToast
+                                                            }}
                                                         />
                                                     </Route>
                                                 )}
-                                                {this.state.payload?.roles.includes("ROLE_DEV") && (
+                                                {roles.includes("ROLE_DEV") && (
                                                     <Route
                                                         exact
                                                         path={this.router.get("logger")}

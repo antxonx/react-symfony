@@ -57,15 +57,15 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 },
             }, {
                 key: "password",
-                children: <FontAwesomeIcon icon={['fas', 'key']} />,
+                children: <FontAwesomeIcon icon={[ 'fas', 'key' ]} />,
                 className: "icon-col",
             }, {
                 key: "impersonate",
-                children: <FontAwesomeIcon icon={['fas', 'user-alt']} />,
+                children: <FontAwesomeIcon icon={[ 'fas', 'user-alt' ]} />,
                 className: "icon-col",
             }, {
                 key: "delete",
-                children: <FontAwesomeIcon icon={['fas', 'trash-alt']} />,
+                children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
                 className: "icon-col",
             },
         ];
@@ -201,14 +201,14 @@ export default class Users extends Panel<UserI, UsersStateI> {
     handlePasswordClick = (id: number) => {
         this.modalContent = (
             <PasswordFormAdmin
-            id={id}
+                id={id}
                 onSuccess={(res) => {
                     HandleResponse.success(res, this.props.toasts);
                     this.setSubState({
                         modal: {
                             show: false,
                         }
-                    })
+                    });
                 }}
             />
         );
@@ -218,7 +218,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 size: 50,
             },
         });
-    }
+    };
 
     handleImpersonateClick = async (id: number) => {
         let loadingStates = this.getSubState().impersonateLoading.slice();
@@ -227,18 +227,19 @@ export default class Users extends Panel<UserI, UsersStateI> {
             impersonateLoading: loadingStates,
         });
         try {
-            const res = await axios.get(this.router.apiGet("user_impersonate", {id: id}));
-            Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
+            // const res = await axios.get(this.router.apiGet("user_impersonate", {id: id}));
+            // Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
+            await Authentication.impersonate(id);
             window.location.href = this.router.get("dashboard");
-        } catch(err) {
+        } catch (err) {
             HandleResponse.error(err, this.props.toasts);
+            let loadingStates2 = this.getSubState().impersonateLoading.slice();
+            loadingStates2.splice(loadingStates2.findIndex(x => x === id), 1);
+            this.setSubState({
+                impersonateLoading: loadingStates2,
+            });
         }
-        let loadingStates2 = this.getSubState().impersonateLoading.slice();
-        loadingStates2.splice(loadingStates2.findIndex(x => x === id), 1);
-        this.setSubState({
-            impersonateLoading: loadingStates2,
-        });
-    }
+    };
 
     render = (): JSX.Element => {
         return (
@@ -296,7 +297,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                             (<Action<number>
                                                 id={user.id}
                                                 color='danger'
-                                                content={<FontAwesomeIcon icon={['fas', 'key']} />}
+                                                content={<FontAwesomeIcon icon={[ 'fas', 'key' ]} />}
                                                 onClick={this.handlePasswordClick}
                                             />),
                                     }, {
@@ -307,7 +308,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                                 key={"_action_" + user.id}
                                                 id={user.id}
                                                 color='info'
-                                                content={<FontAwesomeIcon icon={['fas', 'user-alt']} />}
+                                                content={<FontAwesomeIcon icon={[ 'fas', 'user-alt' ]} />}
                                                 loading={this.getSubState().impersonateLoading.findIndex(x => x === user.id) >= 0}
                                                 onClick={this.handleImpersonateClick}
                                             />),
