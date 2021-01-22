@@ -36,6 +36,11 @@
     }
 }
 
+.modal-component-open {
+    overflow-y: hidden !important;
+    padding-right: 5px !important;
+}
+
 @media screen and (max-width: 900px) and (min-width: 300px) {
     .modal-component {
         .modal-component-content {

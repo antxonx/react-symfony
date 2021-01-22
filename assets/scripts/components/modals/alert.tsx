@@ -31,11 +31,8 @@ export enum FinishedStateTypes {
 
 export default class Alert<T = number> extends React.Component<AlertPropsI<T>, AlertStateI> {
 
-    private bodyOverflow: string;
-
     constructor (props: AlertPropsI<T>) {
         super(props);
-        this.bodyOverflow = "";
         this.state = {
             loading: false,
         };
@@ -43,11 +40,10 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
 
     hideScroll = () => {
         if (this.props.show) {
-            this.bodyOverflow = document.body.style.overflowY;
-            document.body.style.overflowY = "hidden";
+            document.body.classList.add("modal-component-open");
         } else {
             if(document.querySelectorAll(".modal-component.show").length > +this.props.show)
-                document.body.style.overflowY = this.bodyOverflow;
+                document.body.classList.remove("modal-component-open");
         }
     };
 

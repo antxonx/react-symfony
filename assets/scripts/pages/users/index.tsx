@@ -24,6 +24,7 @@ interface UsersStateI {
     modal: {
         show: boolean;
         size: number;
+        title: string;
     };
     alert: AlertPropsI;
     impersonateLoading: number[];
@@ -91,8 +92,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
         this.update();
     };
 
-    handleCloseModal = (_: string) => {
-        this.modalContent = <></>;
+    handleCloseModal = () => {
         this.setSubState({
             modal: {
                 ...this.getSubState().modal,
@@ -121,6 +121,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
         );
         this.setSubState({
             modal: {
+                title: "Agregar",
                 show: true,
                 size: 30,
             }
@@ -192,6 +193,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
         );
         this.setSubState({
             modal: {
+                title: "Usuario",
                 show: true,
                 size: 70,
             },
@@ -214,6 +216,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
         );
         this.setSubState({
             modal: {
+                title: "Contraseña",
                 show: true,
                 size: 50,
             },
@@ -330,7 +333,6 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 <Modal
                     onClose={this.handleCloseModal}
                     name="form"
-                    title="Contraseña"
                     loading={false}
                     {...this.getSubState().modal}
                 >

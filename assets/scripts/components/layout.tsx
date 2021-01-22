@@ -25,7 +25,7 @@ export default class Layout extends React.Component<LayoutPropsI, {}> {
                 {
                     (this.props.top === undefined || this.props.top) && (
                         <section className="page-title">
-                            <h5>{this.props.title}</h5>
+                            <h5><b>{this.props.title}</b></h5>
                         </section>
                     )
                 }
