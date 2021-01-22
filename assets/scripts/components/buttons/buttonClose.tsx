@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
 interface ButtonCloseI {
@@ -21,7 +22,7 @@ export default class ButtonClose extends React.Component<ButtonCloseI, {}> {
                 }
                 onClick={this.props.onClick}
             >
-                <i className="fas fa-times"></i>
+                <FontAwesomeIcon icon={['fas', 'times']} />
             </button>
         );
     };

@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
 interface RoleBadgePropsI {
@@ -13,7 +14,7 @@ export default class RoleBadge extends React.Component<RoleBadgePropsI, {}> {
         this.devIcon = (
             <span>
                 &nbsp;&nbsp;
-                <i className="fas fa-cross mobile-2-desktop-1"></i>
+                <FontAwesomeIcon icon={['fas', 'cross']} />
                 &nbsp;&nbsp;
             </span>
         );

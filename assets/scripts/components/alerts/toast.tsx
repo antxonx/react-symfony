@@ -1,4 +1,4 @@
-import { extend } from 'jquery';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
 interface ToastPropsI {
@@ -21,25 +21,21 @@ export default class Toast extends React.Component<ToastPropsI, {}> {
         super(props);
     }
 
-    successIcon = (): JSX.Element => {
-        return <i className="fas fa-check-circle"></i>;
-    };
-
-    dangerIcon = (): JSX.Element => {
-        return <i className="fas fa-times-circle"></i>;
-    };
-
     render = (): JSX.Element => {
         return (
-            <div 
-            className={`border-${this.props.type} round toast-alert toast-${this.props.type}` + (this.props.show ? " show" : "")}
+            <div
+                className={`border-${this.props.type} round toast-alert toast-${this.props.type}` + (this.props.show ? " show" : "")}
             >
                 {
                     (this.props.title?.trim() !== "") && (
                         <h4>
                             {this.props.title}
                             <span className="float-right">
-                                {this.props.type === "success" ? this.successIcon() : this.dangerIcon()}
+                                {
+                                    this.props.type === "success"
+                                        ? <FontAwesomeIcon icon={[ 'fas', 'check-circle' ]} />
+                                        : <FontAwesomeIcon icon={[ 'fas', 'times-circle' ]} />
+                                }
                             </span>
                         </h4>
                     )

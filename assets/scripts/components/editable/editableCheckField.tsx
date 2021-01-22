@@ -1,4 +1,5 @@
 import LoaderH from '@components/loader/loaderH';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
 interface EditableCheckFieldPropsI {
@@ -178,13 +179,13 @@ export default class EditableCheckField extends React.Component<EditableCheckFie
                         onClick={this.handleCnacelClick}
                         className="btn btn-secondary w-100 round-left"
                     >
-                        <i className="fas fa-times"></i>
+                        <FontAwesomeIcon icon={['fas', 'times']} />
                     </button>
                     <button
                         type="submit"
                         className="btn btn-primary w-100 round-right"
                     >
-                        <i className="fas fa-check"></i>
+                        <FontAwesomeIcon icon={['fas', 'check']} />
                     </button>
                 </div>
             </>

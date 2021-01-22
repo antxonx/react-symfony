@@ -57,15 +57,15 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 },
             }, {
                 key: "password",
-                children: <i className="fas fa-key"></i>,
+                children: <FontAwesomeIcon icon={['fas', 'key']} />,
                 className: "icon-col",
             }, {
                 key: "impersonate",
-                children: <i className="fas fa-user-alt"></i>,
+                children: <FontAwesomeIcon icon={['fas', 'user-alt']} />,
                 className: "icon-col",
             }, {
                 key: "delete",
-                children: <i className="fas fa-trash-alt"></i>,
+                children: <FontAwesomeIcon icon={['fas', 'trash-alt']} />,
                 className: "icon-col",
             },
         ];

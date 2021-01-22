@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
 interface ButtonDeletePropsI<PT> {
@@ -22,7 +23,7 @@ export default class ButtonDelete<T> extends React.Component<ButtonDeletePropsI<
                 className="btn btn-sm btn-outline-dark border-0 w-100 round"
                 onClick={this.handleClick}
             >
-                <i className="fas fa-trash-alt"></i>
+                <FontAwesomeIcon icon={['fas', 'trash-alt']} />
             </button>
         );
     };
