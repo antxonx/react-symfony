@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Exception;
 use Antxony\Handler\Response;
+use App\Entity\User;
 
 /**
  * @Route("/api/user")
@@ -38,6 +39,13 @@ class UserController extends AbstractController
         $this->rep = $rep;
         $this->passwordEncoder = $passwordEncoder;
         $this->response = $response;
+    }
+
+    public function getActualUser(): User
+    {
+        return $this->rep->findOneBy([
+            'username' => $this->security->getUser()->getUsername()
+        ]);
     }
 
     /**
@@ -147,6 +155,9 @@ class UserController extends AbstractController
             if ($content->new != $content->confirmNew) {
                 throw new Exception("Las contraseñas no coinciden");
             }
+            if($user->hasRole("ROLE_DEV") && ($this->getActualUser()->getUsername() !== $user->getUsername())) {
+                throw new Exception("<strong>No se puede cambiar la contraseña del desarrolador</strong>");
+            }
             $user->setPassword(
                 $this->passwordEncoder->encodePassword(
                     $user,
@@ -175,6 +186,9 @@ class UserController extends AbstractController
             if (!$user) {
                 throw new Exception("No se encontró a usuario");
             }
+            if($user->hasRole("ROLE_DEV") && !$this->getActualUser()->hasRole("ROLE_DEV")) {
+                throw new Exception("<strong>No se puede eliminar a este usuario</strong>");
+            }
             $name = $user->getName();
             $username = $user->getUsername();
             $this->getDoctrine()->getManager()->remove($user);
@@ -198,6 +212,9 @@ class UserController extends AbstractController
             );
             if(!$user) {
                 throw new Exception("No se pudo encontrar al usuario");
+            }
+            if($user->hasRole("ROLE_DEV") && !$this->getActualUser()->hasRole("ROLE_DEV")) {
+                throw new Exception("No se puede editar a este usuario");
             }
             if(!is_array($content->value) && trim($content->value) === "") {
                 throw new Exception("El valor no puede estar vacío");
