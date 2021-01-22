@@ -22,7 +22,9 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                     exact
                     className="navbar-brand"
                     to={this.props.router.get("dashboard")}
-                >Sistema</NavLink>
+                >
+                    Sistema
+                </NavLink>
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -45,34 +47,54 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                                 children="Inicio"
                             />
                         </li>
-                        {this.props.roles.includes("ROLE_ADMIN") ? (
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" id="dropdowSystemMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Sistema
+                        {
+                            this.props.roles.includes("ROLE_ADMIN") && (
+                                <li className="nav-item dropdown">
+                                    <a
+                                        className="nav-link dropdown-toggle"
+                                        href="#"
+                                        id="dropdowSystemMenu"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        Sistema
                                 </a>
-                                <div className="dropdown-menu" aria-labelledby="dropdowSystemMenu">
-                                    <NavLink
-                                        exact
-                                        className="dropdown-item"
-                                        to={this.props.router.get("users")}
-                                        children="Usuarios"
-                                    />
-                                    {this.props.roles.includes("ROLE_DEV") ? (
-                                        <>
-                                            <div className="dropdown-divider"></div>
-                                            <NavLink
-                                                exact
-                                                className="dropdown-item"
-                                                to={this.props.router.get("logger")}
-                                                children="Registro"
-                                            />
-                                        </>
-                                    ) : <></>}
-                                </div>
-                            </li>
-                        ) : <></>}
+                                    <div className="dropdown-menu" aria-labelledby="dropdowSystemMenu">
+                                        <NavLink
+                                            exact
+                                            className="dropdown-item"
+                                            to={this.props.router.get("users")}
+                                            children="Usuarios"
+                                        />
+                                        {
+                                            this.props.roles.includes("ROLE_DEV") && (
+                                                <>
+                                                    <div className="dropdown-divider"></div>
+                                                    <NavLink
+                                                        exact
+                                                        className="dropdown-item"
+                                                        to={this.props.router.get("logger")}
+                                                        children="Registro"
+                                                    />
+                                                </>
+                                            )
+                                        }
+                                    </div>
+                                </li>
+                            )
+                        }
                         <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" id="dropdowUserMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a
+                                className="nav-link dropdown-toggle"
+                                href="#"
+                                id="dropdowUserMenu"
+                                role="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
                                 {this.props.username}
                             </a>
                             <div className="dropdown-menu" aria-labelledby="dropdowUserMenu">

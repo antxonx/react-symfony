@@ -171,32 +171,36 @@ export default class Add extends React.Component<AddPropsI, AddStateI> {
                 <b className="text-muted font-italic">Puesto:</b>
                 <br />
                 <div className="row">
-                    {roles.map((role, i) => {
-                        return (
-                            <div className="col-md-5 ml-4 checkbox-lg" key={role.real}>
-                                <input
-                                    type="checkbox"
-                                    className="custom-control-input check-roles"
-                                    value={role.real}
-                                    id={"roleCheckBox" + i}
-                                    name={role.real}
-                                    onChange={this.handleCheckChange}
-                                />
-                                <label
-                                    htmlFor={"roleCheckBox" + i}
-                                    className="custom-control-label">
-                                    {role.nombre}
-                                </label>
-                            </div>
-                        );
-                    })}
+                    {
+                        roles.map((role, i) => {
+                            return (
+                                <div className="col-md-5 ml-4 checkbox-lg" key={role.real}>
+                                    <input
+                                        type="checkbox"
+                                        className="custom-control-input check-roles"
+                                        value={role.real}
+                                        id={"roleCheckBox" + i}
+                                        name={role.real}
+                                        onChange={this.handleCheckChange}
+                                    />
+                                    <label
+                                        htmlFor={"roleCheckBox" + i}
+                                        className="custom-control-label">
+                                        {role.nombre}
+                                    </label>
+                                </div>
+                            );
+                        })
+                    }
                 </div>
                 <SubmitButton text="Agregar usuario" loading={this.state.loading} />
-                {this.state.errorMsg && (
-                    <div className="alert alert-danger round text-center mt-2">
-                        {parse(this.state.errorMsg)}
-                    </div>
-                )}
+                {
+                    this.state.errorMsg && (
+                        <div className="alert alert-danger round text-center mt-2">
+                            {parse(this.state.errorMsg)}
+                        </div>
+                    )
+                }
             </form>
         );
     };

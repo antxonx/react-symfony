@@ -14,7 +14,8 @@ export default class ButtonAction extends React.Component<ButtonActionPropsI, {}
         return (
             <a
                 className="button-action ww-100 text-center"
-                href={`${this.props.type}:${this.props.content || this.props.children}`}>
+                href={`${this.props.type}:${this.props.content || this.props.children}`}
+            >
                 {this.props.content || this.props.children}
             </a>
         );

@@ -201,56 +201,58 @@ export default class Users extends Panel<UserI, UsersStateI> {
                     </Column>
                 </this.MainBar>
                 <this.MainTable>
-                    <Tbody rows={this.getEntities().map(user => {
-                        return {
-                            id: user.id.toString(),
-                            "data-id": user.id.toString(),
-                            cells: [
-                                {
-                                    key: "id",
-                                    "data-name": "id",
-                                    children: <b>{user.id}</b>,
-                                    className: "text-right cursor-pointer",
-                                    onClick: this.handleRowClick,
-                                },
-                                {
-                                    key: "username",
-                                    "data-name": "username",
-                                    children: <em>{user.username}</em>,
-                                    className: "cursor-pointer",
-                                    onClick: this.handleRowClick,
-                                },
-                                {
-                                    key: "name",
-                                    "data-name": "name",
-                                    children: <b>{user.name}</b>,
-                                    className: "cursor-pointer",
-                                    onClick: this.handleRowClick,
-                                },
-                                {
-                                    key: "email",
-                                    "data-name": "email",
-                                    children: <ButtonAction type="mailto" content={user.email} />
-                                },
-                                {
-                                    key: "role",
-                                    "data-name": "role",
-                                    children: <RoleBadge role={user.roles[ 0 ]} />,
-                                    className: "cursor-pointer",
-                                    onClick: this.handleRowClick,
-                                }, {
-                                    key: "delete",
-                                    "data-name": "delete",
-                                    children:
-                                        (<ButtonDelete<number>
-                                            id={user.id}
-                                            extra={<b>{user.name}{' ('}<em>{user.username}</em>{')'}</b>}
-                                            onClick={this.handleDelete}
-                                        />),
-                                },
-                            ]
-                        };
-                    })}
+                    <Tbody rows={
+                        this.getEntities().map(user => {
+                            return {
+                                id: user.id.toString(),
+                                "data-id": user.id.toString(),
+                                cells: [
+                                    {
+                                        key: "id",
+                                        "data-name": "id",
+                                        children: <b>{user.id}</b>,
+                                        className: "text-right cursor-pointer",
+                                        onClick: this.handleRowClick,
+                                    },
+                                    {
+                                        key: "username",
+                                        "data-name": "username",
+                                        children: <em>{user.username}</em>,
+                                        className: "cursor-pointer",
+                                        onClick: this.handleRowClick,
+                                    },
+                                    {
+                                        key: "name",
+                                        "data-name": "name",
+                                        children: <b>{user.name}</b>,
+                                        className: "cursor-pointer",
+                                        onClick: this.handleRowClick,
+                                    },
+                                    {
+                                        key: "email",
+                                        "data-name": "email",
+                                        children: <ButtonAction type="mailto" content={user.email} />
+                                    },
+                                    {
+                                        key: "role",
+                                        "data-name": "role",
+                                        children: <RoleBadge role={user.roles[ 0 ]} />,
+                                        className: "cursor-pointer",
+                                        onClick: this.handleRowClick,
+                                    }, {
+                                        key: "delete",
+                                        "data-name": "delete",
+                                        children:
+                                            (<ButtonDelete<number>
+                                                id={user.id}
+                                                extra={<b>{user.name}{' ('}<em>{user.username}</em>{')'}</b>}
+                                                onClick={this.handleDelete}
+                                            />),
+                                    },
+                                ]
+                            };
+                        })
+                    }
                     />
                 </this.MainTable>
                 <Modal

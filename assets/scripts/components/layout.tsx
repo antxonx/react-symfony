@@ -14,17 +14,21 @@ export default class Layout extends React.Component<LayoutPropsI, {}> {
     render = (): JSX.Element => {
         return (
             <>
-                {this.props.title ? (
-                    <Head>
-                        <meta property="og:title" content={this.props.title} />
-                        <title>{this.props.title}</title>
-                    </Head>
-                ) : <></>}
-                {(this.props.top === undefined || this.props.top) ? (
-                    <section className="page-title">
-                        <h5>{this.props.title}</h5>
-                    </section>
-                ) : <></>}
+                {
+                    this.props.title && (
+                        <Head>
+                            <meta property="og:title" content={this.props.title} />
+                            <title>{this.props.title}</title>
+                        </Head>
+                    )
+                }
+                {
+                    (this.props.top === undefined || this.props.top) && (
+                        <section className="page-title">
+                            <h5>{this.props.title}</h5>
+                        </section>
+                    )
+                }
                 <main className="w-99 mx-auto">
                     {this.props.children}
                 </main>

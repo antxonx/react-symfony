@@ -101,46 +101,50 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
     render = (): JSX.Element => {
         return (
             <Layout title="Inicar sesión" top={false}>
-                {this.state.isLoggedIn ? (
-                    <Redirect to={(new Router()).get("dashboard")} />
-                ) : (
-                        <div className="vertical-center w-100">
-                            <div className="card mx-auto wd-40-wm-95 mt-5 round shadow-lg">
-                                <div className="card-body">
-                                    <h5 className="h3 mb-3 font-weight-normal text-center">Inicia sesión</h5>
-                                    <hr className="divide" />
-                                    {this.state.error ? (
-                                        <div className="alert alert-danger round text-center">
-                                            {this.state.errorMsg}
+                {
+                    this.state.isLoggedIn
+                        ? <Redirect to={(new Router()).get("dashboard")} />
+                        : (
+                            <div className="vertical-center w-100">
+                                <div className="card mx-auto wd-40-wm-95 mt-5 round shadow-lg">
+                                    <div className="card-body">
+                                        <h5 className="h3 mb-3 font-weight-normal text-center">Inicia sesión</h5>
+                                        <hr className="divide" />
+                                        {
+                                            this.state.error && (
+                                                <div className="alert alert-danger round text-center">
+                                                    {this.state.errorMsg}
+                                                </div>
+                                            )
+                                        }
+                                        <form onSubmit={this.handleSubmit}>
+                                            <TextInput
+                                                name="username"
+                                                onChange={this.handleChange}
+                                                onKeyDown={this.handleKeyDown}
+                                                error={this.state.errors.username}
+                                                errorMsg="Ingresa un nombre de usaurio válido"
+                                            />
+                                            <TextInput
+                                                name="password"
+                                                type="password"
+                                                onChange={this.handleChange}
+                                                error={this.state.errors.password}
+                                                errorMsg="Ingresa una contraseña"
+                                            />
+                                            <SubmitButton text="Iniciar sesión" loading={this.state.loading} />
+                                        </form>
+                                        <hr />
+                                        <div className="text-center">
+                                            <small>
+                                                <Link to="/">Olvidé mi contraseña</Link>
+                                            </small>
                                         </div>
-                                    ) : <></>}
-                                    <form onSubmit={this.handleSubmit}>
-                                        <TextInput
-                                            name="username"
-                                            onChange={this.handleChange}
-                                            onKeyDown={this.handleKeyDown}
-                                            error={this.state.errors.username}
-                                            errorMsg="Ingresa un nombre de usaurio válido"
-                                        />
-                                        <TextInput
-                                            name="password"
-                                            type="password"
-                                            onChange={this.handleChange}
-                                            error={this.state.errors.password}
-                                            errorMsg="Ingresa una contraseña"
-                                        />
-                                        <SubmitButton text="Iniciar sesión" loading={this.state.loading} />
-                                    </form>
-                                    <hr />
-                                    <div className="text-center">
-                                        <small>
-                                            <Link to="/">Olvidé mi contraseña</Link>
-                                        </small>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )
+                }
             </Layout>
         );
     };

@@ -57,13 +57,15 @@ export default class Paginator extends React.Component<PaginatorPropsI, {}>{
                                 Anterior
                         </this.PageLink>
                         </li>
-                        {(this.props.actual > 3) ? (
-                            <li className="page-item disabled">
-                                <this.PageLink className="page-link paginator" page-index={1} aria-label="...">
-                                    ...
-                            </this.PageLink>
-                            </li>
-                        ) : <></>}
+                        {
+                            (this.props.actual > 3) && (
+                                <li className="page-item disabled">
+                                    <this.PageLink className="page-link paginator" page-index={1} aria-label="...">
+                                        ...
+                                    </this.PageLink>
+                                </li>
+                            )
+                        }
                         {Array.apply(null, Array(MaxLink)).map((_, i) => {
                             i -= 2;
                             const index = this.props.actual + i;
@@ -78,19 +80,23 @@ export default class Paginator extends React.Component<PaginatorPropsI, {}>{
                                 );
                             }
                         })}
-                        {(this.props.actual < (this.props.maxPages - 2)) ? (
-                            <li className="page-item disabled">
-                                <this.PageLink
-                                    className="page-link paginator"
-                                    page-index={this.props.maxPages}
-                                    aria-label="..."
-                                >
-                                    ...
-                            </this.PageLink>
-                            </li>
-                        ) : <></>}
+                        {
+                            (this.props.actual < (this.props.maxPages - 2)) && (
+                                <li className="page-item disabled">
+                                    <this.PageLink
+                                        className="page-link paginator"
+                                        page-index={this.props.maxPages}
+                                        aria-label="..."
+                                    >
+                                        ...
+                                    </this.PageLink>
+                                </li>
+                            )
+                        }
                         <li className={"page-item" + (this.props.actual === this.props.maxPages ? " disabled" : "")}>
-                            <this.PageLink className="page-link paginator" page-index={this.props.actual + 1}>Siguiente</this.PageLink>
+                            <this.PageLink className="page-link paginator" page-index={this.props.actual + 1}>
+                                Siguiente
+                            </this.PageLink>
                         </li>
                         <li className={"page-item" + (this.props.actual === this.props.maxPages ? " disabled" : "")}>
                             <this.PageLink
@@ -103,7 +109,7 @@ export default class Paginator extends React.Component<PaginatorPropsI, {}>{
                                 aria-label="Último"
                             >
                                 &raquo;
-                        </this.PageLink>
+                            </this.PageLink>
                         </li>
                     </ul>
                 </nav>

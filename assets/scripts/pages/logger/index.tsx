@@ -109,58 +109,60 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
                     </Column>
                 </this.MainBar>
                 <this.MainTable>
-                    <Tbody rows={...this.state.requestResult.entities.map((_log, i) => {
-                        if (_log.infoField) {
-                            const log = (this.state.requestResult.entities[ i - 1 ] as unknown) as ErrorLogI | InfoLogI;
-                            return {
-                                id: "info-" + _log.id,
-                                cells: [
-                                    {
-                                        name: "info",
-                                        children: (
-                                            <div id={"info-" + _log.id} className="collapse full-cont">
-                                                <Log log={log} />
-                                            </div>
-                                        ),
-                                        colSpan: 5,
-                                        className: "p-0"
-                                    }
-                                ]
-                            };
-                        } else {
-                            const log = (_log as unknown) as ErrorLogI | InfoLogI;
-                            return {
-                                id: log.id.toString(),
-                                "data-toggle": "collapse",
-                                "data-target": "#info-" + log.id,
-                                "aria-expanded": "false",
-                                "aria-controls": "info-" + log.id,
-                                cells: [
-                                    {
-                                        name: "id",
-                                        children: <b>{log.id}</b>,
-                                        className: "text-right cursor-pointer",
-                                    }, {
-                                        name: "date",
-                                        children: <this.CreationDate system={log.system} level={log.level} children={log.createdAt} />,
-                                        className: "cursor-pointer",
-                                    }, {
-                                        name: "method",
-                                        children: <Method method={log.method} />,
-                                        className: "cursor-pointer",
-                                    }, {
-                                        name: "route",
-                                        children: <>{log.route}</>,
-                                        className: "cursor-pointer",
-                                    }, {
-                                        name: "message",
-                                        children: <>{parser(log.message)}</>,
-                                        className: "text-truncate cursor-pointer",
-                                    }
-                                ]
-                            };
-                        }
-                    })}
+                    <Tbody rows={
+                        ...this.state.requestResult.entities.map((_log, i) => {
+                            if (_log.infoField) {
+                                const log = (this.state.requestResult.entities[ i - 1 ] as unknown) as ErrorLogI | InfoLogI;
+                                return {
+                                    id: "info-" + _log.id,
+                                    cells: [
+                                        {
+                                            name: "info",
+                                            children: (
+                                                <div id={"info-" + _log.id} className="collapse full-cont">
+                                                    <Log log={log} />
+                                                </div>
+                                            ),
+                                            colSpan: 5,
+                                            className: "p-0"
+                                        }
+                                    ]
+                                };
+                            } else {
+                                const log = (_log as unknown) as ErrorLogI | InfoLogI;
+                                return {
+                                    id: log.id.toString(),
+                                    "data-toggle": "collapse",
+                                    "data-target": "#info-" + log.id,
+                                    "aria-expanded": "false",
+                                    "aria-controls": "info-" + log.id,
+                                    cells: [
+                                        {
+                                            name: "id",
+                                            children: <b>{log.id}</b>,
+                                            className: "text-right cursor-pointer",
+                                        }, {
+                                            name: "date",
+                                            children: <this.CreationDate system={log.system} level={log.level} children={log.createdAt} />,
+                                            className: "cursor-pointer",
+                                        }, {
+                                            name: "method",
+                                            children: <Method method={log.method} />,
+                                            className: "cursor-pointer",
+                                        }, {
+                                            name: "route",
+                                            children: <>{log.route}</>,
+                                            className: "cursor-pointer",
+                                        }, {
+                                            name: "message",
+                                            children: <>{parser(log.message)}</>,
+                                            className: "text-truncate cursor-pointer",
+                                        }
+                                    ]
+                                };
+                            }
+                        })
+                    }
                     />
                 </this.MainTable>
             </Layout>

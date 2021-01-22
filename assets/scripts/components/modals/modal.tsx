@@ -63,13 +63,11 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
                         </h5>
                         {this.props.title && <hr />}
                         <div className="modal-component-body">
-                            {(this.props.loading && (
-                                <LoaderH position="center" />
-                            )) || (
-                                    <>
-                                        {this.props.children}
-                                    </>
-                                )}
+                            {
+                                this.props.loading
+                                    ? <LoaderH position="center" />
+                                    : this.props.children
+                            }
                         </div>
                         <Button
                             color="danger"

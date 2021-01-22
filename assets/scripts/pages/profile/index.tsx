@@ -134,23 +134,27 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
                                     onTextFieldCacel={this.onTextFieldCalcel}
                                     wait={!this.state.user}
                                 />
-                                {this.state.user && this.state.user.roles && (
-                                    <div className="w-100">
-                                        <small>
-                                            <b>Puesto:</b>
-                                        </small>
-                                    </div>
-                                )}
+                                {
+                                    (this.state.user && this.state.user.roles) && (
+                                        <div className="w-100">
+                                            <small>
+                                                <b>Puesto:</b>
+                                            </small>
+                                        </div>
+                                    )
+                                }
                                 <ul className="list-group list-group-horizontal">
-                                    {this.state.user?.roles.map(role => {
-                                        if (role != "ROLE_USER") {
-                                            return (
-                                                <li key={role} className="list-group-item border-0 p-1">
-                                                    <RoleBadge role={role} />
-                                                </li>
-                                            );
-                                        }
-                                    })}
+                                    {
+                                        this.state.user?.roles.map(role => {
+                                            if (role != "ROLE_USER") {
+                                                return (
+                                                    <li key={role} className="list-group-item border-0 p-1">
+                                                        <RoleBadge role={role} />
+                                                    </li>
+                                                );
+                                            }
+                                        })
+                                    }
                                 </ul>
                                 <br />
                             </Column>
@@ -176,16 +180,18 @@ export default class Profile extends React.Component<ProfilePropsI, ProfileState
                                     title="Contraseña"
                                     loading={!this.state.passwordModalOpen}
                                 >
-                                    {this.state.passwordModalOpen && (
-                                        <Suspense fallback={<LoaderH position="center" />}>
-                                            <PasswordForm onSuccess={(res) => {
-                                                HandleResponse.success(res, this.props.toasts);
-                                                this.setState({
-                                                    passwordModalOpen: false,
-                                                });
-                                            }} />
-                                        </Suspense>
-                                    )}
+                                    {
+                                        this.state.passwordModalOpen && (
+                                            <Suspense fallback={<LoaderH position="center" />}>
+                                                <PasswordForm onSuccess={(res) => {
+                                                    HandleResponse.success(res, this.props.toasts);
+                                                    this.setState({
+                                                        passwordModalOpen: false,
+                                                    });
+                                                }} />
+                                            </Suspense>
+                                        )
+                                    }
                                 </Modal>
                             </Column>
                         </Row>

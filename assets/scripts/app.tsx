@@ -105,81 +105,91 @@ class App extends React.Component<{}, AppStateI>{
         return (
             <>
                 <BrowserRouter>
-                    {this.state.loggedIn == null ? (
-                        <Loader />
-                    ) : (this.state.loggedIn ? (
-                        <Suspense fallback={<Loader />}>
-                            <Nav
-                                router={this.router}
-                                username={this.state.payload!.username}
-                                roles={this.state.payload!.roles}
-                            ></Nav>
-                            <Switch>
-                                <Route
-                                    exact
-                                    path={this.router.get("dashboard")}
-                                    component={Dashboard}
-                                />
-                                <Route
-                                    exact
-                                    path={this.router.get("users")}
+                    {
+                        this.state.loggedIn == null
+                            ? (
+                                <Loader />
+                            )
+                            : (
+                                this.state.loggedIn
+                                    ? (
+                                        <Suspense fallback={<Loader />}>
+                                            <Nav
+                                                router={this.router}
+                                                username={this.state.payload!.username}
+                                                roles={this.state.payload!.roles}
+                                            ></Nav>
+                                            <Switch>
+                                                <Route
+                                                    exact
+                                                    path={this.router.get("dashboard")}
+                                                    component={Dashboard}
+                                                />
+                                                <Route
+                                                    exact
+                                                    path={this.router.get("users")}
 
-                                >
-                                    <Users toasts={{
-                                        add: this.addToast
-                                    }} />
-                                </Route>
-                                <Route
-                                    exact
-                                    path={this.router.get("profile")}
-                                >
-                                    <Profile toasts={{
-                                        add: this.addToast,
-                                    }} />
-                                </Route>
-                                <Route
-                                    exact
-                                    path={this.router.get("logger")}
-                                >
-                                    <Logger toasts={{
-                                        add: this.addToast,
-                                    }} />
-                                </Route>
-                                <Route
-                                    exact
-                                    path={this.router.get("logout")}
-                                    component={Logout}
-                                />
-                                <Route component={Error404} />
+                                                >
+                                                    <Users toasts={{
+                                                        add: this.addToast
+                                                    }} />
+                                                </Route>
+                                                <Route
+                                                    exact
+                                                    path={this.router.get("profile")}
+                                                >
+                                                    <Profile toasts={{
+                                                        add: this.addToast,
+                                                    }} />
+                                                </Route>
+                                                <Route
+                                                    exact
+                                                    path={this.router.get("logger")}
+                                                >
+                                                    <Logger toasts={{
+                                                        add: this.addToast,
+                                                    }} />
+                                                </Route>
+                                                <Route
+                                                    exact
+                                                    path={this.router.get("logout")}
+                                                    component={Logout}
+                                                />
+                                                <Route component={Error404} />
 
-                            </Switch>
-                        </Suspense>
-                    ) : (
-                            <Suspense fallback={<Loader />}>
-                                <Redirect to={this.router.get("login")} />
-                                <Switch>
-                                    <Route exact path={this.router.get("dashboard")}>
-                                        <Redirect to={this.router.get("login")} />
-                                    </Route>
-                                    <Route>
-                                        <Login
-                                            logged={this.state.loggedIn}
-                                            onloggedinchange={this.handleLoggedInChange}
-                                        />
-                                    </Route>
-                                </Switch>
-                            </Suspense>
-                        ))}
+                                            </Switch>
+                                        </Suspense>
+                                    )
+                                    : (
+                                        <Suspense fallback={<Loader />}>
+                                            <Redirect to={this.router.get("login")} />
+                                            <Switch>
+                                                <Route exact path={this.router.get("dashboard")}>
+                                                    <Redirect to={this.router.get("login")} />
+                                                </Route>
+                                                <Route>
+                                                    <Login
+                                                        logged={this.state.loggedIn}
+                                                        onloggedinchange={this.handleLoggedInChange}
+                                                    />
+                                                </Route>
+                                            </Switch>
+                                        </Suspense>
+                                    )
+                            )
+                    }
                 </BrowserRouter>
                 <ToastContainer>
-                    {this.state.toasts.map((toast) => {
-                        toast.show = (toast.show === undefined) ? true : toast.show;
-                        return (
-                            <Toast key={toast.id} type={toast.type} title={toast.title} show={toast.show}>
-                                {parse(toast.message)}
-                            </Toast>
-                        );
-                    })}
+                    {
+                        this.state.toasts.map((toast) => {
+                            toast.show = (toast.show === undefined) ? true : toast.show;
+                            return (
+                                <Toast key={toast.id} type={toast.type} title={toast.title} show={toast.show}>
+                                    {parse(toast.message)}
+                                </Toast>
+                            );
+                        })
+                    }
                 </ToastContainer>
             </>
         );

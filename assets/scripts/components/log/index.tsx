@@ -93,7 +93,6 @@ export default class Log extends React.Component<LogPropsI, {}> {
         return (
             <div className="container mx-auto card my-5 round">
                 <div className="card-body">
-
                     <Row extraClass="hide-on-mobile">
                         <Column extraClass="text-left">
                             <b>{this.props.log.id}</b>
@@ -114,9 +113,11 @@ export default class Log extends React.Component<LogPropsI, {}> {
                                 <Method method={this.props.log.method} no100={true} />
                             </Column>
                         </Row>
-                        <Row style={{
-                            transform: "translateY(-1.5rem)"
-                        }}>
+                        <Row
+                            style={{
+                                transform: "translateY(-1.5rem)"
+                            }}
+                        >
                             <Column extraClass="text-center">
                                 <b><em>{this.props.log.createdAt}</em></b>
                             </Column>
@@ -149,22 +150,24 @@ export default class Log extends React.Component<LogPropsI, {}> {
                                 </span>
                             </Column>
                         </Row>
-                        {errorLog.file && (
-                            <Row>
-                                <Column size={8}>
-                                    <span>
-                                        <b>Archivo:</b>{' '}
-                                        {errorLog.file}
-                                    </span>
-                                </Column>
-                                <Column size={4}>
-                                    <span>
-                                        <b>Linea:</b>{' '}
-                                        {errorLog.line}
-                                    </span>
-                                </Column>
-                            </Row>
-                        )}
+                        {
+                            errorLog.file && (
+                                <Row>
+                                    <Column size={8}>
+                                        <span>
+                                            <b>Archivo:</b>{' '}
+                                            {errorLog.file}
+                                        </span>
+                                    </Column>
+                                    <Column size={4}>
+                                        <span>
+                                            <b>Linea:</b>{' '}
+                                            {errorLog.line}
+                                        </span>
+                                    </Column>
+                                </Row>
+                            )
+                        }
                         <hr />
                         {parser(this.props.log.message)}
                     </div>

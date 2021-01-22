@@ -64,28 +64,32 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
     NotFinished = (): JSX.Element => {
         return (
             <>
-                {this.state.loading ? (
-                    <div className="p-4">
-                        <LoaderH position="center" />
-                    </div>
-                ) : (
-                        <div className="btn-group w-100 p-0 m-0 footer">
-                            <Button
-                                color="light"
-                                children={<b>Cancelar</b>}
-                                size={buttonSizes.LARGE}
-                                extraClass="border-0 w-100 p-3"
-                                onClick={() => { this.props.onCancel(this.props.id); }}
-                            />
-                            <Button
-                                color="light"
-                                children={<b>Aceptar</b>}
-                                size={buttonSizes.LARGE}
-                                extraClass="border-0 w-100 p-3"
-                                onClick={this.handleAccept}
-                            />
-                        </div>
-                    )}
+                {
+                    this.state.loading
+                        ? (
+                            <div className="p-4">
+                                <LoaderH position="center" />
+                            </div>
+                        )
+                        : (
+                            <div className="btn-group w-100 p-0 m-0 footer">
+                                <Button
+                                    color="light"
+                                    children={<b>Cancelar</b>}
+                                    size={buttonSizes.LARGE}
+                                    extraClass="border-0 w-100 p-3"
+                                    onClick={() => { this.props.onCancel(this.props.id); }}
+                                />
+                                <Button
+                                    color="light"
+                                    children={<b>Aceptar</b>}
+                                    size={buttonSizes.LARGE}
+                                    extraClass="border-0 w-100 p-3"
+                                    onClick={this.handleAccept}
+                                />
+                            </div>
+                        )
+                }
             </>
         );
     };
@@ -94,9 +98,9 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
         const isSuccess = (this.state.finishedState!.type === FinishedStateTypes.SUCCESS);
         const alertClass = (isSuccess ? "light" : "danger");
         const icon = (
-            isSuccess ?
-                <i className="far fa-check-circle fa-2x"></i> :
-                <i className="far fa-times-circle fa-2x"></i>
+            isSuccess
+                ? <i className="far fa-check-circle fa-2x"></i>
+                : <i className="far fa-times-circle fa-2x"></i>
         );
         return (
             <div>
@@ -138,33 +142,38 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
 
     render = (): JSX.Element => {
         this.hideScroll();
-        let icon: JSX.Element;
-        switch (this.props.type) {
-            case "info":
-                icon = <i className="fas fa-info-circle fa-2x text-info"></i>;
-                break;
-            case "warning":
-                icon = <i className="fas fa-exclamation-triangle fa-2x text-warning"></i>;
-                break;
-            case "alert":
-            default:
-                icon = <i className="fas fa-exclamation-triangle fa-2x text-danger"></i>;
-                break;
-        }
         return (
             <div className={"modal-component" + (this.props.show ? " show" : "")}>
                 <div className="modal-component-content modal-alert">
                     <div className="pt-3 pl-3">
-                        {icon}
+                        <i className={
+                            "fas fa-2x " +
+                            (() => {
+                                switch (this.props.type) {
+                                    case "info": return "fa-info-circle text-info";
+                                    case "warning": return "fa-exclamation-triangle fa-2x text-warning";
+                                    default: return "fa-exclamation-triangle text-danger";
+                                }
+                            })()
+                        }>
+                        </i>
                     </div>
-                    {this.state.finishedState ? <></> : (
-                        <div className="p-4">
-                            <h3 className="text-center">
-                                {this.props.message}
-                            </h3>
-                        </div>
-                    )}
-                    {this.state.finishedState ? <this.Finished /> : <this.NotFinished />}
+                    {
+                        this.state.finishedState
+                            ? <></>
+                            : (
+                                <div className="p-4">
+                                    <h3 className="text-center">
+                                        {this.props.message}
+                                    </h3>
+                                </div>
+                            )
+                    }
+                    {
+                        this.state.finishedState
+                            ? <this.Finished />
+                            : <this.NotFinished />
+                    }
                 </div>
             </div>
         );

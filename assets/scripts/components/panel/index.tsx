@@ -130,33 +130,42 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
 
     protected getEntities = (): PT[] => {
         return this.state.requestResult.entities;
-    }
+    };
+
+    protected Table = (props: React.PropsWithChildren<{}>): JSX.Element => {
+        return (
+            <>
+                <Table extraClass={this.tableExtraClass}>
+                    <Thead cells={this.header} />
+                    {
+                        this.state.loading
+                            ? <TableLoader colSpan={this.header.length} />
+                            : props.children
+                    }
+                </Table>
+                <Paginator
+                    actual={this.params.page}
+                    maxPages={this.state.requestResult.maxPages}
+                    showed={this.state.requestResult.showed}
+                    total={this.state.requestResult.total}
+                    onClick={(page: number) => {
+                        this.params.page = page;
+                        this.update();
+                    }}
+                />
+            </>
+        );
+    };
 
     protected MainTable = (props: React.PropsWithChildren<{}>) => {
         return (
             <>
-                {this.route.trim() === "" ? <this.NoRoute /> :
-                    (this.state.requestResult.entities.length === 0 && !this.state.loading) ? <this.NoRegisters /> : (
-                        <>
-                            <Table extraClass={this.tableExtraClass}>
-                                <Thead cells={this.header} />
-                                {this.state.loading ?
-                                    <TableLoader colSpan={this.header.length} /> :
-                                    props.children
-                                }
-                            </Table>
-                            <Paginator
-                                actual={this.params.page}
-                                maxPages={this.state.requestResult.maxPages}
-                                showed={this.state.requestResult.showed}
-                                total={this.state.requestResult.total}
-                                onClick={(page: number) => {
-                                    this.params.page = page;
-                                    this.update();
-                                }}
-                            />
-                        </>
-                    )
+                {
+                    (this.route.trim() === "")
+                        ? <this.NoRoute />
+                        : (this.state.requestResult.entities.length === 0 && !this.state.loading)
+                            ? <this.NoRegisters />
+                            : <this.Table children={props.children} />
                 }
             </>
         );
