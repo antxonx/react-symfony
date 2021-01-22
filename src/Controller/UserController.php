@@ -116,7 +116,7 @@ class UserController extends AbstractController
             $user = $this->rep->findOneBy(
                 ["username" => $this->security->getUser()->getUsername()]
             );
-            if(trim($content->value) === "") {
+            if (trim($content->value) === "") {
                 throw new Exception("El valor no puede estar vacío");
             }
             if ($content->name == "username") {
@@ -143,7 +143,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/password/{id}", name="user_change_password", methods={"PATCH"}, options={"expose"=true})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_DEV")
      */
     public function updateUserPassword(int $id, Request $request): JsonResponse
     {
@@ -155,7 +155,7 @@ class UserController extends AbstractController
             if ($content->new != $content->confirmNew) {
                 throw new Exception("Las contraseñas no coinciden");
             }
-            if($user->hasRole("ROLE_DEV") && ($this->getActualUser()->getUsername() !== $user->getUsername())) {
+            if ($user->hasRole("ROLE_DEV") && !$this->getActualUser()->hasRole("ROLE_DEV")) {
                 throw new Exception("<strong>No se puede cambiar la contraseña del desarrolador</strong>");
             }
             $user->setPassword(
@@ -174,6 +174,19 @@ class UserController extends AbstractController
     }
 
     /**
+     * Undocumented function
+     *
+     * @param integer $id
+     * @param JWTTokenManagerInterface $jtw
+     * @return JsonResponse
+     */
+    public function impersonate(int $id, JWTTokenManagerInterface $jtw): JsonResponse
+    {
+        $user = $this->rep->find($id);
+        return new JsonResponse(["token" => $jtw->create($user)]);
+    }
+
+    /**
      * @Route("/{id}", name="user_delete", methods={"DELETE"}, options={"expose" = true})
      * @IsGranted("ROLE_ADMIN")
      */
@@ -186,7 +199,7 @@ class UserController extends AbstractController
             if (!$user) {
                 throw new Exception("No se encontró a usuario");
             }
-            if($user->hasRole("ROLE_DEV") && !$this->getActualUser()->hasRole("ROLE_DEV")) {
+            if ($user->hasRole("ROLE_DEV") && !$this->getActualUser()->hasRole("ROLE_DEV")) {
                 throw new Exception("<strong>No se puede eliminar a este usuario</strong>");
             }
             $name = $user->getName();
@@ -210,13 +223,13 @@ class UserController extends AbstractController
             $user = $this->rep->findOneBy(
                 ['id' => $id]
             );
-            if(!$user) {
+            if (!$user) {
                 throw new Exception("No se pudo encontrar al usuario");
             }
-            if($user->hasRole("ROLE_DEV") && !$this->getActualUser()->hasRole("ROLE_DEV")) {
+            if ($user->hasRole("ROLE_DEV") && !$this->getActualUser()->hasRole("ROLE_DEV")) {
                 throw new Exception("No se puede editar a este usuario");
             }
-            if(!is_array($content->value) && trim($content->value) === "") {
+            if (!is_array($content->value) && trim($content->value) === "") {
                 throw new Exception("El valor no puede estar vacío");
             }
             if ($content->name == "username") {
@@ -240,7 +253,7 @@ class UserController extends AbstractController
                 "<b>{$whatCap}</b> actualizado",
                 "Se ha cambiado el <b>{$what}</b> para el usaurio <b>{$user->getName()}</b> (<em>{$user->getUsername()}</em>)"
             );
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return $this->response->error($e);
         }
     }
@@ -259,7 +272,13 @@ class UserController extends AbstractController
             $showed = (($total > $entities->count()) ? $entities->count() : $total);
             $maxPages = ceil($entities->count() / $this->rep::MAX_ENTITIES);
             foreach ($entities as $entity) {
-                $result[] = $entity;
+                if($entity->hasRole("ROLE_DEV")) {
+                    if($this->getActualUser()->hasRole("ROLE_DEV")) {
+                        $result[] = $entity;        
+                    }
+                } else {
+                    $result[] = $entity;
+                }
             }
             return $this->response->successNoLog(json_encode([
                 "entities" => $result,
