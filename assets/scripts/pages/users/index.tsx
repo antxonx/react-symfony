@@ -58,15 +58,15 @@ export default class Users extends Panel<UserI, UsersStateI> {
             }, {
                 key: "password",
                 children: <FontAwesomeIcon icon={[ 'fas', 'key' ]} />,
-                className: "icon-col",
+                className: "icon-col border-right-0",
             }, {
                 key: "impersonate",
                 children: <FontAwesomeIcon icon={[ 'fas', 'user-alt' ]} />,
-                className: "icon-col",
+                className: "icon-col border-right-0 border-left-0",
             }, {
                 key: "delete",
                 children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
-                className: "icon-col",
+                className: "icon-col border-left-0",
             },
         ];
         this.route = "user_all";
@@ -227,8 +227,6 @@ export default class Users extends Panel<UserI, UsersStateI> {
             impersonateLoading: loadingStates,
         });
         try {
-            // const res = await axios.get(this.router.apiGet("user_impersonate", {id: id}));
-            // Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
             await Authentication.impersonate(id);
             window.location.href = this.router.get("dashboard");
         } catch (err) {
@@ -288,11 +286,12 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                     },
                                     {
                                         key: "role",
-                                        children: <RoleBadge role={user.roles[ 0 ]} />,
                                         className: "cursor-pointer",
+                                        children: <RoleBadge role={user.roles[ 0 ]} />,
                                         onClick: this.handleRowClick,
                                     }, {
                                         key: "password",
+                                        className: "border-right-0",
                                         children:
                                             (<Action<number>
                                                 id={user.id}
@@ -302,7 +301,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                             />),
                                     }, {
                                         key: "impersonate",
-
+                                        className: "border-right-0 border-left-0",
                                         children:
                                             (<Action<number>
                                                 key={"_action_" + user.id}
@@ -314,6 +313,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                             />),
                                     }, {
                                         key: "delete",
+                                        className: "border-left-0",
                                         children:
                                             (<ButtonDelete<number>
                                                 id={user.id}
