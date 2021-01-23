@@ -5,6 +5,7 @@ import Method from '@components/log/method';
 import Panel, { PanelPropsI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
+import React from 'react';
 
 interface LoggerStateI { }
 
@@ -43,6 +44,15 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
         ];
         this.route = LogRoutes.UNDEFINED;
         this.tableExtraClass = "fixed";
+        const propsL = (this.props as any);
+        this.params = {
+            page: 1,
+            user: (propsL.location && propsL.location.state && propsL.location.state.id) || 0,
+        }
+    }
+
+    componentDidMount = () => {
+        
     }
 
     handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {

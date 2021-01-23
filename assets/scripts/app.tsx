@@ -46,12 +46,14 @@ class App extends React.Component<{}, AppStateI>{
 
     refreshToken = () => {
         const payload = Authentication.getPayload();
-        let time = (payload!.exp - Math.floor(Date.now() / 1000) - 300);
-        time = (time < 0) ? 0 : time;
-        setTimeout(() => {
-            Authentication.refreshToken();
-            this.refreshToken();
-        }, time * 1000);
+        let time = (payload!.exp - Math.floor(Date.now() / 1000));
+        time = (time < 300) ? 0 : time;
+        if (time > 0) {
+            setTimeout(() => {
+                Authentication.refreshToken();
+                this.refreshToken();
+            }, time * 1000);
+        }
     };
 
     checkLogin = async () => {
@@ -140,14 +142,21 @@ class App extends React.Component<{}, AppStateI>{
                                                     </Route>
                                                 )}
                                                 {roles.includes("ROLE_DEV") && (
-                                                    <Route
-                                                        exact
-                                                        path={this.router.get("logger")}
-                                                    >
-                                                        <Logger toasts={{
-                                                            add: this.addToast,
-                                                        }} />
-                                                    </Route>
+                                                    <>
+                                                        {/* <Route
+                                                            exact
+                                                            path={this.router.get("logger")}
+                                                        >
+                                                            <Logger toasts={{
+                                                                add: this.addToast,
+                                                            }} />
+                                                        </Route> */}
+                                                        <Route
+                                                            exact
+                                                            path={this.router.get("logger")}
+                                                            render={(props) => <Logger toasts={{ add: this.addToast }} {...props} />}
+                                                        />
+                                                    </>
                                                 )}
                                                 <Route
                                                     exact

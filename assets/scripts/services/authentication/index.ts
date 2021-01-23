@@ -25,7 +25,20 @@ enum CookiesNames {
 export default class Authentication {
 
     public static isLoggedIn = async (): Promise<boolean> => {
-        return Authentication.isTokenDefined();
+        const payload = Authentication.getPayload();
+        let result: boolean;
+        if(!payload) {
+            result = false;
+        } else {
+            const time = (payload.exp - Math.floor(Date.now() / 1000));
+            if(time > 0) {
+                result = true;
+            } else {
+                result = false;
+            }
+        }
+        !result && Authentication.deleteCookie(CookiesNames.AUTH_COOKIE_NAME);
+        return result;  
     };
 
     public static setToken = (value: string) => {
@@ -145,7 +158,7 @@ export default class Authentication {
 
     public static getRoles = (): string[] => {
         if (!Authentication.isTokenDefined()) {
-            throw Error("Usuario no autentificado");
+            return [];
         }
         return Authentication.getPayload()!.roles;
     };

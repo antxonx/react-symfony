@@ -16,6 +16,12 @@ export interface PanelPropsI {
     }
 }
 
+export interface PanelStateI<PT, ST> {
+    loading: boolean;
+    requestResult: RequestResult<PT>;
+    state: ST;
+}
+
 interface RequestResult<RRT> {
     entities: RRT[];
     maxPages: number;
@@ -23,11 +29,7 @@ interface RequestResult<RRT> {
     total: number;
 }
 
-export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI, {
-    loading: boolean;
-    requestResult: RequestResult<PT>;
-    state: ST;
-}> {
+export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI, PanelStateI<PT, ST>> {
     protected header: ThPropsI[];
 
     protected router: Router;
