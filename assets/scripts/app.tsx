@@ -5,18 +5,14 @@ import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-route
 import { Router } from '@scripts/router';
 import parse from 'html-react-parser';
 import '@styles/app.scss';
-import {
-    TransitionGroup,
-    CSSTransition
-} from "react-transition-group";
 
-const Profile = React.lazy(() => import('@pages/profile'));
-const Error404 = React.lazy(() => import('@pages/error404'));
-const Logout = React.lazy(() => import('@pages/logout'));
-const Dashboard = React.lazy(() => import('@pages/dashboard'));
-const Login = React.lazy(() => import('@pages/login'));
-const Users = React.lazy(() => import('@pages/users'));
-const Logger = React.lazy(() => import('@pages/logger'));
+import Profile from '@pages/profile';
+import Error404 from '@pages/error404'
+import Logout from '@pages/logout';
+import Dashboard  from '@pages/dashboard';
+import Login from '@pages/login';
+import Users from '@pages/users';
+import Logger from '@pages/logger';
 
 import Authentication, { TokenPayloadI } from '@services/authentication';
 
@@ -110,118 +106,7 @@ class App extends React.Component<{}, AppStateI>{
         }, 200);
     };
 
-    // render = (): JSX.Element => {
-    //     let location = useLocation();
-    //     const roles = Authentication.getRoles();
-    //     return (
-    //         <ErrorBoundary>
-    //             <BrowserRouter>
-    //                 {
-    //                     this.state.loggedIn == null
-    //                         ? (
-    //                             <Loader />
-    //                         )
-    //                         : (
-    //                             this.state.loggedIn
-    //                                 ? (
-    //                                     <Suspense fallback={<Loader />}>
-    //                                         <Nav
-    //                                             router={this.router}
-    //                                         ></Nav>
-    //                                         <TransitionGroup>
-    //                                             <CSSTransition
-    //                                                 key={location.key}
-    //                                                 classNames="fade"
-    //                                                 timeout={300}
-    //                                             >
-    //                                                 <Switch location={location}>
-    //                                                     <Route
-    //                                                         exact
-    //                                                         path={this.router.get("dashboard")}
-    //                                                         component={Dashboard}
-    //                                                     />
-    //                                                     {roles.includes("ROLE_ADMIN") && (
-    //                                                         <Route
-    //                                                             exact
-    //                                                             path={this.router.get("users")}
-
-    //                                                         >
-    //                                                             <Users
-    //                                                                 toasts={{
-    //                                                                     add: this.addToast
-    //                                                                 }}
-    //                                                             />
-    //                                                         </Route>
-    //                                                     )}
-    //                                                     {roles.includes("ROLE_DEV") && (
-    //                                                         <Route
-    //                                                             exact
-    //                                                             path="/logger"
-    //                                                         >
-    //                                                             <Logger toasts={{
-    //                                                                 add: this.addToast,
-    //                                                             }} />
-    //                                                         </Route>
-    //                                                     )}
-    //                                                     <Route
-    //                                                         exact
-    //                                                         path={this.router.get("profile")}
-    //                                                     >
-    //                                                         <Profile
-    //                                                             toasts={{
-    //                                                                 add: this.addToast,
-    //                                                             }}
-    //                                                         />
-    //                                                     </Route>
-    //                                                     <Route
-    //                                                         exact
-    //                                                         path={this.router.get("logout")}
-    //                                                         component={Logout}
-    //                                                     />
-    //                                                     <Route component={Error404} />
-
-    //                                                 </Switch>
-    //                                             </CSSTransition>
-    //                                         </TransitionGroup>
-    //                                     </Suspense>
-    //                                 )
-    //                                 : (
-    //                                     <Suspense fallback={<Loader />}>
-    //                                         <Redirect to={this.router.get("login")} />
-    //                                         <Switch>
-    //                                             <Route exact path={this.router.get("dashboard")}>
-    //                                                 <Redirect to={this.router.get("login")} />
-    //                                             </Route>
-    //                                             <Route>
-    //                                                 <Login
-    //                                                     logged={this.state.loggedIn}
-    //                                                     onloggedinchange={this.handleLoggedInChange}
-    //                                                 />
-    //                                             </Route>
-    //                                         </Switch>
-    //                                     </Suspense>
-    //                                 )
-    //                         )
-    //                 }
-    //             </BrowserRouter>
-    //             <ToastContainer>
-    //                 {
-    //                     this.state.toasts.map((toast) => {
-    //                         toast.show = (toast.show === undefined) ? true : toast.show;
-    //                         return (
-    //                             <Toast key={toast.id} type={toast.type} title={toast.title} show={toast.show}>
-    //                                 {parse(toast.message)}
-    //                             </Toast>
-    //                         );
-    //                     })
-    //                 }
-    //             </ToastContainer>
-    //         </ErrorBoundary>
-    //     );
-    // };
-
     render = (): JSX.Element => {
-        // let location = useLocation();
         const roles = Authentication.getRoles();
         return (
             <ErrorBoundary>
@@ -238,53 +123,53 @@ class App extends React.Component<{}, AppStateI>{
                                             <Nav
                                                 router={this.router}
                                             ></Nav>
-                                            <NavigationContainer toast={{add: this.addToast}}>
-                                                        <Route
-                                                            exact
-                                                            path={this.router.get("dashboard")}
-                                                            component={Dashboard}
-                                                        />
-                                                        {roles.includes("ROLE_ADMIN") && (
-                                                            <Route
-                                                                exact
-                                                                path={this.router.get("users")}
+                                            <NavigationContainer toast={{ add: this.addToast }}>
+                                                <Route
+                                                    exact
+                                                    path={this.router.get("dashboard")}
+                                                    component={Dashboard}
+                                                />
+                                                {roles.includes("ROLE_ADMIN") && (
+                                                    <Route
+                                                        exact
+                                                        path={this.router.get("users")}
 
-                                                            >
-                                                                <Users
-                                                                    toasts={{
-                                                                        add: this.addToast
-                                                                    }}
-                                                                />
-                                                            </Route>
-                                                        )}
-                                                        {roles.includes("ROLE_DEV") && (
-                                                            <Route
-                                                                exact
-                                                                path="/logger"
-                                                            >
-                                                                <Logger toasts={{
-                                                                    add: this.addToast,
-                                                                }} />
-                                                            </Route>
-                                                        )}
-                                                        <Route
-                                                            exact
-                                                            path={this.router.get("profile")}
-                                                        >
-                                                            <Profile
-                                                                toasts={{
-                                                                    add: this.addToast,
-                                                                }}
-                                                            />
-                                                        </Route>
-                                                        <Route
-                                                            exact
-                                                            path={this.router.get("logout")}
-                                                            component={Logout}
+                                                    >
+                                                        <Users
+                                                            toasts={{
+                                                                add: this.addToast
+                                                            }}
                                                         />
-                                                        <Route component={Error404} />
+                                                    </Route>
+                                                )}
+                                                {roles.includes("ROLE_DEV") && (
+                                                    <Route
+                                                        exact
+                                                        path="/logger"
+                                                    >
+                                                        <Logger toasts={{
+                                                            add: this.addToast,
+                                                        }} />
+                                                    </Route>
+                                                )}
+                                                <Route
+                                                    exact
+                                                    path={this.router.get("profile")}
+                                                >
+                                                    <Profile
+                                                        toasts={{
+                                                            add: this.addToast,
+                                                        }}
+                                                    />
+                                                </Route>
+                                                <Route
+                                                    exact
+                                                    path={this.router.get("logout")}
+                                                    component={Logout}
+                                                />
+                                                <Route component={Error404} />
 
-                                                        </NavigationContainer>
+                                            </NavigationContainer>
                                         </Suspense>
                                     )
                                     : (

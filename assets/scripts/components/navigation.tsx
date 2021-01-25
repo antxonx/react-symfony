@@ -10,8 +10,7 @@ export default function NavigationContainer(props: React.PropsWithChildren<{ toa
         <SwitchTransition mode="out-in">
             <CSSTransition
                 key={location.key}
-                classNames="fade"
-                timeout={300}
+                classNames="page"
                 addEndListener={(node, done) => {
                     node.addEventListener("transitionend", done, false);
                 }}
