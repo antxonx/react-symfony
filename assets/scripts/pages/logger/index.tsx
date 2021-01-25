@@ -77,6 +77,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                 this.route = LogRoutes.UNDEFINED;
                 break;
         }
+        this.params.page = 1;
         this.update();
     };
 

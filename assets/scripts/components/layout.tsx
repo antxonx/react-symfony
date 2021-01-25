@@ -29,13 +29,7 @@ export default class Layout extends React.Component<LayoutPropsI, {}> {
                         </section>
                     )
                 }
-                <main className="w-99 mx-auto" 
-                // style={{
-                //     position: "absolute",
-                //     top: "54px",
-                //     left: 0,
-                // }}
-                >
+                <main className="w-99 mx-auto" >
                     {this.props.children}
                 </main>
             </div>

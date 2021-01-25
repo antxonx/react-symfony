@@ -1,7 +1,7 @@
 import { ToastEventsI } from '@scripts/app';
 import React from 'react';
 import { Switch, useLocation } from 'react-router-dom';
-import { TransitionGroup, CSSTransition, SwitchTransition } from 'react-transition-group';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
 export default function NavigationContainer(props: React.PropsWithChildren<{ toast: ToastEventsI; }>): JSX.Element {
     let location = useLocation();
