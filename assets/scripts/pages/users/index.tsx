@@ -8,7 +8,7 @@ import LoaderH from '@components/loader/loaderH';
 import RoleBadge from '@components/misc/roleBadge';
 import Alert, { AlertPropsI, FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
 import Modal from '@components/modals/modal';
-import Panel, { PanelPropsI } from '@components/panel';
+import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
 import PasswordFormAdmin from '@scripts/forms/user/passwordAdmin';
@@ -21,7 +21,12 @@ import { Redirect } from 'react-router-dom';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));
-interface UsersStateI {
+
+interface UserPropsI extends PanelPropsI {
+
+}
+
+interface UsersStateI extends PanelStateI<UserI> {
     modal: {
         show: boolean;
         size: number;
@@ -31,12 +36,35 @@ interface UsersStateI {
     impersonateLoading: number[];
     redirectLogger: number;
 }
-export default class Users extends Panel<UserI, UsersStateI> {
+export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
     protected modalContent: JSX.Element;
 
     constructor (props: PanelPropsI) {
         super(props);
+        this.state = {
+            loading: false,
+            requestResult: {
+                entities: [],
+                maxPages: 0,
+                showed: 0,
+                total: 0,
+            },
+            modal: {
+                title: "",
+                show: false,
+                size: 50,
+            },
+            alert: {
+                id: 0,
+                message: <></>,
+                onAccept: this.handleAcceptDelete,
+                onCancel: this.handleCancelDelete,
+                show: false,
+            },
+            impersonateLoading: [],
+            redirectLogger: 0,
+        };
         this.header = [
             {
                 children: "Id",
@@ -81,30 +109,15 @@ export default class Users extends Panel<UserI, UsersStateI> {
     }
 
     componentDidMount = () => {
-        this.setSubState({
-            modal: {
-                show: false,
-                size: 50,
-            },
-            alert: {
-                id: 0,
-                message: <></>,
-                onAccept: this.handleAcceptDelete,
-                onCancel: this.handleCancelDelete,
-                show: false,
-            },
-            impersonateLoading: [],
-            redirectLogger: 0,
-        });
         this.update();
     };
 
     handleCloseModal = () => {
-        this.setSubState({
+        this.setState({
             modal: {
-                ...this.getSubState().modal,
+                ...this.state.modal,
                 show: false,
-            },
+            }
         });
     };
 
@@ -113,11 +126,11 @@ export default class Users extends Panel<UserI, UsersStateI> {
             <AddForm
                 onSuccess={(res: AxiosResponse) => {
                     HandleResponse.success(res, this.props.toasts);
-                    this.setSubState({
+                    this.setState({
                         modal: {
-                            ...this.getSubState().modal,
+                            ...this.state.modal,
                             show: false,
-                        },
+                        }
                     });
                     this.update({ silent: true });
                 }}
@@ -126,7 +139,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 }}
             />
         );
-        this.setSubState({
+        this.setState({
             modal: {
                 title: "Agregar",
                 show: true,
@@ -142,9 +155,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
     };
 
     handleDelete = (id: number, extra: JSX.Element) => {
-        this.setSubState({
+        this.setState({
             alert: {
-                ...this.getSubState().alert,
+                ...this.state.alert,
                 ...{
                     show: true,
                     id: id,
@@ -174,9 +187,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
     };
 
     handleCancelDelete = (id: number) => {
-        this.setSubState({
+        this.setState({
             alert: {
-                ...this.getSubState().alert,
+                ...this.state.alert,
                 ...{
                     show: false
                 }
@@ -199,7 +212,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
             />
         );
         const user = this.getEntities().find(us => us.id === +row.dataset.id!);
-        this.setSubState({
+        this.setState({
             modal: {
                 title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
                 show: true,
@@ -214,8 +227,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 id={id}
                 onSuccess={(res) => {
                     HandleResponse.success(res, this.props.toasts);
-                    this.setSubState({
+                    this.setState({
                         modal: {
+                            ...this.state.modal,
                             show: false,
                         }
                     });
@@ -223,7 +237,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
             />
         );
         const user = this.getEntities().find(us => us.id === id);
-        this.setSubState({
+        this.setState({
             modal: {
                 title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
                 show: true,
@@ -233,9 +247,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
     };
 
     handleImpersonateClick = async (id: number) => {
-        let loadingStates = this.getSubState().impersonateLoading.slice();
+        let loadingStates = this.state.impersonateLoading.slice();
         loadingStates.push(id);
-        this.setSubState({
+        this.setState({
             impersonateLoading: loadingStates,
         });
         try {
@@ -243,16 +257,16 @@ export default class Users extends Panel<UserI, UsersStateI> {
             window.location.href = this.router.get("dashboard");
         } catch (err) {
             HandleResponse.error(err, this.props.toasts);
-            let loadingStates2 = this.getSubState().impersonateLoading.slice();
+            let loadingStates2 = this.state.impersonateLoading.slice();
             loadingStates2.splice(loadingStates2.findIndex(x => x === id), 1);
-            this.setSubState({
+            this.setState({
                 impersonateLoading: loadingStates2,
             });
         }
     };
 
     handleLoadLogger = (id: number) => {
-        this.setSubState({
+        this.setState({
             redirectLogger: id
         });
     };
@@ -261,11 +275,11 @@ export default class Users extends Panel<UserI, UsersStateI> {
         return (
             <Layout title="Usuarios">
                 {
-                    (this.getSubState().redirectLogger > 0)
+                    (this.state.redirectLogger > 0)
                         ? (
                             <Redirect to={{
                                 pathname: this.router.get("logger"),
-                                state: { id: this.getSubState().redirectLogger }
+                                state: { id: this.state.redirectLogger }
                             }} />
                         )
                         : (
@@ -346,7 +360,7 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                                                 id={user.id}
                                                                 color='info'
                                                                 content={<FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />}
-                                                                loading={this.getSubState().impersonateLoading.findIndex(x => x === user.id) >= 0}
+                                                                loading={this.state.impersonateLoading.findIndex(x => x === user.id) >= 0}
                                                                 onClick={this.handleImpersonateClick}
                                                             />),
                                                     }, {
@@ -369,14 +383,14 @@ export default class Users extends Panel<UserI, UsersStateI> {
                                     onClose={this.handleCloseModal}
                                     name="form"
                                     loading={false}
-                                    {...this.getSubState().modal}
+                                    {...this.state.modal}
                                 >
                                     <Suspense fallback={<LoaderH position="center" />}>
                                         {this.modalContent}
                                     </Suspense>
                                 </Modal>
                                 <Alert<number>
-                                    {...this.getSubState().alert}
+                                    {...this.state.alert}
                                 />
                             </>
                         )

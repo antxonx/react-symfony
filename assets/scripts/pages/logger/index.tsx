@@ -2,17 +2,28 @@ import Column from '@components/grid/column';
 import Layout from '@components/layout';
 import Log, { LogI, LogRoutes, LogNames, logTypes, LogMethods, InfoLogI, ErrorLogI } from '@components/log';
 import Method from '@components/log/method';
-import Panel, { PanelPropsI } from '@components/panel';
+import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
 import React from 'react';
 
-interface LoggerStateI { }
+interface LoggerPropsI extends PanelPropsI { }
 
-export default class Logger extends Panel<LogI, LoggerStateI> {
+interface LoggerStateI extends PanelStateI<LogI> { }
+
+export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
 
     constructor (props: PanelPropsI) {
         super(props);
+        this.state = {
+            loading: false,
+            requestResult: {
+                entities: [],
+                maxPages: 0,
+                showed: 0,
+                total: 0,
+            },
+        };
         this.header = [
             {
                 children: "Id",
@@ -120,9 +131,9 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
                 </this.MainBar>
                 <this.MainTable>
                     <Tbody rows={
-                        ...this.state.requestResult.entities.map((_log, i) => {
+                        ...this.getEntities().map((_log, i) => {
                             if (_log.infoField) {
-                                const log = (this.state.requestResult.entities[ i - 1 ] as unknown) as ErrorLogI | InfoLogI;
+                                const log = (this.getEntities()[ i - 1 ] as unknown) as ErrorLogI | InfoLogI;
                                 return {
                                     id: "info-" + _log.id,
                                     cells: [
