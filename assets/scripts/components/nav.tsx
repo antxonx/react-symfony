@@ -18,7 +18,9 @@ export default class Nav extends React.Component<NavPropsI, {}> {
         const roles = Authentication.getRoles();
         const username = Authentication.getUsername();
         return (
-            <nav className="navbar navbar-expand-lg navbar-light">
+            <nav className="navbar navbar-expand-lg navbar-light" style={{
+                height: "54px",
+            }}>
                 <NavLink
                     exact
                     className="navbar-brand"
