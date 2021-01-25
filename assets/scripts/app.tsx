@@ -1,7 +1,7 @@
 import '@fortawesome/fontawesome-free/js/all.min.js';
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import parse from 'html-react-parser';
 import '@styles/app.scss';
@@ -14,7 +14,7 @@ import Login from '@pages/login';
 import Users from '@pages/users';
 import Logger from '@pages/logger';
 
-import Authentication, { TokenPayloadI } from '@services/authentication';
+import Authentication from '@services/authentication';
 
 import Loader from '@components/loader/loader';
 import Toast, { ToastData } from './components/alerts/toast';
@@ -48,8 +48,8 @@ class App extends React.Component<{}, AppStateI>{
     refreshToken = () => {
         const payload = Authentication.getPayload();
         let time = (payload!.exp - Math.floor(Date.now() / 1000));
-        time = (time < 300) ? 0 : time;
-        if (time >= 0) {
+        time = (time < 300 && time > 0) ? 1 : time;
+        if (time > 0) {
             setTimeout(() => {
                 Authentication.refreshToken();
                 this.refreshToken();
@@ -64,7 +64,7 @@ class App extends React.Component<{}, AppStateI>{
             loggedIn: loggedIn,
         });
         if (this.state.loggedIn) {
-            // this.refreshToken();
+            this.refreshToken();
         }
     };
 

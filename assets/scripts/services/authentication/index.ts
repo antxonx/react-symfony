@@ -30,15 +30,15 @@ export default class Authentication {
         if(!payload) {
             result = false;
         } else {
-            const time = (payload.exp - Math.floor(Date.now() / 1000));
+            const time = (payload.exp - (Math.floor(Date.now() / 1000)));
             if(time > 0) {
                 result = true;
             } else {
                 result = false;
+                Authentication.deleteCookie(CookiesNames.AUTH_COOKIE_NAME);
             }
         }
-        !result && Authentication.deleteCookie(CookiesNames.AUTH_COOKIE_NAME);
-        return result;  
+        return result;
     };
 
     public static setToken = (value: string) => {
