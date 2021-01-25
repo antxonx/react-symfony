@@ -124,7 +124,7 @@ export default class Nav extends React.Component<NavPropsI, {}> {
                                 <NavLink
                                     exact
                                     className="dropdown-item"
-                                    to={(new Router(process.env.BASE_URL)).get("logout")}
+                                    to={this.props.router.get("logout")}
                                     children="Salir"
                                 />
                             </div>

@@ -277,10 +277,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 {
                     (this.state.redirectLogger > 0)
                         ? (
-                            <Redirect to={{
-                                pathname: this.router.get("logger"),
-                                state: { id: this.state.redirectLogger }
-                            }} />
+                            <Redirect to={this.router.get("logger") + "?user=" + this.state.redirectLogger} />
                         )
                         : (
                             <>

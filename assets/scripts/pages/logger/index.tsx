@@ -55,15 +55,14 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
         ];
         this.route = LogRoutes.UNDEFINED;
         this.tableExtraClass = "fixed";
-        const propsL = (this.props as any);
-        this.params = {
-            page: 1,
-            user: (propsL.location && propsL.location.state && propsL.location.state.id) || 0,
-        }
     }
 
     componentDidMount = () => {
-        
+        this.params.user = this.getParameterByName("user") || 0;
+    }
+
+    componentDidUpdate = () => {
+        this.params.user = this.getParameterByName("user") || 0;
     }
 
     handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +110,11 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             </span>
         );
     };
+
+    getParameterByName(name: string) {
+        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
 
     render = (): JSX.Element => {
         return (
