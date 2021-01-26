@@ -2,16 +2,31 @@ import Column from '@components/grid/column';
 import Layout from '@components/layout';
 import Log, { LogI, LogRoutes, LogNames, logTypes, LogMethods, InfoLogI, ErrorLogI } from '@components/log';
 import Method from '@components/log/method';
-import Panel, { PanelPropsI } from '@components/panel';
+import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
+import React from 'react';
 
-interface LoggerStateI { }
+interface LoggerPropsI extends PanelPropsI { }
 
-export default class Logger extends Panel<LogI, LoggerStateI> {
+interface LoggerStateI extends PanelStateI<LogI> {
+    changing: boolean;
+}
+
+export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
 
     constructor (props: PanelPropsI) {
         super(props);
+        this.state = {
+            loading: false,
+            requestResult: {
+                entities: [],
+                maxPages: 0,
+                showed: 0,
+                total: 0,
+            },
+            changing: false,
+        };
         this.header = [
             {
                 children: "Id",
@@ -42,21 +57,37 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
             },
         ];
         this.route = LogRoutes.UNDEFINED;
-        this.tableExtraClass = "fixed";
     }
 
+    componentDidMount = () => {
+        this.params.user = this.getParameterByName("user") || 0;
+    };
+
+    componentDidUpdate = () => {
+        this.params.user = this.getParameterByName("user") || 0;
+    };
+
     handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let change = false;
         switch (e.target.value) {
             case LogNames.INFO:
+                if (this.route != LogRoutes.UNDEFINED)
+                    change = true;
                 this.route = LogRoutes.INFO;
                 break;
             case LogNames.ERROR:
+                if (this.route != LogRoutes.UNDEFINED)
+                    change = true;
                 this.route = LogRoutes.ERROR;
                 break;
             default:
                 this.route = LogRoutes.UNDEFINED;
                 break;
         }
+        this.setState({
+            changing: change,
+        });
+        this.params.page = 1;
         this.update();
     };
 
@@ -91,7 +122,22 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
         );
     };
 
+    getParameterByName(name: string) {
+        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        return match && decodeURIComponent(match[ 1 ].replace(/\+/g, ' '));
+    }
+
+    onPageChange = () => {
+        this.setState({
+            changing: true,
+        });
+    };
+
     render = (): JSX.Element => {
+        let extraTableClass = "fixed result-table";
+        if (this.state.loading && this.state.changing) {
+            extraTableClass += " hide";
+        }
         return (
             <Layout title="Registro">
                 <this.MainBar>
@@ -108,11 +154,11 @@ export default class Logger extends Panel<LogI, LoggerStateI> {
                         </div>
                     </Column>
                 </this.MainBar>
-                <this.MainTable>
+                <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing}>
                     <Tbody rows={
-                        ...this.state.requestResult.entities.map((_log, i) => {
+                        ...this.getEntities().map((_log, i) => {
                             if (_log.infoField) {
-                                const log = (this.state.requestResult.entities[ i - 1 ] as unknown) as ErrorLogI | InfoLogI;
+                                const log = (this.getEntities()[ i - 1 ] as unknown) as ErrorLogI | InfoLogI;
                                 return {
                                     id: "info-" + _log.id,
                                     cells: [

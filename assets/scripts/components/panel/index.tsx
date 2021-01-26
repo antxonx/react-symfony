@@ -11,9 +11,11 @@ import Paginator from '@components/paginator/paginator';
 
 export interface PanelPropsI {
     toasts: ToastEventsI;
-    extra?: {
-        [key: string]: any;
-    }
+}
+
+export interface PanelStateI<RRS> {
+    loading: boolean;
+    requestResult: RequestResult<RRS>;
 }
 
 interface RequestResult<RRT> {
@@ -23,43 +25,31 @@ interface RequestResult<RRT> {
     total: number;
 }
 
-export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI, {
-    loading: boolean;
-    requestResult: RequestResult<PT>;
-    state: ST;
-}> {
+export default class Panel<
+    RRT,
+    PT extends PanelPropsI = PanelPropsI,
+    ST extends PanelStateI<RRT> = PanelStateI<RRT>
+    > extends React.Component<PT, ST> {
+
     protected header: ThPropsI[];
 
     protected router: Router;
 
     protected route: string;
 
-    protected tableExtraClass: string;
-
     protected params: {
         page: number;
         [ key: string ]: string | number;
     };
 
-    constructor (props: PanelPropsI) {
+    constructor (props: PT) {
         super(props);
         this.route = "";
-        this.state = {
-            loading: false,
-            requestResult: {
-                entities: [],
-                maxPages: 0,
-                showed: 0,
-                total: 0,
-            },
-            state: {} as ST
-        };
         this.header = [];
         this.params = {
             page: 1
         };
         this.router = new Router(process.env.BASE_URL);
-        this.tableExtraClass = "";
     }
 
     protected MainBar = (props: React.PropsWithChildren<{}>) => {
@@ -82,23 +72,10 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
         });
     };
 
-    protected setRequestResult = (result: RequestResult<PT>) => {
+    protected setRequestResult = (result: RequestResult<RRT>) => {
         this.setState({
             requestResult: result,
         });
-    };
-
-    protected setSubState = (state: {}) => {
-        this.setState({
-            state: {
-                ...this.state.state,
-                ...state,
-            },
-        });
-    };
-
-    protected getSubState = (): ST => {
-        return this.state.state;
     };
 
     protected update = async (options?: { page?: number, silent?: boolean; }) => {
@@ -131,19 +108,28 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
         );
     };
 
-    protected getEntities = (): PT[] => {
+    protected getEntities = (): RRT[] => {
         return this.state.requestResult.entities;
     };
 
-    protected Table = (props: React.PropsWithChildren<{}>): JSX.Element => {
+    protected onPageChange = () => {
+
+    };
+
+    protected Table = (props: React.PropsWithChildren<{
+        extraTableClass?: string;
+        noLoader?: boolean;
+    }>): JSX.Element => {
         return (
             <>
-                <Table extraClass={this.tableExtraClass}>
+                <Table extraClass={props.extraTableClass}>
                     <Thead cells={this.header} />
                     {
-                        this.state.loading
-                            ? <TableLoader colSpan={this.header.length} />
-                            : props.children
+                        props.noLoader
+                            ? props.children
+                            : this.state.loading
+                                ? <TableLoader colSpan={this.header.length} />
+                                : props.children
                     }
                 </Table>
                 <Paginator
@@ -152,6 +138,7 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
                     showed={this.state.requestResult.showed}
                     total={this.state.requestResult.total}
                     onClick={(page: number) => {
+                        this.onPageChange();
                         this.params.page = page;
                         this.update();
                     }}
@@ -160,7 +147,10 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
         );
     };
 
-    protected MainTable = (props: React.PropsWithChildren<{}>) => {
+    protected MainTable = (props: React.PropsWithChildren<{
+        extraTableClass?: string;
+        noLoader?: boolean;
+    }>) => {
         return (
             <>
                 {
@@ -168,7 +158,7 @@ export default class Panel<PT = {}, ST = {}> extends React.Component<PanelPropsI
                         ? <this.NoRoute />
                         : (this.state.requestResult.entities.length === 0 && !this.state.loading)
                             ? <this.NoRegisters />
-                            : <this.Table children={props.children} />
+                            : <this.Table children={props.children} {...props}/>
                 }
             </>
         );

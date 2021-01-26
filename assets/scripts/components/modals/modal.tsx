@@ -2,6 +2,7 @@ import React from 'react';
 import ButtonClose from '@components/buttons/buttonClose';
 import LoaderH from '@components/loader/loaderH';
 import Button from '@components/buttons/button';
+import parser from 'html-react-parser';
 
 interface ModalPropsI {
     show: boolean;
@@ -14,14 +15,8 @@ interface ModalPropsI {
 
 export default class Modal extends React.Component<ModalPropsI, {}> {
 
-    private size: number;
-
-    private bodyOverflow: string;
-
     constructor (props: ModalPropsI) {
         super(props);
-        this.bodyOverflow = "";
-        this.size = this.props.size || 50;
     }
 
     handleClick = () => {
@@ -33,11 +28,10 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
 
     hideScroll = () => {
         if (this.props.show) {
-            this.bodyOverflow = document.body.style.overflowY;
-            document.body.style.overflowY = "hidden";
+            document.body.classList.add("modal-component-open");
         } else {
             if(document.querySelectorAll(".modal-component.show").length > +this.props.show)
-                document.body.style.overflowY = this.bodyOverflow;
+                document.body.classList.remove("modal-component-open");
         }
     };
 
@@ -55,14 +49,14 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
                 >
                     <div className="w-100 h-100 pt-2">
                         <h5 className="text-center">
-                            {this.props.title}
+                            {this.props.title && parser(this.props.title)}
                             <ButtonClose
                                 onClick={this.handleClick}
                                 float="right"
                                 extraClass="hide-on-mobile"
                             />
                         </h5>
-                        {this.props.title && <hr />}
+                        {this.props.title && <hr className="divide" />}
                         <div className="modal-component-body">
                             {
                                 this.props.loading

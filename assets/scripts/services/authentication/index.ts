@@ -25,21 +25,18 @@ enum CookiesNames {
 export default class Authentication {
 
     public static isLoggedIn = async (): Promise<boolean> => {
-        let result = false;
-        const token = Authentication.getCookie(CookiesNames.AUTH_COOKIE_NAME).trim();
-        if (token !== "") {
-            await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("index_check_login"), {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-                .then(() => {
-                    result = true;
-                })
-                .catch((err) => {
-                    HandleResponse.error(err);
-                    result = false;
-                });
+        const payload = Authentication.getPayload();
+        let result: boolean;
+        if(!payload) {
+            result = false;
+        } else {
+            const time = (payload.exp - (Math.floor(Date.now() / 1000)));
+            if(time > 0) {
+                result = true;
+            } else {
+                result = false;
+                Authentication.deleteCookie(CookiesNames.AUTH_COOKIE_NAME);
+            }
         }
         return result;
     };
@@ -134,19 +131,50 @@ export default class Authentication {
             });
     };
 
+    public static impersonate = async (id: number) => {
+        try {
+            const res = await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_impersonate", { id: id }));
+            Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
+        } catch (err) {
+            throw new Error(err);
+        }
+    };
+
     public static setImpersonation = (token: string) => {
         const actualToken = Authentication.getToken();
         Authentication.setCookie(CookiesNames.REAL_JWT_TOKEN, actualToken);
         Authentication.setToken(token);
-    }
+    };
 
     public static unsetIpersonation = () => {
-        const realToken =  Authentication.getCookie(CookiesNames.REAL_JWT_TOKEN);
+        const realToken = Authentication.getCookie(CookiesNames.REAL_JWT_TOKEN);
         Authentication.setToken(realToken);
         Authentication.deleteCookie(CookiesNames.REAL_JWT_TOKEN);
-    }
+    };
 
     public static isImpersonating = (): boolean => {
-        return Authentication.getCookie(CookiesNames.REAL_JWT_TOKEN) !== "";
-    }
+        return Authentication.isCookieDefined(CookiesNames.REAL_JWT_TOKEN);
+    };
+
+    public static getRoles = (): string[] => {
+        if (!Authentication.isTokenDefined()) {
+            return [];
+        }
+        return Authentication.getPayload()!.roles;
+    };
+
+    public static getUsername = (): string => {
+        if (!Authentication.isTokenDefined()) {
+            throw Error("Usuario no autentificado");
+        }
+        return Authentication.getPayload()!.username;
+    };
+
+    public static isTokenDefined = (): boolean => {
+        return Authentication.isCookieDefined(CookiesNames.AUTH_COOKIE_NAME);
+    };
+
+    public static isCookieDefined = (name: string) => {
+        return Authentication.getCookie(name).trim() !== "";
+    };
 }

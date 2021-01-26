@@ -6,25 +6,25 @@ import { Router } from '@scripts/router';
 import parse from 'html-react-parser';
 import '@styles/app.scss';
 
-const Profile = React.lazy(() => import('@pages/profile'));
-const Error404 = React.lazy(() => import('@pages/error404'));
-const Logout = React.lazy(() => import('@pages/logout'));
-const Dashboard = React.lazy(() => import('@pages/dashboard'));
-const Login = React.lazy(() => import('@pages/login'));
-const Users = React.lazy(() => import('@pages/users'));
-const Logger = React.lazy(() => import('@pages/logger'));
+import Profile from '@pages/profile';
+import Error404 from '@pages/error404'
+import Logout from '@pages/logout';
+import Dashboard  from '@pages/dashboard';
+import Login from '@pages/login';
+import Users from '@pages/users';
+import Logger from '@pages/logger';
 
-import Authentication, { TokenPayloadI } from '@services/authentication';
+import Authentication from '@services/authentication';
 
 import Loader from '@components/loader/loader';
 import Toast, { ToastData } from './components/alerts/toast';
 import ToastContainer from './components/alerts/toastContainer';
 import ErrorBoundary from '@components/error';
+import NavigationContainer from '@components/navigation';
 const Nav = React.lazy(() => import('@components/nav'));
 
 interface AppStateI {
     loggedIn: boolean | null;
-    payload: TokenPayloadI | null;
     toasts: ToastData[];
 }
 
@@ -40,31 +40,30 @@ class App extends React.Component<{}, AppStateI>{
         super(props);
         this.state = {
             loggedIn: null,
-            payload: null,
             toasts: [],
         };
         this.router = new Router(process.env.BASE_ROUTE);
     }
 
     refreshToken = () => {
-        let time = (this.state.payload!.exp - Math.floor(Date.now() / 1000) - 300);
-        time = (time < 0) ? 0 : time;
-        setTimeout(() => {
-            Authentication.refreshToken();
-            this.setState({
-                payload: Authentication.getPayload(),
-            });
-            this.refreshToken();
-        }, time * 1000);
+        const payload = Authentication.getPayload();
+        let time = (payload!.exp - Math.floor(Date.now() / 1000));
+        time = (time < 300 && time > 0) ? 1 : time;
+        if (time > 0) {
+            setTimeout(() => {
+                Authentication.refreshToken();
+                this.refreshToken();
+            }, time * 1000);
+        }
     };
 
     checkLogin = async () => {
         let loggedIn = await Authentication.isLoggedIn();
+
         this.setState({
             loggedIn: loggedIn,
-            payload: Authentication.getPayload(),
         });
-        if (this.state.payload && this.state.loggedIn) {
+        if (this.state.loggedIn) {
             this.refreshToken();
         }
     };
@@ -108,6 +107,7 @@ class App extends React.Component<{}, AppStateI>{
     };
 
     render = (): JSX.Element => {
+        const roles = Authentication.getRoles();
         return (
             <ErrorBoundary>
                 <BrowserRouter>
@@ -122,32 +122,30 @@ class App extends React.Component<{}, AppStateI>{
                                         <Suspense fallback={<Loader />}>
                                             <Nav
                                                 router={this.router}
-                                                username={this.state.payload!.username}
-                                                roles={this.state.payload!.roles}
                                             ></Nav>
-                                            <Switch>
+                                            <NavigationContainer toast={{ add: this.addToast }}>
                                                 <Route
                                                     exact
                                                     path={this.router.get("dashboard")}
                                                     component={Dashboard}
                                                 />
-                                                {this.state.payload?.roles.includes("ROLE_ADMIN") && (
+                                                {roles.includes("ROLE_ADMIN") && (
                                                     <Route
                                                         exact
                                                         path={this.router.get("users")}
 
                                                     >
-                                                        <Users 
-                                                        toasts={{
-                                                            add: this.addToast
-                                                        }}
+                                                        <Users
+                                                            toasts={{
+                                                                add: this.addToast
+                                                            }}
                                                         />
                                                     </Route>
                                                 )}
-                                                {this.state.payload?.roles.includes("ROLE_DEV") && (
+                                                {roles.includes("ROLE_DEV") && (
                                                     <Route
                                                         exact
-                                                        path={this.router.get("logger")}
+                                                        path="/logger"
                                                     >
                                                         <Logger toasts={{
                                                             add: this.addToast,
@@ -158,9 +156,11 @@ class App extends React.Component<{}, AppStateI>{
                                                     exact
                                                     path={this.router.get("profile")}
                                                 >
-                                                    <Profile toasts={{
-                                                        add: this.addToast,
-                                                    }} />
+                                                    <Profile
+                                                        toasts={{
+                                                            add: this.addToast,
+                                                        }}
+                                                    />
                                                 </Route>
                                                 <Route
                                                     exact
@@ -169,7 +169,7 @@ class App extends React.Component<{}, AppStateI>{
                                                 />
                                                 <Route component={Error404} />
 
-                                            </Switch>
+                                            </NavigationContainer>
                                         </Suspense>
                                     )
                                     : (

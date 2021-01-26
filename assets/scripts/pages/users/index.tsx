@@ -8,7 +8,7 @@ import LoaderH from '@components/loader/loaderH';
 import RoleBadge from '@components/misc/roleBadge';
 import Alert, { AlertPropsI, FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
 import Modal from '@components/modals/modal';
-import Panel, { PanelPropsI } from '@components/panel';
+import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
 import PasswordFormAdmin from '@scripts/forms/user/passwordAdmin';
@@ -17,23 +17,56 @@ import HandleResponse from '@services/handleResponse';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { Suspense } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Redirect } from 'react-router-dom';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));
-interface UsersStateI {
+
+interface UserPropsI extends PanelPropsI {
+
+}
+
+interface UsersStateI extends PanelStateI<UserI> {
     modal: {
         show: boolean;
         size: number;
+        title: string;
     };
     alert: AlertPropsI;
     impersonateLoading: number[];
+    redirectLogger: number;
 }
-export default class Users extends Panel<UserI, UsersStateI> {
+export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
     protected modalContent: JSX.Element;
 
+    protected fade: boolean;
+
     constructor (props: PanelPropsI) {
         super(props);
+        this.state = {
+            loading: false,
+            requestResult: {
+                entities: [],
+                maxPages: 0,
+                showed: 0,
+                total: 0,
+            },
+            modal: {
+                title: "",
+                show: false,
+                size: 50,
+            },
+            alert: {
+                id: 0,
+                message: <></>,
+                onAccept: this.handleAcceptDelete,
+                onCancel: this.handleCancelDelete,
+                show: false,
+            },
+            impersonateLoading: [],
+            redirectLogger: 0,
+        };
         this.header = [
             {
                 children: "Id",
@@ -57,47 +90,41 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 },
             }, {
                 key: "password",
-                children: <FontAwesomeIcon icon={['fas', 'key']} />,
-                className: "icon-col",
+                children: <FontAwesomeIcon icon={[ 'fas', 'key' ]} />,
+                className: "icon-col border-right-0",
+            }, {
+                key: "logs",
+                children: <FontAwesomeIcon icon={[ 'fas', 'book' ]} />,
+                className: "icon-col border-right-0 border-left-0",
             }, {
                 key: "impersonate",
-                children: <FontAwesomeIcon icon={['fas', 'user-alt']} />,
-                className: "icon-col",
+                children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
+                className: "icon-col border-right-0 border-left-0",
             }, {
                 key: "delete",
-                children: <FontAwesomeIcon icon={['fas', 'trash-alt']} />,
-                className: "icon-col",
+                children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
+                className: "icon-col border-left-0",
             },
         ];
         this.route = "user_all";
         this.modalContent = <LoaderH position="center" />;
+        this.fade = false;
     }
 
     componentDidMount = () => {
-        this.setSubState({
-            modal: {
-                show: false,
-                size: 50,
-            },
-            alert: {
-                id: 0,
-                message: <></>,
-                onAccept: this.handleAcceptDelete,
-                onCancel: this.handleCancelDelete,
-                show: false,
-            },
-            impersonateLoading: []
-        });
         this.update();
     };
 
-    handleCloseModal = (_: string) => {
-        this.modalContent = <></>;
-        this.setSubState({
+    onPageChange = () => {
+        this.fade = true;
+    }
+
+    handleCloseModal = () => {
+        this.setState({
             modal: {
-                ...this.getSubState().modal,
+                ...this.state.modal,
                 show: false,
-            },
+            }
         });
     };
 
@@ -106,11 +133,11 @@ export default class Users extends Panel<UserI, UsersStateI> {
             <AddForm
                 onSuccess={(res: AxiosResponse) => {
                     HandleResponse.success(res, this.props.toasts);
-                    this.setSubState({
+                    this.setState({
                         modal: {
-                            ...this.getSubState().modal,
+                            ...this.state.modal,
                             show: false,
-                        },
+                        }
                     });
                     this.update({ silent: true });
                 }}
@@ -119,8 +146,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 }}
             />
         );
-        this.setSubState({
+        this.setState({
             modal: {
+                title: "Agregar",
                 show: true,
                 size: 30,
             }
@@ -134,9 +162,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
     };
 
     handleDelete = (id: number, extra: JSX.Element) => {
-        this.setSubState({
+        this.setState({
             alert: {
-                ...this.getSubState().alert,
+                ...this.state.alert,
                 ...{
                     show: true,
                     id: id,
@@ -166,9 +194,9 @@ export default class Users extends Panel<UserI, UsersStateI> {
     };
 
     handleCancelDelete = (id: number) => {
-        this.setSubState({
+        this.setState({
             alert: {
-                ...this.getSubState().alert,
+                ...this.state.alert,
                 ...{
                     show: false
                 }
@@ -190,10 +218,12 @@ export default class Users extends Panel<UserI, UsersStateI> {
                 }}
             />
         );
-        this.setSubState({
+        const user = this.getEntities().find(us => us.id === +row.dataset.id!);
+        this.setState({
             modal: {
+                title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
                 show: true,
-                size: 70,
+                size: 50,
             },
         });
     };
@@ -201,145 +231,179 @@ export default class Users extends Panel<UserI, UsersStateI> {
     handlePasswordClick = (id: number) => {
         this.modalContent = (
             <PasswordFormAdmin
-            id={id}
+                id={id}
                 onSuccess={(res) => {
                     HandleResponse.success(res, this.props.toasts);
-                    this.setSubState({
+                    this.setState({
                         modal: {
+                            ...this.state.modal,
                             show: false,
                         }
-                    })
+                    });
                 }}
             />
         );
-        this.setSubState({
+        const user = this.getEntities().find(us => us.id === id);
+        this.setState({
             modal: {
+                title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
                 show: true,
-                size: 50,
+                size: 30,
             },
         });
-    }
+    };
 
     handleImpersonateClick = async (id: number) => {
-        let loadingStates = this.getSubState().impersonateLoading.slice();
+        let loadingStates = this.state.impersonateLoading.slice();
         loadingStates.push(id);
-        this.setSubState({
+        this.setState({
             impersonateLoading: loadingStates,
         });
         try {
-            const res = await axios.get(this.router.apiGet("user_impersonate", {id: id}));
-            Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
+            await Authentication.impersonate(id);
             window.location.href = this.router.get("dashboard");
-        } catch(err) {
+        } catch (err) {
             HandleResponse.error(err, this.props.toasts);
+            let loadingStates2 = this.state.impersonateLoading.slice();
+            loadingStates2.splice(loadingStates2.findIndex(x => x === id), 1);
+            this.setState({
+                impersonateLoading: loadingStates2,
+            });
         }
-        let loadingStates2 = this.getSubState().impersonateLoading.slice();
-        loadingStates2.splice(loadingStates2.findIndex(x => x === id), 1);
-        this.setSubState({
-            impersonateLoading: loadingStates2,
+    };
+
+    handleLoadLogger = (id: number) => {
+        this.setState({
+            redirectLogger: id
         });
-    }
+    };
 
     render = (): JSX.Element => {
+        let extraTableClass = "result-table";
+        if(this.state.loading && this.fade) {
+            extraTableClass += " hide";
+        }
         return (
             <Layout title="Usuarios">
-                <this.MainBar>
-                    <Column size={3}>
-                        <Button
-                            color="primary"
-                            content="Agregar usuario"
-                            extraClass="w-100"
-                            onClick={this.handleAddUser}
-                        />
-                    </Column>
-                    <Column size={6}>
-                        <Search callback={this.handleSearch} />
-                    </Column>
-                </this.MainBar>
-                <this.MainTable>
-                    <Tbody rows={
-                        this.getEntities().map(user => {
-                            return {
-                                id: user.id.toString(),
-                                "data-id": user.id.toString(),
-                                cells: [
-                                    {
-                                        key: "id",
-                                        children: <b>{user.id}</b>,
-                                        className: "text-right cursor-pointer",
-                                        onClick: this.handleRowClick,
-                                    },
-                                    {
-                                        key: "username",
-                                        children: <em>{user.username}</em>,
-                                        className: "cursor-pointer",
-                                        onClick: this.handleRowClick,
-                                    },
-                                    {
-                                        key: "name",
-                                        children: <b>{user.name}</b>,
-                                        className: "cursor-pointer",
-                                        onClick: this.handleRowClick,
-                                    },
-                                    {
-                                        key: "email",
-                                        children: <ButtonAction type="mailto" content={user.email} />
-                                    },
-                                    {
-                                        key: "role",
-                                        children: <RoleBadge role={user.roles[ 0 ]} />,
-                                        className: "cursor-pointer",
-                                        onClick: this.handleRowClick,
-                                    }, {
-                                        key: "password",
-                                        children:
-                                            (<Action<number>
-                                                id={user.id}
-                                                color='danger'
-                                                content={<FontAwesomeIcon icon={['fas', 'key']} />}
-                                                onClick={this.handlePasswordClick}
-                                            />),
-                                    }, {
-                                        key: "impersonate",
+                {
+                    (this.state.redirectLogger > 0)
+                        ? (
+                            <Redirect to={this.router.get("logger") + "?user=" + this.state.redirectLogger} />
+                        )
+                        : (
+                            <>
+                                <this.MainBar>
+                                    <Column size={3} extraClass="my-1">
+                                        <Button
+                                            color="primary"
+                                            content="Agregar usuario"
+                                            extraClass="w-100"
+                                            onClick={this.handleAddUser}
+                                        />
+                                    </Column>
+                                    <Column size={6} extraClass="my-1">
+                                        <Search callback={this.handleSearch} />
+                                    </Column>
+                                </this.MainBar>
+                                <this.MainTable extraTableClass={extraTableClass} noLoader={this.fade}>
+                                    <Tbody rows={
+                                        this.getEntities().map(user => {
+                                            return {
+                                                id: user.id.toString(),
+                                                "data-id": user.id.toString(),
+                                                cells: [
+                                                    {
+                                                        key: "id",
+                                                        children: <b>{user.id}</b>,
+                                                        className: "text-right cursor-pointer",
+                                                        onClick: this.handleRowClick,
+                                                    },
+                                                    {
+                                                        key: "username",
+                                                        children: <em>{user.username}</em>,
+                                                        className: "cursor-pointer",
+                                                        onClick: this.handleRowClick,
+                                                    },
+                                                    {
+                                                        key: "name",
+                                                        children: <b>{user.name}</b>,
+                                                        className: "cursor-pointer",
+                                                        onClick: this.handleRowClick,
+                                                    },
+                                                    {
+                                                        key: "email",
+                                                        children: <ButtonAction type="mailto" content={user.email} />
+                                                    },
+                                                    {
+                                                        key: "role",
+                                                        className: "cursor-pointer",
+                                                        children: <RoleBadge role={user.roles[ 0 ]} />,
+                                                        onClick: this.handleRowClick,
+                                                    }, {
+                                                        key: "password",
+                                                        className: "border-right-0",
+                                                        children:
+                                                            (<Action<number>
+                                                                id={user.id}
+                                                                color='danger'
+                                                                content={<FontAwesomeIcon icon={[ 'fas', 'key' ]} />}
+                                                                onClick={this.handlePasswordClick}
+                                                            />),
+                                                    }, {
+                                                        key: "logs",
+                                                        className: "border-right-0 border-left-0",
+                                                        children:
+                                                            (<Action<number>
+                                                                id={user.id}
+                                                                color='secondary'
+                                                                content={<FontAwesomeIcon icon={[ 'fas', 'book' ]} />}
+                                                                onClick={this.handleLoadLogger}
+                                                            />),
+                                                    }, {
+                                                        key: "impersonate",
+                                                        className: "border-right-0 border-left-0",
+                                                        children:
+                                                            (<Action<number>
+                                                                key={"_action_" + user.id}
+                                                                id={user.id}
+                                                                color='info'
+                                                                content={<FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />}
+                                                                loading={this.state.impersonateLoading.findIndex(x => x === user.id) >= 0}
+                                                                onClick={this.handleImpersonateClick}
+                                                            />),
+                                                    }, {
+                                                        key: "delete",
+                                                        className: "border-left-0",
+                                                        children:
+                                                            (<ButtonDelete<number>
+                                                                id={user.id}
+                                                                extra={<b>{user.name}{' ('}<em>{user.username}</em>{')'}</b>}
+                                                                onClick={this.handleDelete}
+                                                            />),
+                                                    },
+                                                ]
+                                            };
+                                        })
+                                    }
+                                    />
+                                </this.MainTable>
+                                <Modal
+                                    onClose={this.handleCloseModal}
+                                    name="form"
+                                    loading={false}
+                                    {...this.state.modal}
+                                >
+                                    <Suspense fallback={<LoaderH position="center" />}>
+                                        {this.modalContent}
+                                    </Suspense>
+                                </Modal>
+                                <Alert<number>
+                                    {...this.state.alert}
+                                />
+                            </>
+                        )
+                }
 
-                                        children:
-                                            (<Action<number>
-                                                key={"_action_" + user.id}
-                                                id={user.id}
-                                                color='info'
-                                                content={<FontAwesomeIcon icon={['fas', 'user-alt']} />}
-                                                loading={this.getSubState().impersonateLoading.findIndex(x => x === user.id) >= 0}
-                                                onClick={this.handleImpersonateClick}
-                                            />),
-                                    }, {
-                                        key: "delete",
-                                        children:
-                                            (<ButtonDelete<number>
-                                                id={user.id}
-                                                extra={<b>{user.name}{' ('}<em>{user.username}</em>{')'}</b>}
-                                                onClick={this.handleDelete}
-                                            />),
-                                    },
-                                ]
-                            };
-                        })
-                    }
-                    />
-                </this.MainTable>
-                <Modal
-                    onClose={this.handleCloseModal}
-                    name="form"
-                    title="Contraseña"
-                    loading={false}
-                    {...this.getSubState().modal}
-                >
-                    <Suspense fallback={<LoaderH position="center" />}>
-                        {this.modalContent}
-                    </Suspense>
-                </Modal>
-                <Alert<number>
-                    {...this.getSubState().alert}
-                />
             </Layout>
         );
     };

@@ -67,10 +67,10 @@ h5 {
 
 .vertical-center {
     margin: 0;
-    position: absolute;
-    top: 50%;
-    -ms-transform: translateY(-75%);
-    transform: translateY(-75%);
+    /* position: absolute; */
+    /* top: 50%; */
+    -ms-transform: translateY(50%);
+    transform: translateY(50%);
 }
 
 .btn-sm2 {
@@ -155,5 +155,40 @@ h5 {
 
     .hide-on-mobile {
         display: none !important;
+    }
+}
+
+.page {
+    &-exit {
+        opacity: 1;
+        transform: scale(1);
+    }
+    &-enter {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+    &-enter-active {
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 300ms, transform 300ms;
+        .page-title {
+            opacity: 0;
+        }
+    }
+    &-exit-active {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 300ms, transform 300ms;
+        .page-title {
+            opacity: 0;
+        }
+    }
+}
+
+.result-table {
+    opacity: 1;
+    transition: opacity 200ms;
+    &.hide {
+        opacity: 0;
     }
 }
