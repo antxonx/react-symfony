@@ -8,7 +8,6 @@ import axios from '@services/axios';
 import HandleResponse from '@services/handleResponse';
 import Paginator from '@components/paginator/paginator';
 
-
 export interface PanelPropsI {
     toasts: ToastEventsI;
 }
@@ -16,6 +15,7 @@ export interface PanelPropsI {
 export interface PanelStateI<RRS> {
     loading: boolean;
     requestResult: RequestResult<RRS>;
+    header: ThPropsI[];
 }
 
 interface RequestResult<RRT> {
@@ -31,8 +31,6 @@ export default class Panel<
     ST extends PanelStateI<RRT> = PanelStateI<RRT>
     > extends React.Component<PT, ST> {
 
-    protected header: ThPropsI[];
-
     protected router: Router;
 
     protected route: string;
@@ -45,7 +43,6 @@ export default class Panel<
     constructor (props: PT) {
         super(props);
         this.route = "";
-        this.header = [];
         this.params = {
             page: 1
         };
@@ -116,6 +113,36 @@ export default class Panel<
 
     };
 
+    protected handleThClickBG = (name: string, header: ThPropsI[]) => {
+        const th =  Object.assign({}, header.find(t => t.name === name));
+        if (th.activeOrder) {
+            if (th.order === "ASC") {
+                th.order = "DESC";
+            } else {
+                th.order = "ASC";
+            }
+        } else {
+            th.activeOrder = true;
+            th.order = "ASC";
+        }
+        header = this.unsetSorts(header);
+        header[header.findIndex(t => t.name === name)] = th;
+        this.params.orderBy = th.column!;
+        this.params.order = th.order;
+        this.params.page = 1;
+        return header;
+    };
+
+    protected unsetSorts = (ths: ThPropsI[]): ThPropsI[] => {
+        return ths.map(th => {
+            return {
+                ...th,
+                activeOrder: false,
+                order: undefined
+            }
+        })
+    }
+
     protected Table = (props: React.PropsWithChildren<{
         extraTableClass?: string;
         noLoader?: boolean;
@@ -123,12 +150,12 @@ export default class Panel<
         return (
             <>
                 <Table extraClass={props.extraTableClass}>
-                    <Thead cells={this.header} />
+                    <Thead cells={this.state.header} />
                     {
                         props.noLoader
                             ? props.children
                             : this.state.loading
-                                ? <TableLoader colSpan={this.header.length} />
+                                ? <TableLoader colSpan={this.state.header.length} />
                                 : props.children
                     }
                 </Table>
@@ -158,7 +185,7 @@ export default class Panel<
                         ? <this.NoRoute />
                         : (this.state.requestResult.entities.length === 0 && !this.state.loading)
                             ? <this.NoRegisters />
-                            : <this.Table children={props.children} {...props}/>
+                            : <this.Table children={props.children} {...props} />
                 }
             </>
         );

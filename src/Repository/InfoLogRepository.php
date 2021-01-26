@@ -38,10 +38,11 @@ class InfoLogRepository extends ServiceEntityRepository
 
     public function getBy($params)
     {
-        $page = ((isset($params->page)) ? $params->page : 1);
+        $orderBy = (isset($params->orderBy)?$params->orderBy:"id");
+        $order = (isset($params->order)?$params->order:"DESC");
         // Create our query
         $query = $this->createQueryBuilder('p')
-            ->orderBy("p.id", "DESC");
+            ->orderBy("p.{$orderBy}", $order);
         if (isset($params->user) && $params->user > 0) {
             $userCriteria = new Criteria();
             $userCriteria->where(Criteria::expr()->eq("p.user", $params->user));
@@ -64,7 +65,7 @@ class InfoLogRepository extends ServiceEntityRepository
 
         $paginator = new Paginator($query);
         $paginator->getQuery()
-            ->setFirstResult(self::MAX_PER_PAGE * ($page - 1)) // Offset
+            ->setFirstResult(self::MAX_PER_PAGE * ($params->page - 1)) // Offset
             ->setMaxResults(self::MAX_PER_PAGE); // Limit
 
         return $paginator;

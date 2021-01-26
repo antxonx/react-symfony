@@ -24,14 +24,14 @@ enum CookiesNames {
 
 export default class Authentication {
 
-    public static isLoggedIn = async (): Promise<boolean> => {
+    public static isLoggedIn = (): boolean => {
         const payload = Authentication.getPayload();
         let result: boolean;
-        if(!payload) {
+        if (!payload) {
             result = false;
         } else {
             const time = (payload.exp - (Math.floor(Date.now() / 1000)));
-            if(time > 0) {
+            if (time > 0) {
                 result = true;
             } else {
                 result = false;
@@ -115,20 +115,22 @@ export default class Authentication {
         }
     };
 
-    public static refreshToken = () => {
-        axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"),
-            {
-                headers: {
-                    Authorization: `Bearer ${Authentication.getToken()}`
+    public static refreshToken = async () => {
+
+        try {
+            const res = await axios.get(
+                (new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"),
+                {
+                    headers: {
+                        Authorization: `Bearer ${Authentication.getToken()}`
+                    }
                 }
-            })
-            .then(res => {
-                Authentication.setCookie(CookiesNames.AUTH_COOKIE_NAME, res.data.token);
-                console.info("refreshed token");
-            })
-            .catch(err => {
-                HandleResponse.error(err);
-            });
+            );
+            Authentication.setCookie(CookiesNames.AUTH_COOKIE_NAME, res.data.token);
+            console.info("refreshed token");
+        } catch (err) {
+            HandleResponse.error(err);
+        }
     };
 
     public static impersonate = async (id: number) => {

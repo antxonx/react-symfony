@@ -7,9 +7,9 @@ import parse from 'html-react-parser';
 import '@styles/app.scss';
 
 import Profile from '@pages/profile';
-import Error404 from '@pages/error404'
+import Error404 from '@pages/error404';
 import Logout from '@pages/logout';
-import Dashboard  from '@pages/dashboard';
+import Dashboard from '@pages/dashboard';
 import Login from '@pages/login';
 import Users from '@pages/users';
 import Logger from '@pages/logger';
@@ -21,7 +21,7 @@ import Toast, { ToastData } from './components/alerts/toast';
 import ToastContainer from './components/alerts/toastContainer';
 import ErrorBoundary from '@components/error';
 import NavigationContainer from '@components/navigation';
-const Nav = React.lazy(() => import('@components/nav'));
+import Nav from '@components/nav';
 
 interface AppStateI {
     loggedIn: boolean | null;
@@ -49,27 +49,23 @@ class App extends React.Component<{}, AppStateI>{
         const payload = Authentication.getPayload();
         let time = (payload!.exp - Math.floor(Date.now() / 1000));
         time = (time < 300 && time > 0) ? 1 : time;
+        console.log(time);
         if (time > 0) {
-            setTimeout(() => {
-                Authentication.refreshToken();
+            setTimeout(async () => {
+                await Authentication.refreshToken();
                 this.refreshToken();
-            }, time * 1000);
-        }
-    };
-
-    checkLogin = async () => {
-        let loggedIn = await Authentication.isLoggedIn();
-
-        this.setState({
-            loggedIn: loggedIn,
-        });
-        if (this.state.loggedIn) {
-            this.refreshToken();
+            }, (time - 1) * 1000);
         }
     };
 
     componentDidMount = () => {
-        this.checkLogin();
+        let loggedIn = Authentication.isLoggedIn();
+        this.setState({
+            loggedIn: loggedIn,
+        });
+        if (loggedIn) {
+            this.refreshToken();
+        }
     };
 
     handleLoggedInChange = (logged: boolean) => {
@@ -112,14 +108,12 @@ class App extends React.Component<{}, AppStateI>{
             <ErrorBoundary>
                 <BrowserRouter>
                     {
-                        this.state.loggedIn == null
-                            ? (
-                                <Loader />
-                            )
+                        !this.state.loggedIn
+                            ? <Loader />
                             : (
                                 this.state.loggedIn
                                     ? (
-                                        <Suspense fallback={<Loader />}>
+                                        <>
                                             <Nav
                                                 router={this.router}
                                             ></Nav>
@@ -168,12 +162,11 @@ class App extends React.Component<{}, AppStateI>{
                                                     component={Logout}
                                                 />
                                                 <Route component={Error404} />
-
                                             </NavigationContainer>
-                                        </Suspense>
+                                        </>
                                     )
                                     : (
-                                        <Suspense fallback={<Loader />}>
+                                        <>
                                             <Redirect to={this.router.get("login")} />
                                             <Switch>
                                                 <Route exact path={this.router.get("dashboard")}>
@@ -186,7 +179,7 @@ class App extends React.Component<{}, AppStateI>{
                                                     />
                                                 </Route>
                                             </Switch>
-                                        </Suspense>
+                                        </>
                                     )
                             )
                     }

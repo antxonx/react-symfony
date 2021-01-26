@@ -26,36 +26,42 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                 total: 0,
             },
             changing: false,
+            header: [
+                {
+                    name: "Id",
+                    sort: true,
+                    column: "id",
+                    onClick: this.handleThClick,
+                    className: "text-right",
+                    style: {
+                        width: "7%"
+                    }
+                }, {
+                    name: "Creación",
+                    sort: true,
+                    column: "createdAt",
+                    onClick: this.handleThClick,
+                    style: {
+                        width: "12%",
+                    },
+                }, {
+                    name: "Método",
+                    style: {
+                        width: "6%",
+                    },
+                }, {
+                    name: "Ruta",
+                    style: {
+                        width: "25%",
+                    },
+                }, {
+                    name: "Mensaje",
+                    style: {
+                        width: "50%",
+                    },
+                },
+            ]
         };
-        this.header = [
-            {
-                children: "Id",
-                className: "text-right",
-                style: {
-                    width: "7%"
-                }
-            }, {
-                children: "Creación",
-                style: {
-                    width: "12%",
-                },
-            }, {
-                children: "Método",
-                style: {
-                    width: "6%",
-                },
-            }, {
-                children: "Ruta",
-                style: {
-                    width: "25%",
-                },
-            }, {
-                children: "Mensaje",
-                style: {
-                    width: "50%",
-                },
-            },
-        ];
         this.route = LogRoutes.UNDEFINED;
     }
 
@@ -66,6 +72,15 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
     componentDidUpdate = () => {
         this.params.user = this.getParameterByName("user") || 0;
     };
+
+    handleThClick = (name: string) => {
+        const header = this.handleThClickBG(name, this.state.header.slice());
+        this.setState({
+            header: header,
+            changing: true,
+        })
+        this.update();
+    }
 
     handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let change = false;
@@ -86,8 +101,11 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
         }
         this.setState({
             changing: change,
+            header: this.unsetSorts(this.state.header),
         });
         this.params.page = 1;
+        delete this.params.order;
+        delete this.params.orderBy;
         this.update();
     };
 

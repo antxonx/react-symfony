@@ -18,6 +18,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { Suspense } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Redirect } from 'react-router-dom';
+import { ThPropsI } from '@components/tables';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));
@@ -66,46 +67,58 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
             },
             impersonateLoading: [],
             redirectLogger: 0,
+            header: [
+                {
+                    name: "Id",
+                    column: "id",
+                    sort: true,
+                    onClick: this.handleThClick,
+                    style: {
+                        width: "100px"
+                    }
+                }, {
+                    name: "Usuario",
+                    column: "username",
+                    sort: true,
+                    onClick: this.handleThClick,
+                }, {
+                    name: "Nombre",
+                    column: "name",
+                    sort: true,
+                    onClick: this.handleThClick,
+                }, {
+                    name: "Correo",
+                    style: {
+                        width: "1px",
+                    },
+                }, {
+                    name: "Puesto",
+                    style: {
+                        width: "1px",
+                    },
+                }, {
+                    name: "password",
+                    key: "password",
+                    children: <FontAwesomeIcon icon={[ 'fas', 'key' ]} />,
+                    className: "icon-col border-right-0",
+                }, {
+                    name: "logs",
+                    key: "logs",
+                    children: <FontAwesomeIcon icon={[ 'fas', 'book' ]} />,
+                    className: "icon-col border-right-0 border-left-0",
+                }, {
+                    name: "impersonate",
+                    key: "impersonate",
+                    children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
+                    className: "icon-col border-right-0 border-left-0",
+                }, {
+                    name: "delete",
+                    key: "delete",
+                    children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
+                    className: "icon-col border-left-0",
+                },
+            ]
         };
-        this.header = [
-            {
-                children: "Id",
-                className: "text-right",
-                style: {
-                    width: "100px"
-                }
-            }, {
-                children: "Usuario"
-            }, {
-                children: "Nombre"
-            }, {
-                children: "Correo",
-                style: {
-                    width: "1px",
-                },
-            }, {
-                children: "Puesto",
-                style: {
-                    width: "1px",
-                },
-            }, {
-                key: "password",
-                children: <FontAwesomeIcon icon={[ 'fas', 'key' ]} />,
-                className: "icon-col border-right-0",
-            }, {
-                key: "logs",
-                children: <FontAwesomeIcon icon={[ 'fas', 'book' ]} />,
-                className: "icon-col border-right-0 border-left-0",
-            }, {
-                key: "impersonate",
-                children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
-                className: "icon-col border-right-0 border-left-0",
-            }, {
-                key: "delete",
-                children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
-                className: "icon-col border-left-0",
-            },
-        ];
         this.route = "user_all";
         this.modalContent = <LoaderH position="center" />;
         this.fade = false;
@@ -117,7 +130,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
     onPageChange = () => {
         this.fade = true;
-    }
+    };
 
     handleCloseModal = () => {
         this.setState({
@@ -278,9 +291,18 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         });
     };
 
+    handleThClick = (name: string) => {
+        const header = this.handleThClickBG(name, this.state.header.slice());
+        this.setState({
+            header: header,
+        })
+        this.fade = true;
+        this.update();
+    }
+
     render = (): JSX.Element => {
         let extraTableClass = "result-table";
-        if(this.state.loading && this.fade) {
+        if (this.state.loading && this.fade) {
             extraTableClass += " hide";
         }
         return (

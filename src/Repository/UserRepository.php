@@ -43,8 +43,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getBy($params)
     {
+        $orderBy = (isset($params->orderBy)?$params->orderBy:"name");
+        $order = (isset($params->order)?$params->order:"ASC");
         $query = $this->createQueryBuilder("p")
-            ->orderBy("p.name", "ASC");
+            ->orderBy("p.{$orderBy}", $order);
         if (isset($params->search) && $params->search != "") {
             $sc = new Criteria();
             $sc->where(Criteria::expr()->contains("p.username", $params->search));
