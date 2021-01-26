@@ -293,7 +293,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                         : (
                             <>
                                 <this.MainBar>
-                                    <Column size={3}>
+                                    <Column size={3} extraClass="my-1">
                                         <Button
                                             color="primary"
                                             content="Agregar usuario"
@@ -301,7 +301,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                             onClick={this.handleAddUser}
                                         />
                                     </Column>
-                                    <Column size={6}>
+                                    <Column size={6} extraClass="my-1">
                                         <Search callback={this.handleSearch} />
                                     </Column>
                                 </this.MainBar>
