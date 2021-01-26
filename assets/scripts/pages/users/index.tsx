@@ -70,6 +70,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
             header: [
                 {
                     name: "Id",
+                    column: "id",
                     sort: true,
                     onClick: this.handleThClick,
                     style: {
@@ -77,10 +78,12 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                     }
                 }, {
                     name: "Usuario",
+                    column: "username",
                     sort: true,
                     onClick: this.handleThClick,
                 }, {
                     name: "Nombre",
+                    column: "name",
                     sort: true,
                     onClick: this.handleThClick,
                 }, {
@@ -156,7 +159,10 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         this.setState({
             header: headerCopy
         });
-
+        this.params.orderBy = th.column!;
+        this.params.order = th.order;
+        this.params.page = 1;
+        this.update();
     };
 
     unsetSorts = (ths: ThPropsI[]): ThPropsI[] => {

@@ -25,6 +25,7 @@ export default class Thead extends React.Component<TheadPropsI, {}> {
                                         onClick={cell.onClick}
                                         activeOrder={cell.activeOrder}
                                         order={cell.order}
+                                        column={cell.column}
                                     />
                                     : (<th
                                         key={cell.key || cell.children || cell.name}

@@ -8,6 +8,7 @@ export interface ThPropsI {
     sort?: boolean;
     activeOrder?: boolean;
     order?: "ASC" | "DESC";
+    column?: string;
     onClick?: (name: string) => void;
     [ key: string ]: any;
 }
