@@ -7,6 +7,12 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as RES;
 
+/**
+ * Response handler
+ * 
+ * @package Antxony
+ * @author Antxony <dantonyofcarim@gmail.com>
+ */
 class Response
 {
 
