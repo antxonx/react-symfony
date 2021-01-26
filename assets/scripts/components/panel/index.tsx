@@ -37,8 +37,6 @@ export default class Panel<
 
     protected route: string;
 
-    protected tableExtraClass: string;
-
     protected params: {
         page: number;
         [ key: string ]: string | number;
@@ -52,7 +50,6 @@ export default class Panel<
             page: 1
         };
         this.router = new Router(process.env.BASE_URL);
-        this.tableExtraClass = "";
     }
 
     protected MainBar = (props: React.PropsWithChildren<{}>) => {
@@ -115,15 +112,24 @@ export default class Panel<
         return this.state.requestResult.entities;
     };
 
-    protected Table = (props: React.PropsWithChildren<{}>): JSX.Element => {
+    protected onPageChange = () => {
+
+    };
+
+    protected Table = (props: React.PropsWithChildren<{
+        extraTableClass?: string;
+        noLoader?: boolean;
+    }>): JSX.Element => {
         return (
             <>
-                <Table extraClass={this.tableExtraClass}>
+                <Table extraClass={props.extraTableClass}>
                     <Thead cells={this.header} />
                     {
-                        this.state.loading
-                            ? <TableLoader colSpan={this.header.length} />
-                            : props.children
+                        props.noLoader
+                            ? props.children
+                            : this.state.loading
+                                ? <TableLoader colSpan={this.header.length} />
+                                : props.children
                     }
                 </Table>
                 <Paginator
@@ -132,6 +138,7 @@ export default class Panel<
                     showed={this.state.requestResult.showed}
                     total={this.state.requestResult.total}
                     onClick={(page: number) => {
+                        this.onPageChange();
                         this.params.page = page;
                         this.update();
                     }}
@@ -140,7 +147,10 @@ export default class Panel<
         );
     };
 
-    protected MainTable = (props: React.PropsWithChildren<{}>) => {
+    protected MainTable = (props: React.PropsWithChildren<{
+        extraTableClass?: string;
+        noLoader?: boolean;
+    }>) => {
         return (
             <>
                 {
@@ -148,7 +158,7 @@ export default class Panel<
                         ? <this.NoRoute />
                         : (this.state.requestResult.entities.length === 0 && !this.state.loading)
                             ? <this.NoRegisters />
-                            : <this.Table children={props.children} />
+                            : <this.Table children={props.children} {...props}/>
                 }
             </>
         );

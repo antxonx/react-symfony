@@ -9,7 +9,9 @@ import React from 'react';
 
 interface LoggerPropsI extends PanelPropsI { }
 
-interface LoggerStateI extends PanelStateI<LogI> { }
+interface LoggerStateI extends PanelStateI<LogI> {
+    changing: boolean;
+}
 
 export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
 
@@ -23,6 +25,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                 showed: 0,
                 total: 0,
             },
+            changing: false,
         };
         this.header = [
             {
@@ -54,29 +57,36 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             },
         ];
         this.route = LogRoutes.UNDEFINED;
-        this.tableExtraClass = "fixed";
     }
 
     componentDidMount = () => {
         this.params.user = this.getParameterByName("user") || 0;
-    }
+    };
 
     componentDidUpdate = () => {
         this.params.user = this.getParameterByName("user") || 0;
-    }
+    };
 
     handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let change = false;
         switch (e.target.value) {
             case LogNames.INFO:
+                if (this.route != LogRoutes.UNDEFINED)
+                    change = true;
                 this.route = LogRoutes.INFO;
                 break;
             case LogNames.ERROR:
+                if (this.route != LogRoutes.UNDEFINED)
+                    change = true;
                 this.route = LogRoutes.ERROR;
                 break;
             default:
                 this.route = LogRoutes.UNDEFINED;
                 break;
         }
+        this.setState({
+            changing: change,
+        });
         this.params.page = 1;
         this.update();
     };
@@ -114,10 +124,20 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
 
     getParameterByName(name: string) {
         var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
-        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+        return match && decodeURIComponent(match[ 1 ].replace(/\+/g, ' '));
     }
 
+    onPageChange = () => {
+        this.setState({
+            changing: true,
+        });
+    };
+
     render = (): JSX.Element => {
+        let extraTableClass = "fixed result-table";
+        if (this.state.loading && this.state.changing) {
+            extraTableClass += " hide";
+        }
         return (
             <Layout title="Registro">
                 <this.MainBar>
@@ -134,7 +154,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                         </div>
                     </Column>
                 </this.MainBar>
-                <this.MainTable>
+                <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing}>
                     <Tbody rows={
                         ...this.getEntities().map((_log, i) => {
                             if (_log.infoField) {

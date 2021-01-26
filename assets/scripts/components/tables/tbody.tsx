@@ -2,11 +2,10 @@ import React from 'react';
 import { TbodyRows } from '@components/tables';
 
 interface TbodyPropsI {
+    className?: string;
     idStart?: string;
     rows: TbodyRows[];
 }
-
-
 
 export default class Tbody extends React.Component<TbodyPropsI, {}> {
     constructor (props: TbodyPropsI) {
@@ -14,7 +13,7 @@ export default class Tbody extends React.Component<TbodyPropsI, {}> {
     }
     render = (): JSX.Element => {
         return (
-            <tbody>
+            <tbody className={this.props.className}>
                 {this.props.rows.map(row => {
                     let rowCopy = { ...row };
                     rowCopy.cells = [];

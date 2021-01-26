@@ -40,6 +40,8 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
     protected modalContent: JSX.Element;
 
+    protected fade: boolean;
+
     constructor (props: PanelPropsI) {
         super(props);
         this.state = {
@@ -106,11 +108,16 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         ];
         this.route = "user_all";
         this.modalContent = <LoaderH position="center" />;
+        this.fade = false;
     }
 
     componentDidMount = () => {
         this.update();
     };
+
+    onPageChange = () => {
+        this.fade = true;
+    }
 
     handleCloseModal = () => {
         this.setState({
@@ -272,6 +279,10 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
     };
 
     render = (): JSX.Element => {
+        let extraTableClass = "result-table";
+        if(this.state.loading && this.fade) {
+            extraTableClass += " hide";
+        }
         return (
             <Layout title="Usuarios">
                 {
@@ -294,7 +305,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                         <Search callback={this.handleSearch} />
                                     </Column>
                                 </this.MainBar>
-                                <this.MainTable>
+                                <this.MainTable extraTableClass={extraTableClass} noLoader={this.fade}>
                                     <Tbody rows={
                                         this.getEntities().map(user => {
                                             return {

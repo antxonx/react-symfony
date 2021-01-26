@@ -184,3 +184,11 @@ h5 {
         }
     }
 }
+
+.result-table {
+    opacity: 1;
+    transition: opacity 200ms;
+    &.hide {
+        opacity: 0;
+    }
+}
