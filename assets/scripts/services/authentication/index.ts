@@ -24,7 +24,7 @@ enum CookiesNames {
 
 export default class Authentication {
 
-    public static isLoggedIn = async (): Promise<boolean> => {
+    public static isLoggedIn = (): boolean => {
         const payload = Authentication.getPayload();
         let result: boolean;
         if (!payload) {

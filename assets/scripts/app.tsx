@@ -21,7 +21,7 @@ import Toast, { ToastData } from './components/alerts/toast';
 import ToastContainer from './components/alerts/toastContainer';
 import ErrorBoundary from '@components/error';
 import NavigationContainer from '@components/navigation';
-const Nav = React.lazy(() => import('@components/nav'));
+import Nav from '@components/nav';
 
 interface AppStateI {
     loggedIn: boolean | null;
@@ -57,19 +57,14 @@ class App extends React.Component<{}, AppStateI>{
         }
     };
 
-    checkLogin = async () => {
-        let loggedIn = await Authentication.isLoggedIn();
-
+    componentDidMount = () => {
+        let loggedIn = Authentication.isLoggedIn();
         this.setState({
             loggedIn: loggedIn,
         });
         if (this.state.loggedIn) {
             this.refreshToken();
         }
-    };
-
-    componentDidMount = () => {
-        this.checkLogin();
     };
 
     handleLoggedInChange = (logged: boolean) => {
@@ -113,9 +108,7 @@ class App extends React.Component<{}, AppStateI>{
                 <BrowserRouter>
                     {
                         this.state.loggedIn == null
-                            ? (
-                                <Loader />
-                            )
+                            ? <Loader />
                             : (
                                 this.state.loggedIn
                                     ? (
