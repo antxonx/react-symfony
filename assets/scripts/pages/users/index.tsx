@@ -141,40 +141,6 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         });
     };
 
-    handleThClick = (name: string) => {
-        console.log(name);
-        const th =  Object.assign({}, this.state.header.find(t => t.name === name));
-        const headerCopy = this.unsetSorts(this.state.header.slice());
-        if (th.activeOrder) {
-            if (th.order === "ASC") {
-                th.order = "DESC";
-            } else {
-                th.order = "ASC";
-            }
-        } else {
-            th.activeOrder = true;
-            th.order = "ASC";
-        }
-        headerCopy[headerCopy.findIndex(t => t.name === name)] = th;
-        this.setState({
-            header: headerCopy
-        });
-        this.params.orderBy = th.column!;
-        this.params.order = th.order;
-        this.params.page = 1;
-        this.update();
-    };
-
-    unsetSorts = (ths: ThPropsI[]): ThPropsI[] => {
-        return ths.map(th => {
-            return {
-                ...th,
-                activeOrder: false,
-                order: undefined
-            }
-        })
-    }
-
     handleAddUser = () => {
         this.modalContent = (
             <AddForm
@@ -324,6 +290,15 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
             redirectLogger: id
         });
     };
+
+    handleThClick = (name: string) => {
+        const header = this.handleThClickBG(name, this.state.header.slice());
+        this.setState({
+            header: header,
+        })
+        this.fade = true;
+        this.update();
+    }
 
     render = (): JSX.Element => {
         let extraTableClass = "result-table";

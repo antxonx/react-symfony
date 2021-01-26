@@ -113,6 +113,35 @@ export default class Panel<
 
     };
 
+    protected handleThClickBG = (name: string, header: ThPropsI[]) => {
+        const th =  Object.assign({}, header.find(t => t.name === name));
+        if (th.activeOrder) {
+            if (th.order === "ASC") {
+                th.order = "DESC";
+            } else {
+                th.order = "ASC";
+            }
+        } else {
+            th.activeOrder = true;
+            th.order = "ASC";
+        }
+        header[header.findIndex(t => t.name === name)] = th;
+        this.params.orderBy = th.column!;
+        this.params.order = th.order;
+        this.params.page = 1;
+        return header;
+    };
+
+    protected unsetSorts = (ths: ThPropsI[]): ThPropsI[] => {
+        return ths.map(th => {
+            return {
+                ...th,
+                activeOrder: false,
+                order: undefined
+            }
+        })
+    }
+
     protected Table = (props: React.PropsWithChildren<{
         extraTableClass?: string;
         noLoader?: boolean;
