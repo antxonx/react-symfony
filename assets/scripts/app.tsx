@@ -49,11 +49,12 @@ class App extends React.Component<{}, AppStateI>{
         const payload = Authentication.getPayload();
         let time = (payload!.exp - Math.floor(Date.now() / 1000));
         time = (time < 300 && time > 0) ? 1 : time;
+        console.log(time);
         if (time > 0) {
             setTimeout(async () => {
                 await Authentication.refreshToken();
                 this.refreshToken();
-            }, time * 1000);
+            }, (time - 1) * 1000);
         }
     };
 
@@ -62,7 +63,7 @@ class App extends React.Component<{}, AppStateI>{
         this.setState({
             loggedIn: loggedIn,
         });
-        if (this.state.loggedIn) {
+        if (loggedIn) {
             this.refreshToken();
         }
     };
@@ -107,7 +108,7 @@ class App extends React.Component<{}, AppStateI>{
             <ErrorBoundary>
                 <BrowserRouter>
                     {
-                        this.state.loggedIn == null
+                        !this.state.loggedIn
                             ? <Loader />
                             : (
                                 this.state.loggedIn
