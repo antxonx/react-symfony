@@ -108,7 +108,7 @@ class App extends React.Component<{}, AppStateI>{
             <ErrorBoundary>
                 <BrowserRouter>
                     {
-                        !this.state.loggedIn
+                        this.state.loggedIn == null
                             ? <Loader />
                             : (
                                 this.state.loggedIn
