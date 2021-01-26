@@ -18,7 +18,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { Suspense } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Redirect } from 'react-router-dom';
-import { ThPropsI } from '@components/tables';
+import { TdPropsI, ThPropsI } from '@components/tables';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));
@@ -45,6 +45,32 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
     constructor (props: PanelPropsI) {
         super(props);
+        let impersonatorCell: ThPropsI, logsCell: ThPropsI;
+        if (this.roles.includes("ROLE_DEV")) {
+            impersonatorCell = {
+                name: "impersonate",
+                key: "impersonate",
+                children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
+                className: "icon-col border-right-0 border-left-0",
+            };
+            logsCell = {
+                name: "logs",
+                key: "logs",
+                children: <FontAwesomeIcon icon={[ 'fas', 'book' ]} />,
+                className: "icon-col border-right-0 border-left-0",
+            };
+        } else {
+            impersonatorCell = {
+                name: "impersonate",
+                key: "impersonate",
+                className: "d-none",
+            };
+            logsCell = {
+                name: "logs",
+                key: "logs",
+                className: "d-none",
+            };
+        }
         this.state = {
             loading: false,
             requestResult: {
@@ -101,17 +127,9 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                     key: "password",
                     children: <FontAwesomeIcon icon={[ 'fas', 'key' ]} />,
                     className: "icon-col border-right-0",
-                }, {
-                    name: "logs",
-                    key: "logs",
-                    children: <FontAwesomeIcon icon={[ 'fas', 'book' ]} />,
-                    className: "icon-col border-right-0 border-left-0",
-                }, {
-                    name: "impersonate",
-                    key: "impersonate",
-                    children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
-                    className: "icon-col border-right-0 border-left-0",
-                }, {
+                },
+                logsCell,
+                impersonatorCell, {
                     name: "delete",
                     key: "delete",
                     children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
@@ -295,10 +313,10 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         const header = this.handleThClickBG(name, this.state.header.slice());
         this.setState({
             header: header,
-        })
+        });
         this.fade = true;
         this.update();
-    }
+    };
 
     render = (): JSX.Element => {
         let extraTableClass = "result-table";
@@ -330,6 +348,42 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                 <this.MainTable extraTableClass={extraTableClass} noLoader={this.fade}>
                                     <Tbody rows={
                                         this.getEntities().map(user => {
+                                            let impersonatorCell: TdPropsI, logsCell: TdPropsI;
+                                            if (this.roles.includes("ROLE_DEV")) {
+                                                impersonatorCell = {
+                                                    key: "impersonate",
+                                                    className: "border-right-0 border-left-0",
+                                                    children:
+                                                        (<Action<number>
+                                                            key={"_action_" + user.id}
+                                                            id={user.id}
+                                                            color='info'
+                                                            content={<FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />}
+                                                            loading={this.state.impersonateLoading.findIndex(x => x === user.id) >= 0}
+                                                            onClick={this.handleImpersonateClick}
+                                                        />),
+                                                };
+                                                logsCell = {
+                                                    key: "logs",
+                                                    className: "border-right-0 border-left-0",
+                                                    children:
+                                                        (<Action<number>
+                                                            id={user.id}
+                                                            color='secondary'
+                                                            content={<FontAwesomeIcon icon={[ 'fas', 'book' ]} />}
+                                                            onClick={this.handleLoadLogger}
+                                                        />),
+                                                };
+                                            } else {
+                                                impersonatorCell = {
+                                                    key: "impersonate",
+                                                    className: "d-none",
+                                                };
+                                                logsCell = {
+                                                    key: "logs",
+                                                    className: "d-none",
+                                                };
+                                            }
                                             return {
                                                 id: user.id.toString(),
                                                 "data-id": user.id.toString(),
@@ -371,29 +425,9 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                                                 content={<FontAwesomeIcon icon={[ 'fas', 'key' ]} />}
                                                                 onClick={this.handlePasswordClick}
                                                             />),
-                                                    }, {
-                                                        key: "logs",
-                                                        className: "border-right-0 border-left-0",
-                                                        children:
-                                                            (<Action<number>
-                                                                id={user.id}
-                                                                color='secondary'
-                                                                content={<FontAwesomeIcon icon={[ 'fas', 'book' ]} />}
-                                                                onClick={this.handleLoadLogger}
-                                                            />),
-                                                    }, {
-                                                        key: "impersonate",
-                                                        className: "border-right-0 border-left-0",
-                                                        children:
-                                                            (<Action<number>
-                                                                key={"_action_" + user.id}
-                                                                id={user.id}
-                                                                color='info'
-                                                                content={<FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />}
-                                                                loading={this.state.impersonateLoading.findIndex(x => x === user.id) >= 0}
-                                                                onClick={this.handleImpersonateClick}
-                                                            />),
-                                                    }, {
+                                                    },
+                                                    logsCell,
+                                                    impersonatorCell, {
                                                         key: "delete",
                                                         className: "border-left-0",
                                                         children:

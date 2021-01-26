@@ -7,6 +7,7 @@ import { Router } from '@scripts/router';
 import axios from '@services/axios';
 import HandleResponse from '@services/handleResponse';
 import Paginator from '@components/paginator/paginator';
+import Authentication from '@services/authentication';
 
 export interface PanelPropsI {
     toasts: ToastEventsI;
@@ -35,6 +36,8 @@ export default class Panel<
 
     protected route: string;
 
+    protected roles: string[];
+
     protected params: {
         page: number;
         [ key: string ]: string | number;
@@ -47,6 +50,7 @@ export default class Panel<
             page: 1
         };
         this.router = new Router(process.env.BASE_URL);
+        this.roles = Authentication.getRoles();
     }
 
     protected MainBar = (props: React.PropsWithChildren<{}>) => {
