@@ -29,12 +29,18 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             header: [
                 {
                     name: "Id",
+                    sort: true,
+                    column: "id",
+                    onClick: this.handleThClick,
                     className: "text-right",
                     style: {
                         width: "7%"
                     }
                 }, {
                     name: "Creación",
+                    sort: true,
+                    column: "createdAt",
+                    onClick: this.handleThClick,
                     style: {
                         width: "12%",
                     },
@@ -67,6 +73,15 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
         this.params.user = this.getParameterByName("user") || 0;
     };
 
+    handleThClick = (name: string) => {
+        const header = this.handleThClickBG(name, this.state.header.slice());
+        this.setState({
+            header: header,
+            changing: true,
+        })
+        this.update();
+    }
+
     handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let change = false;
         switch (e.target.value) {
@@ -86,8 +101,11 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
         }
         this.setState({
             changing: change,
+            header: this.unsetSorts(this.state.header),
         });
         this.params.page = 1;
+        delete this.params.order;
+        delete this.params.orderBy;
         this.update();
     };
 

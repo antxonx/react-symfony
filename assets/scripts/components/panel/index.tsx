@@ -125,6 +125,7 @@ export default class Panel<
             th.activeOrder = true;
             th.order = "ASC";
         }
+        header = this.unsetSorts(header);
         header[header.findIndex(t => t.name === name)] = th;
         this.params.orderBy = th.column!;
         this.params.order = th.order;
