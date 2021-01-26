@@ -37,7 +37,7 @@ jobs:
     - name: rsync deployments
       uses: burnett01/rsync-deployments@4.1
       with:
-        switches: -avzr --delete --exclude node_modules --exclude '.git*' --exclude .env.local --exclude storage --exclude confu/jwt
+        switches: -avzr --delete --exclude node_modules --exclude '.git*' --exclude .env.local --exclude storage --exclude config/jwt
         remote_path: ${{ secrets.DEST_ROUTE }}
         remote_host: ${{ secrets.HOST }}
         remote_user: ${{ secrets.USER }}
