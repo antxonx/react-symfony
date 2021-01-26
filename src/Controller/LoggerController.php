@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Antxony\Handler\Response;
+use App\Antxony\Handler\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

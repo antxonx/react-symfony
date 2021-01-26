@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Exception;
-use Antxony\Handler\Response;
+use App\Antxony\Handler\Response;
 use App\Entity\User;
 
 /**

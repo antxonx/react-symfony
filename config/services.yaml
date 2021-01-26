@@ -30,8 +30,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     antxony.logger:
-        class: Antxony\Logger\Logger
+        class: App\Antxony\Logger\Logger
         arguments: ['@doctrine.orm.entity_manager', '@router', '@security.helper', '@doctrine.orm.entity_manager']
 
-    Antxony\Handler\Response:
+    App\Antxony\Handler\Response:
         tags: ['Antxony.Handler.Response']

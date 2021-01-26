@@ -1,6 +1,6 @@
 <?php
 
-namespace Antxony\Handler;
+namespace App\Antxony\Handler;
 
 use Exception;
 use Psr\Log\LoggerInterface;

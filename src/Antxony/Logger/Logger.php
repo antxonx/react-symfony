@@ -4,7 +4,7 @@
  * Error and Info logs
  */
 
-namespace Antxony\Logger;
+namespace App\Antxony\Logger;
 
 use App\Entity\ErrorLog;
 use App\Entity\InfoLog;
