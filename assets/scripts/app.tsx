@@ -7,9 +7,9 @@ import parse from 'html-react-parser';
 import '@styles/app.scss';
 
 import Profile from '@pages/profile';
-import Error404 from '@pages/error404'
+import Error404 from '@pages/error404';
 import Logout from '@pages/logout';
-import Dashboard  from '@pages/dashboard';
+import Dashboard from '@pages/dashboard';
 import Login from '@pages/login';
 import Users from '@pages/users';
 import Logger from '@pages/logger';
@@ -50,8 +50,8 @@ class App extends React.Component<{}, AppStateI>{
         let time = (payload!.exp - Math.floor(Date.now() / 1000));
         time = (time < 300 && time > 0) ? 1 : time;
         if (time > 0) {
-            setTimeout(() => {
-                Authentication.refreshToken();
+            setTimeout(async () => {
+                await Authentication.refreshToken();
                 this.refreshToken();
             }, time * 1000);
         }
@@ -119,7 +119,7 @@ class App extends React.Component<{}, AppStateI>{
                             : (
                                 this.state.loggedIn
                                     ? (
-                                        <Suspense fallback={<Loader />}>
+                                        <>
                                             <Nav
                                                 router={this.router}
                                             ></Nav>
@@ -168,12 +168,11 @@ class App extends React.Component<{}, AppStateI>{
                                                     component={Logout}
                                                 />
                                                 <Route component={Error404} />
-
                                             </NavigationContainer>
-                                        </Suspense>
+                                        </>
                                     )
                                     : (
-                                        <Suspense fallback={<Loader />}>
+                                        <>
                                             <Redirect to={this.router.get("login")} />
                                             <Switch>
                                                 <Route exact path={this.router.get("dashboard")}>
@@ -186,7 +185,7 @@ class App extends React.Component<{}, AppStateI>{
                                                     />
                                                 </Route>
                                             </Switch>
-                                        </Suspense>
+                                        </>
                                     )
                             )
                     }
