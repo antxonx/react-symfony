@@ -8,6 +8,7 @@ interface ModalPropsI {
     show: boolean;
     size?: number;
     onClose: (name: string) => void;
+    onHide?: (name: string) => void;
     title?: string;
     name?: string;
     loading: boolean;
@@ -20,17 +21,27 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
     }
 
     handleClick = () => {
-        (
-            (this.props.name && this.props.onClose(this.props.name)) ||
+        this.props.name && (
+            this.props.onClose(this.props.name)
+        ) || (
             this.props.onClose("_")
         );
+        setTimeout(() => {
+            this.props.onHide && (
+                this.props.name && (
+                    this.props.onHide(this.props.name)
+                ) || (
+                    this.props.onHide("_")
+                )
+            );
+        }, 200);
     };
 
     hideScroll = () => {
         if (this.props.show) {
             document.body.classList.add("modal-component-open");
         } else {
-            if(document.querySelectorAll(".modal-component.show").length > +this.props.show)
+            if (document.querySelectorAll(".modal-component.show").length > +this.props.show)
                 document.body.classList.remove("modal-component-open");
         }
     };

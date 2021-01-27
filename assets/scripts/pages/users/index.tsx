@@ -36,10 +36,9 @@ interface UsersStateI extends PanelStateI<UserI> {
     alert: AlertPropsI;
     impersonateLoading: number[];
     redirectLogger: number;
+    modalContent: JSX.Element;
 }
 export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
-
-    protected modalContent: JSX.Element;
 
     protected fade: boolean;
 
@@ -135,10 +134,10 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                     children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
                     className: "icon-col border-left-0",
                 },
-            ]
+            ],
+            modalContent: <LoaderH position="center" />,
         };
         this.route = "user_all";
-        this.modalContent = <LoaderH position="center" />;
         this.fade = false;
     }
 
@@ -159,30 +158,36 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         });
     };
 
+    handleHideModal = () => {
+        this.setState({
+            modalContent: <></>,
+        });
+    };
+
     handleAddUser = () => {
-        this.modalContent = (
-            <AddForm
-                onSuccess={(res: AxiosResponse) => {
-                    HandleResponse.success(res, this.props.toasts);
-                    this.setState({
-                        modal: {
-                            ...this.state.modal,
-                            show: false,
-                        }
-                    });
-                    this.update({ silent: true });
-                }}
-                onError={(err: AxiosError) => {
-                    return HandleResponse.error(err, this.props.toasts)?.message;
-                }}
-            />
-        );
         this.setState({
             modal: {
                 title: "Agregar",
                 show: true,
                 size: 30,
-            }
+            },
+            modalContent: (
+                <AddForm
+                    onSuccess={(res: AxiosResponse) => {
+                        HandleResponse.success(res, this.props.toasts);
+                        this.setState({
+                            modal: {
+                                ...this.state.modal,
+                                show: false,
+                            }
+                        });
+                        this.update({ silent: true });
+                    }}
+                    onError={(err: AxiosError) => {
+                        return HandleResponse.error(err, this.props.toasts)?.message;
+                    }}
+                />
+            )
         });
     };
 
@@ -241,15 +246,6 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         const toShow = this.getEntities().find((user) => {
             return user.id == +row.dataset.id!;
         }) as UserI;
-        this.modalContent = (
-            <UserShow
-                key={toShow.id}
-                user={toShow}
-                callback={() => {
-                    this.update({ silent: true });
-                }}
-            />
-        );
         const user = this.getEntities().find(us => us.id === +row.dataset.id!);
         this.setState({
             modal: {
@@ -257,24 +253,19 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 show: true,
                 size: 50,
             },
+            modalContent: (
+                <UserShow
+                    key={toShow.id}
+                    user={toShow}
+                    callback={() => {
+                        this.update({ silent: true });
+                    }}
+                />
+            )
         });
     };
 
     handlePasswordClick = (id: number) => {
-        this.modalContent = (
-            <PasswordFormAdmin
-                id={id}
-                onSuccess={(res) => {
-                    HandleResponse.success(res, this.props.toasts);
-                    this.setState({
-                        modal: {
-                            ...this.state.modal,
-                            show: false,
-                        }
-                    });
-                }}
-            />
-        );
         const user = this.getEntities().find(us => us.id === id);
         this.setState({
             modal: {
@@ -282,6 +273,20 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 show: true,
                 size: 30,
             },
+            modalContent: (
+                <PasswordFormAdmin
+                    id={id}
+                    onSuccess={(res) => {
+                        HandleResponse.success(res, this.props.toasts);
+                        this.setState({
+                            modal: {
+                                ...this.state.modal,
+                                show: false,
+                            }
+                        });
+                    }}
+                />
+            )
         });
     };
 
@@ -446,12 +451,13 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                 </this.MainTable>
                                 <Modal
                                     onClose={this.handleCloseModal}
+                                    onHide={this.handleHideModal}
                                     name="form"
                                     loading={false}
                                     {...this.state.modal}
                                 >
                                     <Suspense fallback={<LoaderH position="center" />}>
-                                        {this.modalContent}
+                                        {this.state.modalContent}
                                     </Suspense>
                                 </Modal>
                                 <Alert<number>
