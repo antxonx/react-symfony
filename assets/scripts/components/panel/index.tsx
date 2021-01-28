@@ -12,6 +12,7 @@ import Alert, { AlertPropsI, FinishedAlertState, FinishedStateTypes } from '@com
 import Layout from '@components/layout';
 import Modal from '@components/modals/modal';
 import LoaderH from '@components/loader/loaderH';
+import { Alert as AlertBox } from 'antd';
 
 export interface PanelPropsI {
     toasts: ToastEventsI;
@@ -114,17 +115,25 @@ export default class Panel<
 
     protected NoRegisters = (): JSX.Element => {
         return (
-            <div className="alert alert-dark container mt-5 round">
-                No hay registos.
-            </div>
+            <AlertBox
+                className="round w-50 mx-auto mt-5"
+                message="No hay registros."
+                description="No se pudo encontrar registros con la petición realizada."
+                type="info"
+                showIcon
+            />
         );
     };
 
     protected NoRoute = (): JSX.Element => {
         return (
-            <div className="alert alert-dark container mt-5 round">
-                No se ha seleccionado una ruta.
-            </div>
+            <AlertBox
+                className="round w-50 mx-auto mt-5"
+                message="No se ha seleccionado una ruta."
+                description="Debe seleccionar una ruta para poder mostrar los resultados."
+                type="info"
+                showIcon
+            />
         );
     };
 
@@ -253,9 +262,9 @@ export default class Panel<
     protected handleSearch = (data: string) => {
         this.params.page = 1;
         this.params.search = data;
-        if(this.route != "") 
+        if (this.route != "")
             this.update();
-    }
+    };
 
     protected Table = (props: React.PropsWithChildren<{
         extraTableClass?: string;
