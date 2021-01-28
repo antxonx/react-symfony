@@ -125,6 +125,22 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
         this.update();
     };
 
+    handleDateChange = (_: any) => {
+        if(_) {
+            const dates = _ as moment.Moment[];
+            const startDate = dates![ 0 ]?.format("YYYY-MM-DD");
+            const endDate = dates![ 1 ]?.format("YYYY-MM-DD");
+            console.log(startDate + " - " + endDate);
+            this.params.startDate = startDate;
+            this.params.endDate = endDate;
+        } else {
+            delete this.params.startDate;
+            delete this.params.endDate;
+        }
+        if(this.route !== "") 
+                this.update();
+    }
+
     getTypeColor = (type: logTypes) => {
         return (() => {
             switch (type) {
@@ -180,11 +196,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                         />
                     </Column>
                     <Column size={4}>
-                        <RangePicker className="round w-100" onChange={(dates) => {
-                            console.log(dates![ 0 ]?.format("D-M-YYYY"));
-                            console.log(" - ");
-                            console.log(dates![ 1 ]?.format("D-M-YYYY"));
-                        }} />
+                        <RangePicker className="round w-100" onChange={this.handleDateChange} />
                     </Column>
                 </this.MainBar>
                 <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing}>

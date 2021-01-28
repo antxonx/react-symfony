@@ -7,6 +7,7 @@
 namespace App\Repository;
 
 use App\Entity\InfoLog;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -47,6 +48,12 @@ class InfoLogRepository extends ServiceEntityRepository
             $userCriteria = new Criteria();
             $userCriteria->where(Criteria::expr()->eq("p.user", $params->user));
             $query->addCriteria($userCriteria);
+        }
+        if(isset($params->startDate) && $params->startDate != "") {
+            $dateCriteria = new Criteria();
+            $dateCriteria->where(Criteria::expr()->gt("p.createdAt", new DateTime($params->startDate)));
+            $dateCriteria->andWhere(Criteria::expr()->lt("p.createdAt", new DateTime($params->endDate)));
+            $query->addCriteria($dateCriteria);
         }
         if (isset($params->search) && $params->search != "") {
             $searchRoute = str_replace("_", "/", $params->search);
