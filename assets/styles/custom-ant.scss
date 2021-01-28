@@ -50,3 +50,18 @@
 .anticon.anticon-search {
     vertical-align: initial;
 }
+
+.ant-btn-primary {
+    color: #fff;
+    background: #2c3e50;
+    border-color: #2c3e50;
+    &:hover,
+    &:focus {
+        background-color: #1e2b37;
+        border-color: #1a252f;
+    }
+}
+
+.ant-btn[disabled] {
+    cursor: default;
+}

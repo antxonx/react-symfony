@@ -1,5 +1,4 @@
 import ButtonAction from '@components/buttons/bottonAction';
-import Button from '@components/buttons/button';
 import Action from '@components/buttons/table/action';
 import ButtonDelete from '@components/buttons/table/delete';
 import Column from '@components/grid/column';
@@ -17,6 +16,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Redirect } from 'react-router-dom';
 import { TdPropsI, ThPropsI } from '@components/tables';
+import { Button } from 'antd';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));
@@ -304,11 +304,12 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                 <this.MainBar>
                                     <Column size={3} extraClass="my-1">
                                         <Button
-                                            color="primary"
-                                            content="Agregar usuario"
-                                            extraClass="w-100"
+                                            type="primary"
+                                            className="w-100 round"
                                             onClick={this.handleAddUser}
-                                        />
+                                        >
+                                            Agregar usaurio
+                                        </Button>
                                     </Column>
                                     <Column size={6} extraClass="my-1">
                                         <Search callback={this.handleSearch} />
