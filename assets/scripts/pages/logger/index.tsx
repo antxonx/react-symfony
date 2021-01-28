@@ -6,9 +6,10 @@ import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
 import React from 'react';
-import { DatePicker, Input, Radio, RadioChangeEvent } from 'antd';
+import { Input, Radio, RadioChangeEvent } from 'antd';
 import Search from '@components/search/search';
-const { RangePicker } = DatePicker;
+import RangePicker from '@components/RangePicker';
+
 
 interface LoggerPropsI extends PanelPropsI { }
 
@@ -197,10 +198,10 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                         />
                     </Column>
                     <Column size={5}>
-                       <Search callback={this.handleSearch}/>
+                        <Search callback={this.handleSearch} />
                     </Column>
                     <Column size={4}>
-                        <RangePicker className="round w-100" onChange={this.handleDateChange} />
+                        <RangePicker onChange={this.handleDateChange} />
                     </Column>
                 </this.MainBar>
                 <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing}>
