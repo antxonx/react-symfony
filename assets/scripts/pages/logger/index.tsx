@@ -197,10 +197,10 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                             buttonStyle="solid"
                         />
                     </Column>
-                    <Column size={5}>
+                    <Column size={6}>
                         <Search callback={this.handleSearch} />
                     </Column>
-                    <Column size={4}>
+                    <Column size={3}>
                         <RangePicker onChange={this.handleDateChange} />
                     </Column>
                 </this.MainBar>
