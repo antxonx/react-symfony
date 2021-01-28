@@ -6,11 +6,14 @@ import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
 import React from 'react';
+import { DatePicker, Radio, RadioChangeEvent } from 'antd';
+const { RangePicker } = DatePicker;
 
 interface LoggerPropsI extends PanelPropsI { }
 
 interface LoggerStateI extends PanelStateI<LogI> {
     changing: boolean;
+    type: "error" | "info" | "";
 }
 
 export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
@@ -26,6 +29,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                 total: 0,
             },
             changing: false,
+            type: "",
             header: [
                 {
                     name: "Id",
@@ -65,7 +69,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                 title: "",
                 show: false,
                 size: 50,
-                content:<LoaderH position="center" />,
+                content: <LoaderH position="center" />,
                 onClose: this.handleCloseModal,
                 onHide: this.handleHideModal,
             },
@@ -98,30 +102,22 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
         this.setState({
             header: header,
             changing: true,
-        })
+        });
         this.update();
-    }
+    };
 
-    handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let change = false;
-        switch (e.target.value) {
-            case LogNames.INFO:
-                if (this.route != LogRoutes.UNDEFINED)
-                    change = true;
-                this.route = LogRoutes.INFO;
-                break;
-            case LogNames.ERROR:
-                if (this.route != LogRoutes.UNDEFINED)
-                    change = true;
-                this.route = LogRoutes.ERROR;
-                break;
-            default:
-                this.route = LogRoutes.UNDEFINED;
-                break;
-        }
+    handleTypeChange = (e: RadioChangeEvent) => {
+        this.route = (() => {
+            switch (e.target.value) {
+                case LogNames.INFO: return LogRoutes.INFO;
+                case LogNames.ERROR: return LogRoutes.ERROR;
+                default: return LogRoutes.UNDEFINED;
+            }
+        })();
         this.setState({
-            changing: change,
+            changing: true,
             header: this.unsetSorts(this.state.header),
+            type: e.target.value,
         });
         this.params.page = 1;
         delete this.params.order;
@@ -130,20 +126,14 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
     };
 
     getTypeColor = (type: logTypes) => {
-        let color: string;
-        switch (type) {
-            case logTypes.WARNING:
-            case logTypes.API:
-                color = "warning";
-                break;
-            case logTypes.INFO:
-                color = "info";
-                break;
-            default:
-                color = "danger";
-                break;
-        }
-        return color;
+        return (() => {
+            switch (type) {
+                case logTypes.WARNING:
+                case logTypes.API: return "warning";
+                case logTypes.INFO: return "info";
+                default: return "danger";
+            }
+        })();
     };
 
     CreationDate = (props: React.PropsWithChildren<{ system: boolean; level: logTypes; }>): JSX.Element => {
@@ -180,16 +170,21 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             <this.Layout title="Registro">
                 <this.MainBar>
                     <Column size={3}>
-                        <div className="btn-group btn-group-toggle w-100" data-toggle="buttons" onChange={this.handleTypeChange}>
-                            <label className="btn btn-outline-primary round">
-                                <input type="radio" value="info" name="logName" autoComplete="off" />
-                                Info
-                            </label>
-                            <label className="btn btn-outline-primary round">
-                                <input type="radio" value="error" name="logName" autoComplete="off" />
-                                Error
-                            </label>
-                        </div>
+                        <Radio.Group
+                            options={[ { label: 'Info', value: 'info' }, { label: 'Error', value: 'error' } ]}
+                            onChange={this.handleTypeChange}
+                            value={this.state.type}
+                            className="button-group"
+                            optionType="button"
+                            buttonStyle="solid"
+                        />
+                    </Column>
+                    <Column size={4}>
+                        <RangePicker className="round w-100" onChange={(dates) => {
+                            console.log(dates![ 0 ]?.format("D-M-YYYY"));
+                            console.log(" - ");
+                            console.log(dates![ 1 ]?.format("D-M-YYYY"));
+                        }} />
                     </Column>
                 </this.MainBar>
                 <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing}>

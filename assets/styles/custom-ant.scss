@@ -1,0 +1,35 @@
+.button-group {
+    width: 100%;
+    label {
+        text-align: center;
+        &:first-child {
+            border-top-left-radius: 1.25rem;
+            border-bottom-left-radius: 1.25rem;
+            &:nth-last-child(1) {
+                width: 100%;
+            }
+            @for $i from 2 to 10 {
+                &:nth-last-child(#{$i}),
+                &:nth-last-child(#{$i}) ~ label {
+                    width: (100%/$i);
+                }
+            }
+        }
+        &:last-child {
+            border-top-right-radius: 1.25rem;
+            border-bottom-right-radius: 1.25rem;
+        }
+    }
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: #fff;
+    background: #075aa7;
+    border-color: #075aa7;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+    color: #fff;
+    background: #0c68be;
+    border-color: #0c68be;
+}
