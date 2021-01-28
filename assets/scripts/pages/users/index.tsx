@@ -3,11 +3,9 @@ import Button from '@components/buttons/button';
 import Action from '@components/buttons/table/action';
 import ButtonDelete from '@components/buttons/table/delete';
 import Column from '@components/grid/column';
-import Layout from '@components/layout';
 import LoaderH from '@components/loader/loaderH';
 import RoleBadge from '@components/misc/roleBadge';
-import Alert, { AlertPropsI, FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
-import Modal from '@components/modals/modal';
+import { FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
 import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
@@ -15,7 +13,7 @@ import PasswordFormAdmin from '@scripts/forms/user/passwordAdmin';
 import Authentication, { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import React, { Suspense } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Redirect } from 'react-router-dom';
 import { TdPropsI, ThPropsI } from '@components/tables';
@@ -27,21 +25,10 @@ interface UserPropsI extends PanelPropsI {
 
 }
 
-interface ModalI {
-    show: boolean;
-    size: number;
-    title: string;
-}
+
 interface UsersStateI extends PanelStateI<UserI> {
-    modal: ModalI;
-    alert: AlertPropsI;
     impersonateLoading: number[];
     redirectLogger: number;
-    modalContent: JSX.Element;
-    active: {
-        modal: boolean;
-        alert: boolean;
-    };
 }
 export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
@@ -87,12 +74,15 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 title: "",
                 show: false,
                 size: 50,
+                content: <LoaderH position="center" />,
+                onClose: this.handleCloseModal,
+                onHide: this.handleHideModal,
             },
             alert: {
                 id: 0,
                 message: <></>,
-                onAccept: this.handleAcceptDelete,
-                onCancel: this.handleCancelDelete,
+                onAccept: this.handleAcceptAlert,
+                onCancel: this.handleCancelAlert,
                 onHide: this.handleHideAlert,
                 show: false,
             },
@@ -141,7 +131,6 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                     className: "icon-col border-left-0",
                 },
             ],
-            modalContent: <LoaderH position="center" />,
             active: {
                 modal: false,
                 alert: false,
@@ -159,53 +148,13 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         this.fade = true;
     };
 
-    setModal = (modal: ModalI) => {
-        setTimeout(() => {
-            this.setState({
-                modal: {
-                    title: modal.title,
-                    show: modal.show,
-                    size: modal.size,
-                },
-            });
-        }, 1);
-    };
-
-    handleCloseModal = () => {
-        this.setState({
-            modal: {
-                ...this.state.modal,
-                show: false,
-            }
-        });
-    };
-
-    handleHideModal = () => {
-        this.setState({
-            modalContent: <></>,
-            active: {
-                ...this.state.active,
-                modal: false,
-            }
-        });
-    };
-
-    handleHideAlert = () => {
-        this.setState({
-            active: {
-                ...this.state.active,
-                alert: false,
-            }
-        });
-    };
-
     handleAddUser = () => {
-        this.setState({
-            active: {
-                ...this.state.active,
-                modal: true,
-            },
-            modalContent: (
+        this.setModal({
+            ...this.state.modal,
+            title: "Agregar",
+            show: true,
+            size: 30,
+            content: (
                 <AddForm
                     onSuccess={(res: AxiosResponse) => {
                         HandleResponse.success(res, this.props.toasts);
@@ -221,12 +170,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                         return HandleResponse.error(err, this.props.toasts)?.message;
                     }}
                 />
-            ),
-        });
-        this.setModal({
-            title: "Agregar",
-            show: true,
-            size: 30,
+            )
         });
     };
 
@@ -238,27 +182,17 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
     };
 
     handleDelete = (id: number, extra: JSX.Element) => {
-        this.setState({
-            active: {
-                ...this.state.active,
-                alert: true,
+        this.setAlert({
+            ...this.state.alert,
+            ...{
+                show: true,
+                id: id,
+                message: (<>¿Eliminar a {extra}?</>),
             }
         });
-        setTimeout(() => {
-            this.setState({
-                alert: {
-                    ...this.state.alert,
-                    ...{
-                        show: true,
-                        id: id,
-                        message: (<>¿Eliminar a {extra}?</>),
-                    }
-                }
-            });
-        }, 1);
     };
 
-    handleAcceptDelete = async (id: number): Promise<FinishedAlertState> => {
+    handleAcceptAlert = async (id: number): Promise<FinishedAlertState> => {
         let message: string;
         let type: FinishedStateTypes;
         let res;
@@ -277,29 +211,18 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         };
     };
 
-    handleCancelDelete = (id: number) => {
-        this.setState({
-            alert: {
-                ...this.state.alert,
-                ...{
-                    show: false
-                },
-            },
-        });
-    };
-
     handleRowClick = (e: React.MouseEvent<HTMLTableCellElement>) => {
         const row = e.currentTarget.closest("tr")!;
         const toShow = this.getEntities().find((user) => {
             return user.id == +row.dataset.id!;
         }) as UserI;
         const user = this.getEntities().find(us => us.id === +row.dataset.id!);
-        this.setState({
-            active: {
-                ...this.state.active,
-                modal: true,
-            },
-            modalContent: (
+        this.setModal({
+            ...this.state.modal,
+            title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
+            show: true,
+            size: 50,
+            content: (
                 <UserShow
                     key={toShow.id}
                     user={toShow}
@@ -309,39 +232,24 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 />
             )
         });
-        this.setModal({
-            title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
-            show: true,
-            size: 50,
-        });
     };
 
     handlePasswordClick = (id: number) => {
         const user = this.getEntities().find(us => us.id === id);
-        this.setState({
-            active: {
-                ...this.state.active,
-                modal: true,
-            },
-            modalContent: (
+        this.setModal({
+            ...this.state.modal,
+            title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
+            show: true,
+            size: 30,
+            content: (
                 <PasswordFormAdmin
                     id={id}
                     onSuccess={(res) => {
                         HandleResponse.success(res, this.props.toasts);
-                        this.setState({
-                            modal: {
-                                ...this.state.modal,
-                                show: false,
-                            }
-                        });
+                        this.manuallyCloseModal();
                     }}
                 />
             )
-        });
-        this.setModal({
-            title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
-            show: true,
-            size: 30,
         });
     };
 
@@ -385,7 +293,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
             extraTableClass += " hide";
         }
         return (
-            <Layout title="Usuarios">
+            <this.Layout title="Usuarios">
                 {
                     (this.state.redirectLogger > 0)
                         ? (
@@ -504,28 +412,10 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                     }
                                     />
                                 </this.MainTable>
-                                {
-                                    this.state.active.modal && (
-                                        <Modal
-                                            onClose={this.handleCloseModal}
-                                            onHide={this.handleHideModal}
-                                            name="form"
-                                            loading={false}
-                                            {...this.state.modal}
-                                        >
-                                            <Suspense fallback={<LoaderH position="center" />}>
-                                                {this.state.modalContent}
-                                            </Suspense>
-                                        </Modal>
-                                    )
-                                }
-                                {
-                                    this.state.active.alert && <Alert<number>{...this.state.alert} />
-                                }
                             </>
                         )
                 }
-            </Layout>
+            </this.Layout>
         );
     };
 }

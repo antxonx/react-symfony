@@ -1,5 +1,5 @@
 import Column from '@components/grid/column';
-import Layout from '@components/layout';
+import LoaderH from '@components/loader/loaderH';
 import Log, { LogI, LogRoutes, LogNames, logTypes, LogMethods, InfoLogI, ErrorLogI } from '@components/log';
 import Method from '@components/log/method';
 import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
@@ -60,7 +60,27 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                         width: "50%",
                     },
                 },
-            ]
+            ],
+            modal: {
+                title: "",
+                show: false,
+                size: 50,
+                content:<LoaderH position="center" />,
+                onClose: this.handleCloseModal,
+                onHide: this.handleHideModal,
+            },
+            alert: {
+                id: 0,
+                message: <></>,
+                onAccept: this.handleAcceptAlert,
+                onCancel: this.handleCancelAlert,
+                onHide: this.handleHideAlert,
+                show: false,
+            },
+            active: {
+                modal: false,
+                alert: false,
+            }
         };
         this.route = LogRoutes.UNDEFINED;
     }
@@ -157,7 +177,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             extraTableClass += " hide";
         }
         return (
-            <Layout title="Registro">
+            <this.Layout title="Registro">
                 <this.MainBar>
                     <Column size={3}>
                         <div className="btn-group btn-group-toggle w-100" data-toggle="buttons" onChange={this.handleTypeChange}>
@@ -229,7 +249,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                     }
                     />
                 </this.MainTable>
-            </Layout>
+            </this.Layout>
         );
     };
 }
