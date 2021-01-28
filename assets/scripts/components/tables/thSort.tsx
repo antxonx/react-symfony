@@ -5,7 +5,7 @@ export default function ThSort(props: React.PropsWithChildren<{
     name: string;
     activeOrder?: boolean;
     order?: "ASC" | "DESC";
-    style?: any
+    style?: any;
     [ key: string ]: any;
 }>) {
     return (

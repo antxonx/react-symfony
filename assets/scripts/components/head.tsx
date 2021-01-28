@@ -1,8 +1,5 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-
-const headRoot = document.head;
-
 export interface HeadI {
     title?: string;
     url?: string;
@@ -10,8 +7,6 @@ export interface HeadI {
     description?: string;
 }
 
-export default class Head extends React.Component {
-    render = (): JSX.Element => {
-        return ReactDOM.createPortal(this.props.children, headRoot);
-    };
+export default function Head(props: React.PropsWithChildren<{}>): JSX.Element {
+    return ReactDOM.createPortal(props.children, document.head);
 }

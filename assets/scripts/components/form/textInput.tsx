@@ -10,33 +10,26 @@ interface TextInputPropsI {
     placeholder?: string;
 }
 
-export default class TextInput extends React.Component<TextInputPropsI, {}> {
-
-    constructor (props: TextInputPropsI) {
-        super(props);
-    }
-
-    render = (): JSX.Element => {
-        return (
-            <div className="form-group">
-                <input
-                    type={this.props.type ? this.props.type : 'text'}
-                    className={this.props.error ? 'form-control is-invalid' : 'form-control'}
-                    name={this.props.name}
-                    onChange={this.props.onChange}
-                    onKeyDown={this.props.onKeyDown}
-                    placeholder={this.props.placeholder}
-                />
-                {
-                    (this.props.error && this.props.errorMsg) && (
-                        <small>
-                            <span className="text-danger">
-                                *{this.props.errorMsg}
-                            </span>
-                        </small>
-                    )
-                }
-            </div>
-        );
-    };
+export default function TextInput(props: React.PropsWithChildren<TextInputPropsI>): JSX.Element {
+    return (
+        <div className="form-group">
+            <input
+                type={props.type ? props.type : 'text'}
+                className={props.error ? 'form-control is-invalid' : 'form-control'}
+                name={props.name}
+                onChange={props.onChange}
+                onKeyDown={props.onKeyDown}
+                placeholder={props.placeholder}
+            />
+            {
+                (props.error && props.errorMsg) && (
+                    <small>
+                        <span className="text-danger">
+                            *{props.errorMsg}
+                        </span>
+                    </small>
+                )
+            }
+        </div>
+    );
 }

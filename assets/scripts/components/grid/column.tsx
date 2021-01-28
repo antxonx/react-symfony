@@ -5,18 +5,12 @@ interface ColumnPropsI {
     extraClass?: string;
 }
 
-export default class Column extends React.Component<ColumnPropsI, {}> {
-    constructor (props: ColumnPropsI) {
-        super(props);
-    }
-
-    render = (): JSX.Element => {
-        let className = ((this.props.size) ? `col-md-${this.props.size}` : 'col');
-        this.props.extraClass && (className += ` ${this.props.extraClass}`);
-        return (
-            <div className={className}>
-                {this.props.children}
-            </div>
-        );
-    };
+export default function Column(props: React.PropsWithChildren<ColumnPropsI>): JSX.Element {
+    let className = ((props.size) ? `col-md-${props.size}` : 'col');
+        props.extraClass && (className += ` ${props.extraClass}`);
+    return (
+        <div className={className}>
+            {props.children}
+        </div>
+    );
 }

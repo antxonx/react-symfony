@@ -7,23 +7,17 @@ interface ButtonCloseI {
     extraClass?: string;
 }
 
-export default class ButtonClose extends React.Component<ButtonCloseI, {}> {
-    constructor (props: ButtonCloseI) {
-        super(props);
-    }
-
-    render = (): JSX.Element => {
-        return (
-            <button
-                className={
-                    "btn text-muted close-btn" +
-                    (this.props.float ? " float-" + this.props.float : "") +
-                    (this.props.extraClass ? " " + this.props.extraClass : "")
-                }
-                onClick={this.props.onClick}
-            >
-                <FontAwesomeIcon icon={['fas', 'times']} />
-            </button>
-        );
-    };
+export default function ButtonClose(props: React.PropsWithChildren<ButtonCloseI>): JSX.Element {
+    return (
+        <button
+            className={
+                "btn text-muted close-btn" +
+                (props.float ? " float-" + props.float : "") +
+                (props.extraClass ? " " + props.extraClass : "")
+            }
+            onClick={props.onClick}
+        >
+            <FontAwesomeIcon icon={[ 'fas', 'times' ]} />
+        </button>
+    );
 }

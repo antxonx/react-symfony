@@ -5,19 +5,13 @@ interface ButtonActionPropsI {
     content: string;
 }
 
-export default class ButtonAction extends React.Component<ButtonActionPropsI, {}> {
-    constructor (props: ButtonActionPropsI) {
-        super(props);
-    }
-
-    render = (): JSX.Element => {
-        return (
-            <a
-                className="button-action ww-100 text-center"
-                href={`${this.props.type}:${this.props.content || this.props.children}`}
-            >
-                {this.props.content || this.props.children}
-            </a>
-        );
-    };
+export default function ButtonAction(props: React.PropsWithChildren<ButtonActionPropsI>): JSX.Element {
+    return (
+        <a
+            className="button-action ww-100 text-center"
+            href={`${props.type}:${props.content || props.children}`}
+        >
+            {props.content || props.children}
+        </a>
+    );
 }

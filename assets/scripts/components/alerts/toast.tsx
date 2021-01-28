@@ -16,32 +16,26 @@ export interface ToastData {
     show?: boolean;
 }
 
-export default class Toast extends React.Component<ToastPropsI, {}> {
-    constructor (props: ToastPropsI) {
-        super(props);
-    }
-
-    render = (): JSX.Element => {
-        return (
-            <div
-                className={`border-${this.props.type} round toast-alert toast-${this.props.type}` + (this.props.show ? " show" : "")}
-            >
-                {
-                    (this.props.title?.trim() !== "") && (
-                        <h4>
-                            {this.props.title}
-                            <span className="float-right">
-                                {
-                                    this.props.type === "success"
-                                        ? <FontAwesomeIcon icon={[ 'fas', 'check-circle' ]} />
-                                        : <FontAwesomeIcon icon={[ 'fas', 'times-circle' ]} />
-                                }
-                            </span>
-                        </h4>
-                    )
-                }
-                {this.props.message || this.props.children}
-            </div>
-        );
-    };
+export default function Toast(props: React.PropsWithChildren<ToastPropsI>): JSX.Element {
+    return (
+        <div
+            className={`border-${props.type} round toast-alert toast-${props.type}` + (props.show ? " show" : "")}
+        >
+            {
+                (props.title?.trim() !== "") && (
+                    <h4>
+                        {props.title}
+                        <span className="float-right">
+                            {
+                                props.type === "success"
+                                    ? <FontAwesomeIcon icon={[ 'fas', 'check-circle' ]} />
+                                    : <FontAwesomeIcon icon={[ 'fas', 'times-circle' ]} />
+                            }
+                        </span>
+                    </h4>
+                )
+            }
+            {props.message || props.children}
+        </div>
+    );
 }
