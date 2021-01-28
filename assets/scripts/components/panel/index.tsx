@@ -250,6 +250,13 @@ export default class Panel<
         }, 1);
     };
 
+    protected handleSearch = (data: string) => {
+        this.params.page = 1;
+        this.params.search = data;
+        if(this.route != "") 
+            this.update();
+    }
+
     protected Table = (props: React.PropsWithChildren<{
         extraTableClass?: string;
         noLoader?: boolean;

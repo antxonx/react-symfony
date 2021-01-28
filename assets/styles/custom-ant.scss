@@ -11,7 +11,7 @@
             @for $i from 2 to 10 {
                 &:nth-last-child(#{$i}),
                 &:nth-last-child(#{$i}) ~ label {
-                    width: (100%/$i);
+                    width: (100% / $i);
                 }
             }
         }
@@ -32,4 +32,21 @@
     color: #fff;
     background: #0c68be;
     border-color: #0c68be;
+}
+
+.ant-input-search {
+    .ant-input-group {
+        .ant-input-affix-wrapper:not(:last-child) {
+            border-top-left-radius: 1.25rem !important;
+            border-bottom-left-radius: 1.25rem !important;
+        }
+        .ant-input-search-button {
+            border-top-right-radius: 1.25rem !important;
+            border-bottom-right-radius: 1.25rem !important;
+        }
+    }
+}
+
+.anticon.anticon-search {
+    vertical-align: initial;
 }

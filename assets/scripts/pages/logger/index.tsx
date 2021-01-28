@@ -6,7 +6,8 @@ import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
 import React from 'react';
-import { DatePicker, Radio, RadioChangeEvent } from 'antd';
+import { DatePicker, Input, Radio, RadioChangeEvent } from 'antd';
+import Search from '@components/search/search';
 const { RangePicker } = DatePicker;
 
 interface LoggerPropsI extends PanelPropsI { }
@@ -126,7 +127,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
     };
 
     handleDateChange = (_: any) => {
-        if(_) {
+        if (_) {
             const dates = _ as moment.Moment[];
             const startDate = dates![ 0 ]?.format("YYYY-MM-DD");
             const endDate = dates![ 1 ]?.format("YYYY-MM-DD");
@@ -137,9 +138,9 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             delete this.params.startDate;
             delete this.params.endDate;
         }
-        if(this.route !== "") 
-                this.update();
-    }
+        if (this.route !== "")
+            this.update();
+    };
 
     getTypeColor = (type: logTypes) => {
         return (() => {
@@ -194,6 +195,9 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                             optionType="button"
                             buttonStyle="solid"
                         />
+                    </Column>
+                    <Column size={5}>
+                       <Search callback={this.handleSearch}/>
                     </Column>
                     <Column size={4}>
                         <RangePicker className="round w-100" onChange={this.handleDateChange} />
