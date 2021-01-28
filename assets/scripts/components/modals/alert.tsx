@@ -12,6 +12,7 @@ export interface AlertPropsI<PT = number> {
     onCancel: (id: PT) => void;
     message: JSX.Element;
     type?: "alert" | "warning" | "info";
+    onHide?: (id: PT) => void;
 }
 
 interface AlertStateI {
@@ -36,6 +37,15 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
         this.state = {
             loading: false,
         };
+    }
+
+    handleCancel = () => {
+        this.props.onCancel(this.props.id)
+        setTimeout(() => {
+            this.props.onHide && (
+                this.props.onHide(this.props.id)
+            );
+        }, 200);
     }
 
     hideScroll = () => {
@@ -75,7 +85,7 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
                                     children={<b>Cancelar</b>}
                                     size={buttonSizes.LARGE}
                                     extraClass="border-0 w-100 p-3"
-                                    onClick={() => { this.props.onCancel(this.props.id); }}
+                                    onClick={this.handleCancel}
                                 />
                                 <Button
                                     color="light"

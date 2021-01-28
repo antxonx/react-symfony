@@ -27,16 +27,21 @@ interface UserPropsI extends PanelPropsI {
 
 }
 
+interface ModalI {
+    show: boolean;
+    size: number;
+    title: string;
+}
 interface UsersStateI extends PanelStateI<UserI> {
-    modal: {
-        show: boolean;
-        size: number;
-        title: string;
-    };
+    modal: ModalI;
     alert: AlertPropsI;
     impersonateLoading: number[];
     redirectLogger: number;
     modalContent: JSX.Element;
+    active: {
+        modal: boolean;
+        alert: boolean;
+    };
 }
 export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
@@ -88,6 +93,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 message: <></>,
                 onAccept: this.handleAcceptDelete,
                 onCancel: this.handleCancelDelete,
+                onHide: this.handleHideAlert,
                 show: false,
             },
             impersonateLoading: [],
@@ -136,6 +142,10 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 },
             ],
             modalContent: <LoaderH position="center" />,
+            active: {
+                modal: false,
+                alert: false,
+            }
         };
         this.route = "user_all";
         this.fade = false;
@@ -147,6 +157,18 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
     onPageChange = () => {
         this.fade = true;
+    };
+
+    setModal = (modal: ModalI) => {
+        setTimeout(() => {
+            this.setState({
+                modal: {
+                    title: modal.title,
+                    show: modal.show,
+                    size: modal.size,
+                },
+            });
+        }, 1);
     };
 
     handleCloseModal = () => {
@@ -161,15 +183,27 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
     handleHideModal = () => {
         this.setState({
             modalContent: <></>,
+            active: {
+                ...this.state.active,
+                modal: false,
+            }
+        });
+    };
+
+    handleHideAlert = () => {
+        this.setState({
+            active: {
+                ...this.state.active,
+                alert: false,
+            }
         });
     };
 
     handleAddUser = () => {
         this.setState({
-            modal: {
-                title: "Agregar",
-                show: true,
-                size: 30,
+            active: {
+                ...this.state.active,
+                modal: true,
             },
             modalContent: (
                 <AddForm
@@ -187,7 +221,12 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                         return HandleResponse.error(err, this.props.toasts)?.message;
                     }}
                 />
-            )
+            ),
+        });
+        this.setModal({
+            title: "Agregar",
+            show: true,
+            size: 30,
         });
     };
 
@@ -200,15 +239,23 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
     handleDelete = (id: number, extra: JSX.Element) => {
         this.setState({
-            alert: {
-                ...this.state.alert,
-                ...{
-                    show: true,
-                    id: id,
-                    message: (<>¿Eliminar a {extra}?</>),
-                }
+            active: {
+                ...this.state.active,
+                alert: true,
             }
         });
+        setTimeout(() => {
+            this.setState({
+                alert: {
+                    ...this.state.alert,
+                    ...{
+                        show: true,
+                        id: id,
+                        message: (<>¿Eliminar a {extra}?</>),
+                    }
+                }
+            });
+        }, 1);
     };
 
     handleAcceptDelete = async (id: number): Promise<FinishedAlertState> => {
@@ -236,8 +283,8 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 ...this.state.alert,
                 ...{
                     show: false
-                }
-            }
+                },
+            },
         });
     };
 
@@ -248,10 +295,9 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         }) as UserI;
         const user = this.getEntities().find(us => us.id === +row.dataset.id!);
         this.setState({
-            modal: {
-                title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
-                show: true,
-                size: 50,
+            active: {
+                ...this.state.active,
+                modal: true,
             },
             modalContent: (
                 <UserShow
@@ -263,15 +309,19 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 />
             )
         });
+        this.setModal({
+            title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
+            show: true,
+            size: 50,
+        });
     };
 
     handlePasswordClick = (id: number) => {
         const user = this.getEntities().find(us => us.id === id);
         this.setState({
-            modal: {
-                title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
-                show: true,
-                size: 30,
+            active: {
+                ...this.state.active,
+                modal: true,
             },
             modalContent: (
                 <PasswordFormAdmin
@@ -287,6 +337,11 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                     }}
                 />
             )
+        });
+        this.setModal({
+            title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
+            show: true,
+            size: 30,
         });
     };
 
@@ -449,24 +504,27 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                     }
                                     />
                                 </this.MainTable>
-                                <Modal
-                                    onClose={this.handleCloseModal}
-                                    onHide={this.handleHideModal}
-                                    name="form"
-                                    loading={false}
-                                    {...this.state.modal}
-                                >
-                                    <Suspense fallback={<LoaderH position="center" />}>
-                                        {this.state.modalContent}
-                                    </Suspense>
-                                </Modal>
-                                <Alert<number>
-                                    {...this.state.alert}
-                                />
+                                {
+                                    this.state.active.modal && (
+                                        <Modal
+                                            onClose={this.handleCloseModal}
+                                            onHide={this.handleHideModal}
+                                            name="form"
+                                            loading={false}
+                                            {...this.state.modal}
+                                        >
+                                            <Suspense fallback={<LoaderH position="center" />}>
+                                                {this.state.modalContent}
+                                            </Suspense>
+                                        </Modal>
+                                    )
+                                }
+                                {
+                                    this.state.active.alert && <Alert<number>{...this.state.alert} />
+                                }
                             </>
                         )
                 }
-
             </Layout>
         );
     };

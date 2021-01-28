@@ -23,7 +23,8 @@ export default function Button(props: React.PropsWithChildren<ButtonPropsI>): JS
             onClick={() => {
                 props.onClick && props.onClick();
             }}
-            className={"btn btn-round"
+            className={"btn round"
+                + (props.color ? ` btn-${props.color}`: "btn-light")
                 + (props.extraClass ? " " + props.extraClass : "")
                 + (() => {
                     switch (props.size) {
