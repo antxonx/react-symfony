@@ -1,3 +1,4 @@
+import { Input } from 'antd';
 import { string } from 'prop-types';
 import React from 'react';
 
@@ -41,26 +42,37 @@ export default class Search extends React.Component<SearchPropsI, SearchStateI> 
 
     render = (): JSX.Element => {
         return (
-            <div className="search-input">
-                <div className="input-group">
-                    <div className="input-group-prepend">
-                        <div className="input-group-text round">Buscar</div>
-                    </div>
-                    <input
-                        type="text"
-                        className="form-control round"
-                        placeholder=""
-                        onChange={this.handleChange}
+            <>
+                <Input.Group compact>
+                    <Input.Search
+                        allowClear
+                        style={{ width: '100%' }}
+                        defaultValue=""
                         value={this.state.value}
+                        onChange={this.handleChange}
                     />
-                </div>
-                <span
-                    className="erase-search cursor-pointer text-muted"
-                    onClick={this.handleEraseClick}
-                >
-                    &times;
+                </Input.Group>
+                {/* <div className="search-input">
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                            <div className="input-group-text round">Buscar</div>
+                        </div>
+                        <input
+                            type="text"
+                            className="form-control round"
+                            placeholder=""
+                            onChange={this.handleChange}
+                            value={this.state.value}
+                        />
+                    </div>
+                    <span
+                        className="erase-search cursor-pointer text-muted"
+                        onClick={this.handleEraseClick}
+                    >
+                        &times;
                     </span>
-            </div>
+                </div> */}
+            </>
         );
     };
 }

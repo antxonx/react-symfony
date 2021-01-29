@@ -3,14 +3,14 @@
         position: fixed;
         right: 0;
         top: 0;
-        width: 50%;
+        width: 30%;
     }
     &alert {
         margin: 0.25rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        // padding-left: 1rem;
+        // padding-right: 1rem;
+        // padding-top: 0.5rem;
+        // padding-bottom: 0.5rem;
         visibility: hidden;
         opacity: 0;
         transition: visibility 200ms, opacity 200ms linear;
@@ -19,14 +19,22 @@
             opacity: 1;
             transition: visibility 200ms, opacity 200ms linear;
         }
+        .ant-card-head {
+            border-bottom: none !important;
+        }
     }
 
     &success {
-        background-color: #24dc2461;
+        background-color: #b7eb8ff2;
         color: #000000;
     }
-    &danger {
-        background-color: #c7000061;
+    &error {
+        h6,
+        h5,
+        h4 {
+            color: #ffffff;
+        }
+        background-color: #ff311df2;
         color: #ffffff;
     }
 }

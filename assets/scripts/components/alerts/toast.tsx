@@ -1,8 +1,11 @@
+import Column from '@components/grid/column';
+import Row from '@components/grid/row';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Card } from 'antd';
 import React from 'react';
 
 interface ToastPropsI {
-    type: "success" | "danger";
+    type: "success" | "error";
     title?: string;
     message?: string;
     show: boolean;
@@ -10,7 +13,7 @@ interface ToastPropsI {
 
 export interface ToastData {
     id: string;
-    type: "success" | "danger";
+    type: "success" | "error";
     title?: string;
     message: string;
     show?: boolean;
@@ -18,24 +21,25 @@ export interface ToastData {
 
 export default function Toast(props: React.PropsWithChildren<ToastPropsI>): JSX.Element {
     return (
-        <div
-            className={`border-${props.type} round toast-alert toast-${props.type}` + (props.show ? " show" : "")}
+        <Card
+            className={`toast-alert round toast-${props.type}` + (props.show ? " show" : "")}
+            size="small"
         >
-            {
-                (props.title?.trim() !== "") && (
-                    <h4>
-                        {props.title}
-                        <span className="float-right">
-                            {
-                                props.type === "success"
-                                    ? <FontAwesomeIcon icon={[ 'fas', 'check-circle' ]} />
-                                    : <FontAwesomeIcon icon={[ 'fas', 'times-circle' ]} />
-                            }
-                        </span>
-                    </h4>
-                )
-            }
-            {props.message || props.children}
-        </div>
+            <Row>
+                <Column size={1}>
+                    {
+                        props.type === "success"
+                            ? <FontAwesomeIcon icon={[ 'far', 'check-circle' ]} size="2x" color="#52c41a" />
+                            : <FontAwesomeIcon icon={[ 'far', 'times-circle' ]} size="2x" color="#e79a93" />
+                    }
+                </Column>
+                <Column size={11} extraClass="mt-1">
+                    <h6>
+                        {props.message || props.children}
+                    </h6>
+                </Column>
+            </Row>
+
+        </Card>
     );
 }
