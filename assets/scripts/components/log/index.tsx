@@ -1,8 +1,7 @@
-import Column from '@components/grid/column';
-import Row from '@components/grid/row';
 import React from 'react';
 import parser from 'html-react-parser';
 import Method from './method';
+import { Column, Row } from '@components/grid';
 
 export enum LogMethods {
     GET = "GET",

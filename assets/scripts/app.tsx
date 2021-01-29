@@ -1,5 +1,5 @@
 import '@fortawesome/fontawesome-free/js/all.min.js';
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Router } from '@scripts/router';

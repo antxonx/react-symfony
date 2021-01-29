@@ -1,10 +1,8 @@
 import React from 'react';
 import parser from 'html-react-parser';
-import Button, { buttonSizes } from '@components/buttons/button';
 import LoaderH from '@components/loader/loaderH';
-import Row from '@components/grid/row';
-import Column from '@components/grid/column';
 import { Card } from 'antd';
+import { Column, Row } from '@components/grid';
 
 export interface AlertPropsI<PT = number> {
     show: boolean;

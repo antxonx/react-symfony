@@ -1,4 +1,3 @@
-import Column from '@components/grid/column';
 import LoaderH from '@components/loader/loaderH';
 import Log, { LogI, LogRoutes, LogNames, logTypes, LogMethods, InfoLogI, ErrorLogI } from '@components/log';
 import Method from '@components/log/method';
@@ -9,6 +8,7 @@ import React from 'react';
 import { Input, Radio, RadioChangeEvent } from 'antd';
 import Search from '@components/search/search';
 import RangePicker from '@components/RangePicker';
+import { Column } from '@components/grid';
 
 
 interface LoggerPropsI extends PanelPropsI { }

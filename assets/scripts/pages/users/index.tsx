@@ -1,7 +1,6 @@
 import ButtonAction from '@components/buttons/bottonAction';
 import Action from '@components/buttons/table/action';
 import ButtonDelete from '@components/buttons/table/delete';
-import Column from '@components/grid/column';
 import LoaderH from '@components/loader/loaderH';
 import RoleBadge from '@components/misc/roleBadge';
 import { FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
@@ -17,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Redirect } from 'react-router-dom';
 import { TdPropsI, ThPropsI } from '@components/tables';
 import { Button } from 'antd';
+import { Column } from '@components/grid';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));

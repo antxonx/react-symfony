@@ -5,7 +5,7 @@ interface ColumnPropsI {
     extraClass?: string;
 }
 
-export default function Column(props: React.PropsWithChildren<ColumnPropsI>): JSX.Element {
+export default function _Column(props: React.PropsWithChildren<ColumnPropsI>): JSX.Element {
     let className = ((props.size) ? `col-md-${props.size}` : 'col');
         props.extraClass && (className += ` ${props.extraClass}`);
     return (

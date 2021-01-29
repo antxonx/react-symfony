@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import Row from '@components/grid/row';
 import { ToastEventsI } from '@scripts/app';
 import { Table, Thead, ThPropsI } from '@components/tables';
 import TableLoader from '@components/loader/tableLoader';
@@ -13,6 +12,7 @@ import Layout from '@components/layout';
 import Modal from '@components/modals/modal';
 import LoaderH from '@components/loader/loaderH';
 import { Alert as AlertBox } from 'antd';
+import { Row } from '@components/grid';
 
 export interface PanelPropsI {
     toasts: ToastEventsI;

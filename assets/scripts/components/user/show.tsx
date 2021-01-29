@@ -1,7 +1,5 @@
-import EditableCheckField from '@components/editable/editableCheckField';
-import EditableTextField from '@components/editable/editableTextField';
-import Column from '@components/grid/column';
-import Row from '@components/grid/row';
+import { EditableCheckField, EditableTextField } from '@components/editable';
+import { Column, Row } from '@components/grid';
 import { Router } from '@scripts/router';
 import { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';

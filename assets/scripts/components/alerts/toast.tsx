@@ -1,5 +1,4 @@
-import Column from '@components/grid/column';
-import Row from '@components/grid/row';
+import { Column, Row } from '@components/grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Card } from 'antd';
 import React from 'react';

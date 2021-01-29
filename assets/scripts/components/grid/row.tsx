@@ -5,7 +5,7 @@ interface RowPropsI {
     style?: React.CSSProperties;
 }
 
-export default function Row(props: React.PropsWithChildren<RowPropsI>): JSX.Element {
+export default function _Row(props: React.PropsWithChildren<RowPropsI>): JSX.Element {
     return (
         <div
             className={"row" + (props.extraClass ? " " + props.extraClass : "")}

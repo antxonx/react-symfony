@@ -4,8 +4,6 @@ import { UserI } from '@services/authentication';
 import { Router } from '@scripts/router';
 import Layout from '@components/layout';
 import EditableTextField from '@components/editable/editableTextField';
-import Column from '@components/grid/column';
-import Row from '@components/grid/row';
 import Button from '@components/buttons/button';
 import Modal from '@components/modals/modal';
 import LoaderH from '@components/loader/loaderH';
@@ -13,6 +11,7 @@ import { Card } from 'antd';
 import HandleResponse from '@scripts/services/handleResponse';
 import { ToastEventsI } from '@scripts/app';
 import RoleBadge from '@components/misc/roleBadge';
+import { Column, Row } from '@components/grid';
 
 const PasswordForm = React.lazy(() => import('@scripts/forms/user/password'));
 

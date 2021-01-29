@@ -29,7 +29,7 @@ interface OptionsI extends CheckValue {
     checked: boolean;
 }
 
-export default class EditableCheckField extends React.Component<EditableCheckFieldPropsI, EditableFieldStatesI> {
+export default class _EditableCheckField extends React.Component<EditableCheckFieldPropsI, EditableFieldStatesI> {
 
     protected options: OptionsI[];
 
