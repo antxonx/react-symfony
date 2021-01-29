@@ -3,6 +3,7 @@ import ButtonClose from '@components/buttons/buttonClose';
 import LoaderH from '@components/loader/loaderH';
 import Button from '@components/buttons/button';
 import parser from 'html-react-parser';
+import { Card } from 'antd';
 
 interface ModalPropsI {
     show: boolean;
@@ -24,8 +25,8 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
         this.props.name && (
             this.props.onClose(this.props.name)
         ) || (
-            this.props.onClose("_")
-        );
+                this.props.onClose("_")
+            );
         setTimeout(() => {
             this.props.onHide && (
                 this.props.name && (
@@ -58,30 +59,32 @@ export default class Modal extends React.Component<ModalPropsI, {}> {
                         width: `${this.props.size || 50}%`,
                     }}
                 >
-                    <div className="w-100 h-100 pt-2">
-                        <h5 className="text-center">
-                            {this.props.title && parser(this.props.title)}
-                            <ButtonClose
+                    <Card className="round">
+                        <div className="w-100 h-100 pt-2">
+                            <h5 className="text-center">
+                                {this.props.title && parser(this.props.title)}
+                                <ButtonClose
+                                    onClick={this.handleClick}
+                                    float="right"
+                                    extraClass="hide-on-mobile"
+                                />
+                            </h5>
+                            {this.props.title && <hr className="divide" />}
+                            <div className="modal-component-body">
+                                {
+                                    this.props.loading
+                                        ? <LoaderH position="center" />
+                                        : this.props.children
+                                }
+                            </div>
+                            <Button
+                                color="danger"
+                                content="Cerrar"
+                                extraClass="w-100 mt-2 hide-on-desktop"
                                 onClick={this.handleClick}
-                                float="right"
-                                extraClass="hide-on-mobile"
                             />
-                        </h5>
-                        {this.props.title && <hr className="divide" />}
-                        <div className="modal-component-body">
-                            {
-                                this.props.loading
-                                    ? <LoaderH position="center" />
-                                    : this.props.children
-                            }
                         </div>
-                        <Button
-                            color="danger"
-                            content="Cerrar"
-                            extraClass="w-100 mt-2 hide-on-desktop"
-                            onClick={this.handleClick}
-                        />
-                    </div>
+                    </Card>
                 </div>
             </div>
 
