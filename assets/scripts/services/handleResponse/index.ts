@@ -28,7 +28,7 @@ export default class HandleResponse {
                 toasts.add({
                     id: id.toString(),
                     title: "Error",
-                    type: "danger",
+                    type: "error",
                     message: message,
                 })
             );
