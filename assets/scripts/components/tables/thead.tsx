@@ -6,17 +6,16 @@ interface TheadPropsI {
     cells: ThPropsI[];
 }
 
-export default class Thead extends React.Component<TheadPropsI, {}> {
-
-    render = (): JSX.Element => {
-        return (
-            <thead>
-                <tr>
-                    {
-                        this.props.cells.map(cell => {
-                            return (
-                                cell.sort
-                                    ? <ThSort
+export default function Thead(props: React.PropsWithChildren<TheadPropsI>): JSX.Element {
+    return (
+        <thead>
+            <tr>
+                {
+                    props.cells.map(cell => {
+                        return (
+                            cell.sort
+                                ? (
+                                    <ThSort
                                         key={cell.key || cell.children || cell.name}
                                         className={cell.className}
                                         name={cell.name}
@@ -27,18 +26,19 @@ export default class Thead extends React.Component<TheadPropsI, {}> {
                                         order={cell.order}
                                         column={cell.column}
                                     />
-                                    : (<th
+                                )
+                                : (
+                                    <th
                                         key={cell.key || cell.children || cell.name}
                                         className={cell.className}
                                         style={cell.style}
                                         children={cell.children || cell.name}
                                     />
-                                    )
-                            );
-                        })
-                    }
-                </tr>
-            </thead>
-        );
-    };
+                                )
+                        );
+                    })
+                }
+            </tr>
+        </thead>
+    );
 }

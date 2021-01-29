@@ -1,5 +1,4 @@
-import React from 'react';
-import Row from '@components/grid/row';
+import React, { Suspense } from 'react';
 import { ToastEventsI } from '@scripts/app';
 import { Table, Thead, ThPropsI } from '@components/tables';
 import TableLoader from '@components/loader/tableLoader';
@@ -7,15 +6,37 @@ import { Router } from '@scripts/router';
 import axios from '@services/axios';
 import HandleResponse from '@services/handleResponse';
 import Paginator from '@components/paginator/paginator';
+import Authentication from '@services/authentication';
+import Alert, { AlertPropsI, FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
+import Layout from '@components/layout';
+import Modal from '@components/modals/modal';
+import LoaderH from '@components/loader/loaderH';
+import { Alert as AlertBox } from 'antd';
+import { Row } from '@components/grid';
 
 export interface PanelPropsI {
     toasts: ToastEventsI;
+}
+
+export interface ModalI {
+    show: boolean;
+    size: number;
+    title: string;
+    content: JSX.Element;
+    onHide?: (name: string) => void;
+    onClose?: (name: string) => void;
 }
 
 export interface PanelStateI<RRS> {
     loading: boolean;
     requestResult: RequestResult<RRS>;
     header: ThPropsI[];
+    modal: ModalI;
+    alert: AlertPropsI;
+    active: {
+        modal: boolean;
+        alert: boolean;
+    };
 }
 
 interface RequestResult<RRT> {
@@ -35,6 +56,8 @@ export default class Panel<
 
     protected route: string;
 
+    protected roles: string[];
+
     protected params: {
         page: number;
         [ key: string ]: string | number;
@@ -47,6 +70,7 @@ export default class Panel<
             page: 1
         };
         this.router = new Router(process.env.BASE_URL);
+        this.roles = Authentication.getRoles();
     }
 
     protected MainBar = (props: React.PropsWithChildren<{}>) => {
@@ -91,17 +115,25 @@ export default class Panel<
 
     protected NoRegisters = (): JSX.Element => {
         return (
-            <div className="alert alert-dark container mt-5 round">
-                No hay registos.
-            </div>
+            <AlertBox
+                className="round w-50 mx-auto mt-5"
+                message="No hay registros."
+                description="No se pudo encontrar registros con la petición realizada."
+                type="info"
+                showIcon
+            />
         );
     };
 
     protected NoRoute = (): JSX.Element => {
         return (
-            <div className="alert alert-dark container mt-5 round">
-                No se ha seleccionado una ruta.
-            </div>
+            <AlertBox
+                className="round w-50 mx-auto mt-5"
+                message="No se ha seleccionado una ruta."
+                description="Debe seleccionar una ruta para poder mostrar los resultados."
+                type="info"
+                showIcon
+            />
         );
     };
 
@@ -114,7 +146,7 @@ export default class Panel<
     };
 
     protected handleThClickBG = (name: string, header: ThPropsI[]) => {
-        const th =  Object.assign({}, header.find(t => t.name === name));
+        const th = Object.assign({}, header.find(t => t.name === name));
         if (th.activeOrder) {
             if (th.order === "ASC") {
                 th.order = "DESC";
@@ -126,7 +158,7 @@ export default class Panel<
             th.order = "ASC";
         }
         header = this.unsetSorts(header);
-        header[header.findIndex(t => t.name === name)] = th;
+        header[ header.findIndex(t => t.name === name) ] = th;
         this.params.orderBy = th.column!;
         this.params.order = th.order;
         this.params.page = 1;
@@ -139,9 +171,100 @@ export default class Panel<
                 ...th,
                 activeOrder: false,
                 order: undefined
+            };
+        });
+    };
+
+    protected manuallyCloseModal = () => {
+        this.handleCloseModal();
+        setTimeout(() => {
+            this.handleHideModal();
+        }, 1);
+    };
+
+    protected handleCloseModal = () => {
+        this.setState({
+            modal: {
+                ...this.state.modal,
+                show: false,
             }
-        })
-    }
+        });
+    };
+
+    protected handleHideModal = () => {
+        this.setState({
+            modal: {
+                ...this.state.modal,
+                content: <></>,
+            },
+            active: {
+                ...this.state.active,
+                modal: false,
+            }
+        });
+    };
+
+    protected setModal = (modal: ModalI) => {
+        this.setState({
+            active: {
+                ...this.state.active,
+                modal: true,
+            },
+        });
+        setTimeout(() => {
+            this.setState({
+                modal: modal
+            });
+        }, 1);
+    };
+
+    protected handleHideAlert = () => {
+        this.setState({
+            active: {
+                ...this.state.active,
+                alert: false,
+            }
+        });
+    };
+
+    protected handleAcceptAlert = async (id: any): Promise<FinishedAlertState> => {
+        return {
+            type: FinishedStateTypes.SUCCESS,
+            message: "",
+        };
+    };
+
+    protected handleCancelAlert = () => {
+        this.setState({
+            alert: {
+                ...this.state.alert,
+                ...{
+                    show: false
+                },
+            },
+        });
+    };
+
+    protected setAlert = (alert: AlertPropsI) => {
+        this.setState({
+            active: {
+                ...this.state.active,
+                alert: true,
+            }
+        });
+        setTimeout(() => {
+            this.setState({
+                alert: alert
+            });
+        }, 1);
+    };
+
+    protected handleSearch = (data: string) => {
+        this.params.page = 1;
+        this.params.search = data;
+        if (this.route != "")
+            this.update();
+    };
 
     protected Table = (props: React.PropsWithChildren<{
         extraTableClass?: string;
@@ -188,6 +311,32 @@ export default class Panel<
                             : <this.Table children={props.children} {...props} />
                 }
             </>
+        );
+    };
+
+    protected Layout = (props: React.PropsWithChildren<{ title?: string; }>) => {
+        return (
+            <Layout title={props.title}>
+                {props.children}
+                {
+                    this.state.active.modal && (
+                        <Modal
+                            onClose={this.handleCloseModal}
+                            onHide={this.handleHideModal}
+                            name="form"
+                            loading={false}
+                            {...this.state.modal}
+                        >
+                            <Suspense fallback={<LoaderH position="center" />}>
+                                {this.state.modal.content}
+                            </Suspense>
+                        </Modal>
+                    )
+                }
+                {
+                    this.state.active.alert && <Alert<number>{...this.state.alert} />
+                }
+            </Layout>
         );
     };
 }

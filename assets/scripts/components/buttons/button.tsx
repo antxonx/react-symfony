@@ -15,45 +15,27 @@ interface ButtonPropsI {
     onClick?: () => void;
 }
 
-interface ButtonStateI {
-    size: string;
-    color: string;
-}
-
-export default class Button extends React.Component<ButtonPropsI, ButtonStateI> {
-    constructor (props: ButtonPropsI) {
-        super(props);
-        let buttonClass: string;
-        switch (this.props.size) {
-            case buttonSizes.LARGE:
-                buttonClass = " btn-lg";
-                break;
-            case buttonSizes.SMALL:
-                buttonClass = " btn-sm";
-                break;
-            default:
-                buttonClass = "";
-        }
-        this.state = {
-            size: buttonClass,
-            color: (this.props.color || "btn-light")
-        };
-    }
-
-    handleClick = () => {
-        this.props.onClick && this.props.onClick();
-    };
-
-    render = (): JSX.Element => {
-        return (
-            <button
-                type="button"
-                name={this.props.name}
-                onClick={this.handleClick}
-                className={"btn round" + this.state.size + " btn-" + this.state.color + (this.props.extraClass ? " " + this.props.extraClass : "")}
-            >
-                {this.props.content || this.props.children}
-            </button>
-        );
-    };
+export default function Button(props: React.PropsWithChildren<ButtonPropsI>): JSX.Element {
+    return (
+        <button
+            type="button"
+            name={props.name}
+            onClick={() => {
+                props.onClick && props.onClick();
+            }}
+            className={"btn round"
+                + (props.color ? ` btn-${props.color}`: "btn-light")
+                + (props.extraClass ? " " + props.extraClass : "")
+                + (() => {
+                    switch (props.size) {
+                        case buttonSizes.LARGE: return " btn-large";
+                        case buttonSizes.SMALL: return " btn-sm";
+                        default: return "";
+                    }
+                })()
+            }
+        >
+            {props.content || props.children}
+        </button>
+    );
 }

@@ -20,7 +20,7 @@ interface EditableFieldStatesI {
     error: boolean;
 }
 
-export default class EditableTextField extends React.Component<EditableTextFieldPropsI, EditableFieldStatesI> {
+export default class _EditableTextField extends React.Component<EditableTextFieldPropsI, EditableFieldStatesI> {
 
     constructor (props: EditableTextFieldPropsI) {
         super(props);

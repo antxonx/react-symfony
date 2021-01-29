@@ -6,17 +6,11 @@ interface ErrorAlertI {
     text: string;
 }
 
-export default class ErrorAlert extends React.Component<ErrorAlertI, {}> {
-    constructor (props: ErrorAlertI) {
-        super(props);
-    }
-
-    render = (): JSX.Element => {
-        return (
-            <div className="alert alert-danger mt-2 round">
-                {this.props.title && <h5>this.props.title</h5>}
-                {parser(this.props.text)}
-            </div>
-        );
-    };
+export default function ErrorAlert(props: React.PropsWithChildren<ErrorAlertI>): JSX.Element {
+    return (
+        <div className="alert alert-danger mt-2 round">
+            {props.title && <h5>this.props.title</h5>}
+            {parser(props.text)}
+        </div>
+    );
 }

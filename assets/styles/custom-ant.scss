@@ -1,0 +1,74 @@
+.button-group {
+    width: 100%;
+    label {
+        text-align: center;
+        &:first-child {
+            border-top-left-radius: 1.25rem;
+            border-bottom-left-radius: 1.25rem;
+            &:nth-last-child(1) {
+                width: 100%;
+            }
+            @for $i from 2 to 10 {
+                &:nth-last-child(#{$i}),
+                &:nth-last-child(#{$i}) ~ label {
+                    width: (100% / $i);
+                }
+            }
+        }
+        &:last-child {
+            border-top-right-radius: 1.25rem;
+            border-bottom-right-radius: 1.25rem;
+        }
+    }
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: #fff;
+    background: #075aa7;
+    border-color: #075aa7;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+    color: #fff;
+    background: #0c68be;
+    border-color: #0c68be;
+}
+
+.ant-input-search {
+    .ant-input-group {
+        .ant-input-affix-wrapper:not(:last-child) {
+            border-top-left-radius: 1.25rem !important;
+            border-bottom-left-radius: 1.25rem !important;
+        }
+        .ant-input-search-button {
+            border-top-right-radius: 1.25rem !important;
+            border-bottom-right-radius: 1.25rem !important;
+        }
+    }
+}
+
+.anticon.anticon-search {
+    vertical-align: initial;
+}
+
+.ant-btn-primary {
+    color: #fff;
+    background: #2c3e50;
+    border-color: #2c3e50;
+    &:hover,
+    &:focus {
+        background-color: #1e2b37;
+        border-color: #1a252f;
+    }
+}
+
+.ant-btn[disabled] {
+    cursor: default;
+}
+
+.ant-card.round{
+    .ant-card-actions {
+        border-bottom-left-radius: 1.25rem;
+        border-bottom-right-radius: 1.25rem;
+    }
+}

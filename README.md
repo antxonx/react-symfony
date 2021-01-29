@@ -1,5 +1,7 @@
 # react proyect with symfony API
 
+![Deploy to server](https://github.com/antxony/react-symfony/workflows/Deploy%20to%20server/badge.svg)
+
 ## FOS routes
 
 ```console

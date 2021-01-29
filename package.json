@@ -1,10 +1,11 @@
 {
     "devDependencies": {
         "@symfony/stimulus-bridge": "^1.1.0",
-        "@symfony/webpack-encore": "^0.32.0",
+        "@symfony/webpack-encore": "^1.0.2",
         "@types/react-router-dom": "^5.1.7",
         "@types/react-transition-group": "^4.4.0",
         "core-js": "^3.8.3",
+        "file-loader": "^6.0.0",
         "regenerator-runtime": "^0.13.2",
         "stimulus": "^2.0.0",
         "webpack-notifier": "^1.6.0"
@@ -30,6 +31,7 @@
         "@types/node": "^14.14.22",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
+        "antd": "^4.11.2",
         "axios": "^0.21.1",
         "bootstrap": "^4.6.0",
         "dotenv": "^8.2.0",

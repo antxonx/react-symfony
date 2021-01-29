@@ -1,9 +1,8 @@
 import React from 'react';
 import parser from 'html-react-parser';
-import Button, { buttonSizes } from '@components/buttons/button';
 import LoaderH from '@components/loader/loaderH';
-import Row from '@components/grid/row';
-import Column from '@components/grid/column';
+import { Card } from 'antd';
+import { Column, Row } from '@components/grid';
 
 export interface AlertPropsI<PT = number> {
     show: boolean;
@@ -12,6 +11,7 @@ export interface AlertPropsI<PT = number> {
     onCancel: (id: PT) => void;
     message: JSX.Element;
     type?: "alert" | "warning" | "info";
+    onHide?: (id: PT) => void;
 }
 
 interface AlertStateI {
@@ -38,11 +38,20 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
         };
     }
 
+    handleCancel = () => {
+        this.props.onCancel(this.props.id);
+        setTimeout(() => {
+            this.props.onHide && (
+                this.props.onHide(this.props.id)
+            );
+        }, 200);
+    };
+
     hideScroll = () => {
         if (this.props.show) {
             document.body.classList.add("modal-component-open");
         } else {
-            if(document.querySelectorAll(".modal-component.show").length > +this.props.show)
+            if (document.querySelectorAll(".modal-component.show").length > +this.props.show)
                 document.body.classList.remove("modal-component-open");
         }
     };
@@ -68,24 +77,7 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
                                 <LoaderH position="center" />
                             </div>
                         )
-                        : (
-                            <div className="btn-group w-100 p-0 m-0 footer">
-                                <Button
-                                    color="light"
-                                    children={<b>Cancelar</b>}
-                                    size={buttonSizes.LARGE}
-                                    extraClass="border-0 w-100 p-3"
-                                    onClick={() => { this.props.onCancel(this.props.id); }}
-                                />
-                                <Button
-                                    color="light"
-                                    children={<b>Aceptar</b>}
-                                    size={buttonSizes.LARGE}
-                                    extraClass="border-0 w-100 p-3"
-                                    onClick={this.handleAccept}
-                                />
-                            </div>
-                        )
+                        : <></>
                 }
             </>
         );
@@ -115,18 +107,6 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
                         </Column>
                     </Row>
                 </div>
-                <div className="btn-group w-100 p-0 m-0 footer">
-                    <Button
-                        color="light"
-                        children={<b>Aceptar</b>}
-                        size={buttonSizes.LARGE}
-                        extraClass="border-0 w-100 p-3"
-                        onClick={() => {
-                            this.restartFinished();
-                            this.props.onCancel(this.props.id);
-                        }}
-                    />
-                </div>
             </div>
         );
     };
@@ -138,39 +118,65 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
     };
 
     render = (): JSX.Element => {
+        let actions: JSX.Element[] = [];
         this.hideScroll();
+        if (this.state.finishedState) {
+            actions.push(<div
+                children={<b>Aceptar</b>}
+                onClick={() => {
+                    this.restartFinished();
+                    this.props.onCancel(this.props.id);
+                }}
+            />);
+        } else {
+            actions.push(<div
+                children={<b>Cancelar</b>}
+                onClick={this.handleCancel}
+            />
+            );
+            actions.push(<div
+                children={<b>Aceptar</b>}
+                onClick={this.handleAccept}
+            />);
+        }
         return (
             <div className={"modal-component" + (this.props.show ? " show" : "")}>
                 <div className="modal-component-content modal-alert">
-                    <div className="pt-3 pl-3">
-                        <i className={
-                            "fas fa-2x " +
-                            (() => {
-                                switch (this.props.type) {
-                                    case "info": return "fa-info-circle text-info";
-                                    case "warning": return "fa-exclamation-triangle fa-2x text-warning";
-                                    default: return "fa-exclamation-triangle text-danger";
-                                }
-                            })()
-                        }>
-                        </i>
-                    </div>
-                    {
-                        this.state.finishedState
-                            ? <></>
-                            : (
-                                <div className="p-4">
-                                    <h3 className="text-center">
-                                        {this.props.message}
-                                    </h3>
-                                </div>
+                    <Card
+                        className="round"
+                        title={
+                            (
+                                <i className={
+                                    "fas fa-2x " +
+                                    (() => {
+                                        switch (this.props.type) {
+                                            case "info": return "fa-info-circle text-info";
+                                            case "warning": return "fa-exclamation-triangle fa-2x text-warning";
+                                            default: return "fa-exclamation-triangle text-danger";
+                                        }
+                                    })()
+                                } />
                             )
-                    }
-                    {
-                        this.state.finishedState
-                            ? <this.Finished />
-                            : <this.NotFinished />
-                    }
+                        }
+                        actions={actions}
+                    >
+                        {
+                            this.state.finishedState
+                                ? <></>
+                                : (
+                                    <div className="p-4">
+                                        <h3 className="text-center">
+                                            {this.props.message}
+                                        </h3>
+                                    </div>
+                                )
+                        }
+                        {
+                            this.state.finishedState
+                                ? <this.Finished />
+                                : <this.NotFinished />
+                        }
+                    </Card>
                 </div>
             </div>
         );

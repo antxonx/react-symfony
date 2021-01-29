@@ -1,13 +1,9 @@
 import ButtonAction from '@components/buttons/bottonAction';
-import Button from '@components/buttons/button';
 import Action from '@components/buttons/table/action';
 import ButtonDelete from '@components/buttons/table/delete';
-import Column from '@components/grid/column';
-import Layout from '@components/layout';
 import LoaderH from '@components/loader/loaderH';
 import RoleBadge from '@components/misc/roleBadge';
-import Alert, { AlertPropsI, FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
-import Modal from '@components/modals/modal';
+import { FinishedAlertState, FinishedStateTypes } from '@components/modals/alert';
 import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
@@ -15,10 +11,12 @@ import PasswordFormAdmin from '@scripts/forms/user/passwordAdmin';
 import Authentication, { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import React, { Suspense } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Redirect } from 'react-router-dom';
-import { ThPropsI } from '@components/tables';
+import { TdPropsI, ThPropsI } from '@components/tables';
+import { Button } from 'antd';
+import { Column } from '@components/grid';
 
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));
@@ -27,24 +25,43 @@ interface UserPropsI extends PanelPropsI {
 
 }
 
+
 interface UsersStateI extends PanelStateI<UserI> {
-    modal: {
-        show: boolean;
-        size: number;
-        title: string;
-    };
-    alert: AlertPropsI;
     impersonateLoading: number[];
     redirectLogger: number;
 }
 export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
 
-    protected modalContent: JSX.Element;
-
     protected fade: boolean;
 
     constructor (props: PanelPropsI) {
         super(props);
+        let impersonatorCell: ThPropsI, logsCell: ThPropsI;
+        if (this.roles.includes("ROLE_DEV")) {
+            impersonatorCell = {
+                name: "impersonate",
+                key: "impersonate",
+                children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
+                className: "icon-col border-right-0 border-left-0",
+            };
+            logsCell = {
+                name: "logs",
+                key: "logs",
+                children: <FontAwesomeIcon icon={[ 'fas', 'book' ]} />,
+                className: "icon-col border-right-0 border-left-0",
+            };
+        } else {
+            impersonatorCell = {
+                name: "impersonate",
+                key: "impersonate",
+                className: "d-none",
+            };
+            logsCell = {
+                name: "logs",
+                key: "logs",
+                className: "d-none",
+            };
+        }
         this.state = {
             loading: false,
             requestResult: {
@@ -57,12 +74,16 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 title: "",
                 show: false,
                 size: 50,
+                content: <LoaderH position="center" />,
+                onClose: this.handleCloseModal,
+                onHide: this.handleHideModal,
             },
             alert: {
                 id: 0,
                 message: <></>,
-                onAccept: this.handleAcceptDelete,
-                onCancel: this.handleCancelDelete,
+                onAccept: this.handleAcceptAlert,
+                onCancel: this.handleCancelAlert,
+                onHide: this.handleHideAlert,
                 show: false,
             },
             impersonateLoading: [],
@@ -101,26 +122,21 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                     key: "password",
                     children: <FontAwesomeIcon icon={[ 'fas', 'key' ]} />,
                     className: "icon-col border-right-0",
-                }, {
-                    name: "logs",
-                    key: "logs",
-                    children: <FontAwesomeIcon icon={[ 'fas', 'book' ]} />,
-                    className: "icon-col border-right-0 border-left-0",
-                }, {
-                    name: "impersonate",
-                    key: "impersonate",
-                    children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
-                    className: "icon-col border-right-0 border-left-0",
-                }, {
+                },
+                logsCell,
+                impersonatorCell, {
                     name: "delete",
                     key: "delete",
                     children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
                     className: "icon-col border-left-0",
                 },
-            ]
+            ],
+            active: {
+                modal: false,
+                alert: false,
+            }
         };
         this.route = "user_all";
-        this.modalContent = <LoaderH position="center" />;
         this.fade = false;
     }
 
@@ -132,62 +148,51 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         this.fade = true;
     };
 
-    handleCloseModal = () => {
-        this.setState({
-            modal: {
-                ...this.state.modal,
-                show: false,
-            }
-        });
-    };
-
     handleAddUser = () => {
-        this.modalContent = (
-            <AddForm
-                onSuccess={(res: AxiosResponse) => {
-                    HandleResponse.success(res, this.props.toasts);
-                    this.setState({
-                        modal: {
-                            ...this.state.modal,
-                            show: false,
-                        }
-                    });
-                    this.update({ silent: true });
-                }}
-                onError={(err: AxiosError) => {
-                    return HandleResponse.error(err, this.props.toasts)?.message;
-                }}
-            />
-        );
-        this.setState({
-            modal: {
-                title: "Agregar",
-                show: true,
-                size: 30,
-            }
+        this.setModal({
+            ...this.state.modal,
+            title: "Agregar",
+            show: true,
+            size: 30,
+            content: (
+                <AddForm
+                    onSuccess={(res: AxiosResponse) => {
+                        HandleResponse.success(res, this.props.toasts);
+                        this.setState({
+                            modal: {
+                                ...this.state.modal,
+                                show: false,
+                            }
+                        });
+                        this.update({ silent: true });
+                    }}
+                    onError={(err: AxiosError) => {
+                        return HandleResponse.error(err, this.props.toasts)?.message;
+                    }}
+                />
+            )
         });
     };
 
     handleSearch = (data: string) => {
         this.params.search = data;
         this.params.page = 1;
+        this.fade = true;
         this.update();
     };
 
     handleDelete = (id: number, extra: JSX.Element) => {
-        this.setState({
-            alert: {
-                ...this.state.alert,
-                ...{
-                    show: true,
-                    id: id,
-                    message: (<>¿Eliminar a {extra}?</>),
-                }
+        this.setAlert({
+            ...this.state.alert,
+            ...{
+                show: true,
+                id: id,
+                message: (<>¿Eliminar a {extra}?</>),
             }
         });
     };
 
-    handleAcceptDelete = async (id: number): Promise<FinishedAlertState> => {
+    handleAcceptAlert = async (id: number): Promise<FinishedAlertState> => {
         let message: string;
         let type: FinishedStateTypes;
         let res;
@@ -206,63 +211,45 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         };
     };
 
-    handleCancelDelete = (id: number) => {
-        this.setState({
-            alert: {
-                ...this.state.alert,
-                ...{
-                    show: false
-                }
-            }
-        });
-    };
-
     handleRowClick = (e: React.MouseEvent<HTMLTableCellElement>) => {
         const row = e.currentTarget.closest("tr")!;
         const toShow = this.getEntities().find((user) => {
             return user.id == +row.dataset.id!;
         }) as UserI;
-        this.modalContent = (
-            <UserShow
-                key={toShow.id}
-                user={toShow}
-                callback={() => {
-                    this.update({ silent: true });
-                }}
-            />
-        );
         const user = this.getEntities().find(us => us.id === +row.dataset.id!);
-        this.setState({
-            modal: {
-                title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
-                show: true,
-                size: 50,
-            },
+        this.setModal({
+            ...this.state.modal,
+            title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
+            show: true,
+            size: 50,
+            content: (
+                <UserShow
+                    key={toShow.id}
+                    user={toShow}
+                    callback={() => {
+                        this.update({ silent: true });
+                    }}
+                />
+            )
         });
     };
 
     handlePasswordClick = (id: number) => {
-        this.modalContent = (
-            <PasswordFormAdmin
-                id={id}
-                onSuccess={(res) => {
-                    HandleResponse.success(res, this.props.toasts);
-                    this.setState({
-                        modal: {
-                            ...this.state.modal,
-                            show: false,
-                        }
-                    });
-                }}
-            />
-        );
         const user = this.getEntities().find(us => us.id === id);
-        this.setState({
-            modal: {
-                title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
-                show: true,
-                size: 30,
-            },
+        this.setModal({
+            ...this.state.modal,
+            title: `<b>${user!.name}</b> | <em>${user!.username}</em>`,
+            show: true,
+            size: 30,
+            content: (
+                <PasswordFormAdmin
+                    id={id}
+                    onSuccess={(res) => {
+                        HandleResponse.success(res, this.props.toasts);
+                        this.manuallyCloseModal();
+                    }}
+                />
+            )
         });
     };
 
@@ -295,10 +282,10 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
         const header = this.handleThClickBG(name, this.state.header.slice());
         this.setState({
             header: header,
-        })
+        });
         this.fade = true;
         this.update();
-    }
+    };
 
     render = (): JSX.Element => {
         let extraTableClass = "result-table";
@@ -306,7 +293,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
             extraTableClass += " hide";
         }
         return (
-            <Layout title="Usuarios">
+            <this.Layout title="Usuarios">
                 {
                     (this.state.redirectLogger > 0)
                         ? (
@@ -317,11 +304,12 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                 <this.MainBar>
                                     <Column size={3} extraClass="my-1">
                                         <Button
-                                            color="primary"
-                                            content="Agregar usuario"
-                                            extraClass="w-100"
+                                            type="primary"
+                                            className="w-100 round"
                                             onClick={this.handleAddUser}
-                                        />
+                                        >
+                                            Agregar usaurio
+                                        </Button>
                                     </Column>
                                     <Column size={6} extraClass="my-1">
                                         <Search callback={this.handleSearch} />
@@ -330,6 +318,42 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                 <this.MainTable extraTableClass={extraTableClass} noLoader={this.fade}>
                                     <Tbody rows={
                                         this.getEntities().map(user => {
+                                            let impersonatorCell: TdPropsI, logsCell: TdPropsI;
+                                            if (this.roles.includes("ROLE_DEV")) {
+                                                impersonatorCell = {
+                                                    key: "impersonate",
+                                                    className: "border-right-0 border-left-0",
+                                                    children:
+                                                        (<Action<number>
+                                                            key={"_action_" + user.id}
+                                                            id={user.id}
+                                                            color='info'
+                                                            content={<FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />}
+                                                            loading={this.state.impersonateLoading.findIndex(x => x === user.id) >= 0}
+                                                            onClick={this.handleImpersonateClick}
+                                                        />),
+                                                };
+                                                logsCell = {
+                                                    key: "logs",
+                                                    className: "border-right-0 border-left-0",
+                                                    children:
+                                                        (<Action<number>
+                                                            id={user.id}
+                                                            color='secondary'
+                                                            content={<FontAwesomeIcon icon={[ 'fas', 'book' ]} />}
+                                                            onClick={this.handleLoadLogger}
+                                                        />),
+                                                };
+                                            } else {
+                                                impersonatorCell = {
+                                                    key: "impersonate",
+                                                    className: "d-none",
+                                                };
+                                                logsCell = {
+                                                    key: "logs",
+                                                    className: "d-none",
+                                                };
+                                            }
                                             return {
                                                 id: user.id.toString(),
                                                 "data-id": user.id.toString(),
@@ -371,29 +395,9 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                                                 content={<FontAwesomeIcon icon={[ 'fas', 'key' ]} />}
                                                                 onClick={this.handlePasswordClick}
                                                             />),
-                                                    }, {
-                                                        key: "logs",
-                                                        className: "border-right-0 border-left-0",
-                                                        children:
-                                                            (<Action<number>
-                                                                id={user.id}
-                                                                color='secondary'
-                                                                content={<FontAwesomeIcon icon={[ 'fas', 'book' ]} />}
-                                                                onClick={this.handleLoadLogger}
-                                                            />),
-                                                    }, {
-                                                        key: "impersonate",
-                                                        className: "border-right-0 border-left-0",
-                                                        children:
-                                                            (<Action<number>
-                                                                key={"_action_" + user.id}
-                                                                id={user.id}
-                                                                color='info'
-                                                                content={<FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />}
-                                                                loading={this.state.impersonateLoading.findIndex(x => x === user.id) >= 0}
-                                                                onClick={this.handleImpersonateClick}
-                                                            />),
-                                                    }, {
+                                                    },
+                                                    logsCell,
+                                                    impersonatorCell, {
                                                         key: "delete",
                                                         className: "border-left-0",
                                                         children:
@@ -409,24 +413,10 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                     }
                                     />
                                 </this.MainTable>
-                                <Modal
-                                    onClose={this.handleCloseModal}
-                                    name="form"
-                                    loading={false}
-                                    {...this.state.modal}
-                                >
-                                    <Suspense fallback={<LoaderH position="center" />}>
-                                        {this.modalContent}
-                                    </Suspense>
-                                </Modal>
-                                <Alert<number>
-                                    {...this.state.alert}
-                                />
                             </>
                         )
                 }
-
-            </Layout>
+            </this.Layout>
         );
     };
 }

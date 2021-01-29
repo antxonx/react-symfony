@@ -1,5 +1,5 @@
 import '@fortawesome/fontawesome-free/js/all.min.js';
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Router } from '@scripts/router';
@@ -47,15 +47,13 @@ class App extends React.Component<{}, AppStateI>{
 
     refreshToken = () => {
         const payload = Authentication.getPayload();
-        let time = (payload!.exp - Math.floor(Date.now() / 1000));
-        time = (time < 300 && time > 0) ? 1 : time;
+        let time = (payload!.exp - Math.floor(Date.now() / 1000)) - 300;
+        time = (time < 0) ? 0 : time;
         console.log(time);
-        if (time > 0) {
-            setTimeout(async () => {
-                await Authentication.refreshToken();
-                this.refreshToken();
-            }, (time - 1) * 1000);
-        }
+        setTimeout(async () => {
+            await Authentication.refreshToken();
+            this.refreshToken();
+        }, time * 1000);
     };
 
     componentDidMount = () => {
