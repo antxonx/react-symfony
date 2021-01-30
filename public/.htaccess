@@ -78,24 +78,6 @@ Options -Indexes
     </IfModule>
 </IfModule>
 
-# AddEncoding gzip .gz
-# RewriteEngine on
-# 
-# RewriteCond %{HTTP:Accept-encoding} gzip
-# RewriteCond %{REQUEST_FILENAME}\.gz -s
-# RewriteRule "^(.*)\.js" "$1\.js\.gz" [QSA]
-# RewriteRule "^(.*)\.css" "$1\.css\.gz" [QSA]
-# 
-# # Serve correct content types, and prevent mod_deflate double gzip.
-# RewriteRule "\.js\.gz$" "-" [T=text/javascript,E=no-gzip:1]
-# RewriteRule "\.css\.gz$" "-" [T=text/css,E=no-gzip:1]
-# 
-# <FilesMatch ".+\.((js|css)\.gz)$">
-#   Header append Content-Encoding gzip
-#   Header append worked yes   
-# </FilesMatch>
-
-
 <IfModule mod_deflate.c>
 
 # Force compression for mangled headers.

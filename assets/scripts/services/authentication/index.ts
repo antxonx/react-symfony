@@ -1,5 +1,5 @@
 import { Router } from '@scripts/router';
-import axios from 'axios';
+import axios from '@services/axios';
 import HandleResponse from '@services/handleResponse';
 
 export interface UserI {
@@ -116,7 +116,6 @@ export default class Authentication {
     };
 
     public static refreshToken = async () => {
-
         try {
             const res = await axios.get(
                 (new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"),

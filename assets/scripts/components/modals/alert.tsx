@@ -143,6 +143,7 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
             <div className={"modal-component" + (this.props.show ? " show" : "")}>
                 <div className="modal-component-content modal-alert">
                     <Card
+                        size="small"
                         className="round"
                         title={
                             (

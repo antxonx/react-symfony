@@ -1,15 +1,14 @@
+import React from 'react';
 import LoaderH from '@components/loader/loaderH';
-import Log, { LogI, LogRoutes, LogNames, logTypes, LogMethods, InfoLogI, ErrorLogI } from '@components/log';
+import Log, { LogI, LogRoutes, LogNames, logTypes, InfoLogI, ErrorLogI } from '@components/log';
 import Method from '@components/log/method';
 import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
-import React from 'react';
-import { Input, Radio, RadioChangeEvent } from 'antd';
+import { Radio, RadioChangeEvent } from 'antd';
 import Search from '@components/search/search';
 import RangePicker from '@components/RangePicker';
 import { Column } from '@components/grid';
-
 
 interface LoggerPropsI extends PanelPropsI { }
 
