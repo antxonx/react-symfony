@@ -1,18 +1,18 @@
 import '@fortawesome/fontawesome-free/js/all.min.js';
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import parse from 'html-react-parser';
 import '@styles/app.scss';
 
-import Profile from '@pages/profile';
-import Error404 from '@pages/error404';
-import Logout from '@pages/logout';
-import Dashboard from '@pages/dashboard';
-import Login from '@pages/login';
-import Users from '@pages/users';
-import Logger from '@pages/logger';
+const Profile = React.lazy(() => import('@pages/profile'));
+const Error404 = React.lazy(() => import('@pages/error404'));
+const Logout = React.lazy(() => import('@pages/logout'));
+const Dashboard = React.lazy(() => import('@pages/dashboard'));
+const Login = React.lazy(() => import('@pages/login'));
+const Users = React.lazy(() => import('@pages/users'));
+const Logger = React.lazy(() => import('@pages/logger'));
 
 import Authentication from '@services/authentication';
 
@@ -115,68 +115,72 @@ class App extends React.Component<{}, AppStateI>{
                                             <Nav
                                                 router={this.router}
                                             ></Nav>
-                                            <NavigationContainer toast={{ add: this.addToast }}>
-                                                <Route
-                                                    exact
-                                                    path={this.router.get("dashboard")}
-                                                    component={Dashboard}
-                                                />
-                                                {roles.includes("ROLE_ADMIN") && (
+                                            <Suspense fallback={<Loader />}>
+                                                <NavigationContainer toast={{ add: this.addToast }}>
                                                     <Route
                                                         exact
-                                                        path={this.router.get("users")}
+                                                        path={this.router.get("dashboard")}
+                                                        component={Dashboard}
+                                                    />
+                                                    {roles.includes("ROLE_ADMIN") && (
+                                                        <Route
+                                                            exact
+                                                            path={this.router.get("users")}
 
+                                                        >
+                                                            <Users
+                                                                toasts={{
+                                                                    add: this.addToast
+                                                                }}
+                                                            />
+                                                        </Route>
+                                                    )}
+                                                    {roles.includes("ROLE_DEV") && (
+                                                        <Route
+                                                            exact
+                                                            path="/logger"
+                                                        >
+                                                            <Logger toasts={{
+                                                                add: this.addToast,
+                                                            }} />
+                                                        </Route>
+                                                    )}
+                                                    <Route
+                                                        exact
+                                                        path={this.router.get("profile")}
                                                     >
-                                                        <Users
+                                                        <Profile
                                                             toasts={{
-                                                                add: this.addToast
+                                                                add: this.addToast,
                                                             }}
                                                         />
                                                     </Route>
-                                                )}
-                                                {roles.includes("ROLE_DEV") && (
                                                     <Route
                                                         exact
-                                                        path="/logger"
-                                                    >
-                                                        <Logger toasts={{
-                                                            add: this.addToast,
-                                                        }} />
-                                                    </Route>
-                                                )}
-                                                <Route
-                                                    exact
-                                                    path={this.router.get("profile")}
-                                                >
-                                                    <Profile
-                                                        toasts={{
-                                                            add: this.addToast,
-                                                        }}
+                                                        path={this.router.get("logout")}
+                                                        component={Logout}
                                                     />
-                                                </Route>
-                                                <Route
-                                                    exact
-                                                    path={this.router.get("logout")}
-                                                    component={Logout}
-                                                />
-                                                <Route component={Error404} />
-                                            </NavigationContainer>
+                                                    <Route component={Error404} />
+                                                </NavigationContainer>
+                                            </Suspense>
                                         </>
                                     )
                                     : (
                                         <>
                                             <Redirect to={this.router.get("login")} />
-                                            <Switch>
-                                                <Route exact path={this.router.get("dashboard")}>
-                                                    <Redirect to={this.router.get("login")} />
-                                                </Route>
-                                                <Route>
-                                                    <Login
-                                                        logged={this.state.loggedIn}
-                                                        onloggedinchange={this.handleLoggedInChange}
-                                                    />
-                                                </Route>
-                                            </Switch>
+                                            <Suspense fallback={<Loader />}>
+                                                <Switch>
+                                                    <Route exact path={this.router.get("dashboard")}>
+                                                        <Redirect to={this.router.get("login")} />
+                                                    </Route>
+                                                    <Route>
+                                                        <Login
+                                                            logged={this.state.loggedIn}
+                                                            onloggedinchange={this.handleLoggedInChange}
+                                                        />
+                                                    </Route>
+                                                </Switch>
+                                            </Suspense>
                                         </>
                                     )
                             )

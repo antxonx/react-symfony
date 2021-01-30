@@ -7,7 +7,6 @@ import { FinishedAlertState, FinishedStateTypes } from '@components/modals/alert
 import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
-import PasswordFormAdmin from '@scripts/forms/user/passwordAdmin';
 import Authentication, { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
 import axios, { AxiosError, AxiosResponse } from 'axios';
@@ -18,6 +17,7 @@ import { TdPropsI, ThPropsI } from '@components/tables';
 import { Button } from 'antd';
 import { Column } from '@components/grid';
 
+const PasswordFormAdmin = React.lazy(() => import('@scripts/forms/user/passwordAdmin'));
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));
 
