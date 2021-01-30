@@ -132,7 +132,6 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             const dates = _ as moment.Moment[];
             const startDate = dates![ 0 ]?.format("YYYY-MM-DD");
             const endDate = dates![ 1 ]?.format("YYYY-MM-DD");
-            console.log(startDate + " - " + endDate);
             this.params.startDate = startDate;
             this.params.endDate = endDate;
         } else {

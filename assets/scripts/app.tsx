@@ -49,7 +49,6 @@ class App extends React.Component<{}, AppStateI>{
         const payload = Authentication.getPayload();
         let time = (payload!.exp - Math.floor(Date.now() / 1000)) - 300;
         time = (time < 0) ? 0 : time;
-        console.log(time);
         setTimeout(async () => {
             await Authentication.refreshToken();
             this.refreshToken();

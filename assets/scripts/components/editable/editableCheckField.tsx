@@ -83,7 +83,6 @@ export default class _EditableCheckField extends React.Component<EditableCheckFi
 
     handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(this.state.newData);
         if (this.props.onTextFieldEdit) {
             this.setState({
                 loading: true,
