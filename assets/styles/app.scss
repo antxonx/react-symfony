@@ -124,13 +124,13 @@ h5 {
 .full-cont {
     width: 100%;
     float: left;
-    .card {
+    .log-card {
         box-shadow: 5px 5px 10px #888888;
         transition: 1s box-shadow;
     }
     &.show {
         margin-bottom: 5px;
-        .card {
+        .log-card {
             box-shadow: 5px 5px 30px #888888;
             transition: 0.5s box-shadow;
         }

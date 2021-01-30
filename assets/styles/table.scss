@@ -1,13 +1,15 @@
-.table-striped2 {
-    tbody {
-        tr {
-            &:nth-child(odd) {
-                background-color: #e6e6fa57;
-
-                th,
-                td {
-                    border-left-color: #e6e6fa;
-                    border-right-color: #e6e6fa;
+@for $i from 2 to 8 {
+    .table-striped#{$i} {
+        tbody {
+            tr {
+                &:nth-child(#{$i}n+1) {
+                    background-color: #e6e6fa57;
+    
+                    th,
+                    td {
+                        border-left-color: #e6e6fa;
+                        border-right-color: #e6e6fa;
+                    }
                 }
             }
         }

@@ -17,8 +17,8 @@ const Logger = React.lazy(() => import('@pages/logger'));
 import Authentication from '@services/authentication';
 
 import Loader from '@components/loader/loader';
-import Toast, { ToastData } from './components/alerts/toast';
-import ToastContainer from './components/alerts/toastContainer';
+import Toast, { ToastData } from '@components/alerts/toast';
+import ToastContainer from '@components/alerts/toastContainer';
 import ErrorBoundary from '@components/error';
 import NavigationContainer from '@components/navigation';
 import Nav from '@components/nav';

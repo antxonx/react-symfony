@@ -1,4 +1,5 @@
 import React from 'react';
+import 'bootstrap/js/dist/collapse';
 import LoaderH from '@components/loader/loaderH';
 import Log, { LogI, LogRoutes, LogNames, logTypes, InfoLogI, ErrorLogI } from '@components/log';
 import Method from '@components/log/method';
@@ -108,6 +109,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
     };
 
     handleTypeChange = (e: RadioChangeEvent) => {
+        const change = (this.route != LogRoutes.UNDEFINED);
         this.route = (() => {
             switch (e.target.value) {
                 case LogNames.INFO: return LogRoutes.INFO;
@@ -116,7 +118,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             }
         })();
         this.setState({
-            changing: true,
+            changing: change,
             header: this.unsetSorts(this.state.header),
             type: e.target.value,
         });
@@ -202,7 +204,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                         <RangePicker onChange={this.handleDateChange} />
                     </Column>
                 </this.MainBar>
-                <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing}>
+                <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing} striped="4">
                     <Tbody rows={
                         ...this.getEntities().map((_log, i) => {
                             if (_log.infoField) {
