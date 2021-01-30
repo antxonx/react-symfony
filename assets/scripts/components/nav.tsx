@@ -1,5 +1,5 @@
 import React from "react";
-import 'bootstrap';
+import 'bootstrap/js/dist/dropdown';
 import { NavLink } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import Authentication from "@services/authentication";

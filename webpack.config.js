@@ -43,7 +43,8 @@ Encore
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
-    .enableSingleRuntimeChunk()
+    // .enableSingleRuntimeChunk()
+    .disableSingleRuntimeChunk()
 
     /*
      * FEATURE CONFIG
@@ -78,7 +79,9 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader()
+    .enableSassLoader(function (options) {
+        options.sassOptions.localIdentName = '[sha1:hash:hex:4]';
+    })
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
