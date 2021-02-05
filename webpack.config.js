@@ -43,8 +43,8 @@ Encore
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
-    // .enableSingleRuntimeChunk()
-    .disableSingleRuntimeChunk()
+    .enableSingleRuntimeChunk()
+    // .disableSingleRuntimeChunk()
 
     /*
      * FEATURE CONFIG
@@ -79,9 +79,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader(function (options) {
-        options.sassOptions.localIdentName = '[sha1:hash:hex:4]';
-    })
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
@@ -99,6 +97,7 @@ Encore
 
 // module.exports = Encore.getWebpackConfig();
 const config = Encore.getWebpackConfig();
+config.optimization.splitChunks.chunks = "all";
 config.resolve.alias[ "@pages" ] = path.resolve(__dirname, 'assets/scripts/pages');
 config.resolve.alias[ "@components" ] = path.resolve(__dirname, 'assets/scripts/components');
 config.resolve.alias[ "@services" ] = path.resolve(__dirname, 'assets/scripts/services');
