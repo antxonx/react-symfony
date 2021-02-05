@@ -1,7 +1,9 @@
 import LoaderH from '@components/loader/loaderH';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
+
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 
 interface EditableCheckFieldPropsI {
     data: CheckValue[];

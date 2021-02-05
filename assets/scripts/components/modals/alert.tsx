@@ -1,10 +1,12 @@
 import React from 'react';
 import parser from 'html-react-parser';
 import LoaderH from '@components/loader/loaderH';
-import { Card } from 'antd';
+import Card from 'antd/es/card';
 import { Column, Row } from '@components/grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle';
 
 export interface AlertPropsI<PT = number> {
     show: boolean;

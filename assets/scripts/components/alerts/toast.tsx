@@ -1,9 +1,10 @@
 import { Column, Row } from '@components/grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
-import { Card } from 'antd';
+import Card from 'antd/es/card';
 import React from 'react';
 
+import { faCheckCircle } from '@fortawesome/free-regular-svg-icons/faCheckCircle';
+import { faTimesCircle } from '@fortawesome/free-regular-svg-icons/faTimesCircle';
 interface ToastPropsI {
     type: "success" | "error";
     title?: string;

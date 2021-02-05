@@ -3,7 +3,7 @@ import ButtonClose from '@components/buttons/buttonClose';
 import LoaderH from '@components/loader/loaderH';
 import Button from '@components/buttons/button';
 import parser from 'html-react-parser';
-import { Card } from 'antd';
+import Card from 'antd/es/card';
 
 interface ModalPropsI {
     show: boolean;
