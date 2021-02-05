@@ -1,3 +1,4 @@
+import { faCross } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
@@ -21,7 +22,7 @@ export default function RoleBadge(props: React.PropsWithChildren<RoleBadgePropsI
                     ? (
                         <span>
                             &nbsp;&nbsp;
-                            <FontAwesomeIcon icon={[ 'fas', 'cross' ]} />
+                            <FontAwesomeIcon icon={faCross} />
                             &nbsp;&nbsp;
                         </span>
                     )

@@ -33,7 +33,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('app', './assets/scripts/app.tsx')
+    .addEntry('app', './assets/index.tsx')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     // .enableStimulusBridge('./assets/controllers.json')
@@ -43,8 +43,8 @@ Encore
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
-    .enableSingleRuntimeChunk()
-    // .disableSingleRuntimeChunk()
+    // .enableSingleRuntimeChunk()
+    .disableSingleRuntimeChunk()
 
     /*
      * FEATURE CONFIG
@@ -97,7 +97,6 @@ Encore
 
 // module.exports = Encore.getWebpackConfig();
 const config = Encore.getWebpackConfig();
-config.optimization.splitChunks.chunks = "all";
 config.resolve.alias[ "@pages" ] = path.resolve(__dirname, 'assets/scripts/pages');
 config.resolve.alias[ "@components" ] = path.resolve(__dirname, 'assets/scripts/components');
 config.resolve.alias[ "@services" ] = path.resolve(__dirname, 'assets/scripts/services');

@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 
 interface ButtonDeletePropsI<PT> {
@@ -16,7 +17,7 @@ export default function ButtonDelete<T>(props: React.PropsWithChildren<ButtonDel
                 props.onClick(props.id, props.extra || <></>);
             }}
         >
-            <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />
+            <FontAwesomeIcon icon={faTrashAlt} />
         </button>
     );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import LoaderH from '@components/loader/loaderH';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 interface EditableTextFieldPropsI {
     value?: string;
@@ -111,14 +112,14 @@ export default class _EditableTextField extends React.Component<EditableTextFiel
                             onClick={this.handleCnacelClick}
                             className="btn btn-secondary w-100"
                         >
-                            <FontAwesomeIcon icon={['fas', 'times']} />
+                            <FontAwesomeIcon icon={faTimes} />
                         </button>
                         <button
                             type="submit"
                             className="btn btn-primary w-100 round-right"
                             onClick={this.handleSubmit}
                         >
-                            <FontAwesomeIcon icon={['fas', 'check']} />
+                            <FontAwesomeIcon icon={faCheck} />
                         </button>
                     </div>
                 </div>

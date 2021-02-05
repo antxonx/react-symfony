@@ -1,6 +1,4 @@
-import '@fortawesome/fontawesome-free/js/all.min.js';
 import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import parse from 'html-react-parser';
@@ -32,7 +30,7 @@ export interface ToastEventsI {
     add: (toast: ToastData) => void;
 }
 
-class App extends React.Component<{}, AppStateI>{
+export default class App extends React.Component<{}, AppStateI>{
 
     protected router: Router;
 
@@ -201,8 +199,3 @@ class App extends React.Component<{}, AppStateI>{
         );
     };
 }
-
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
-);

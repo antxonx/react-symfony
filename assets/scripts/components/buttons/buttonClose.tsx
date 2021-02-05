@@ -1,3 +1,4 @@
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
@@ -17,7 +18,7 @@ export default function ButtonClose(props: React.PropsWithChildren<ButtonCloseI>
             }
             onClick={props.onClick}
         >
-            <FontAwesomeIcon icon={[ 'fas', 'times' ]} />
+            <FontAwesomeIcon icon={faTimes} />
         </button>
     );
 }

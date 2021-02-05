@@ -1,3 +1,5 @@
+import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
 export default function ThSort(props: React.PropsWithChildren<{
@@ -31,7 +33,7 @@ export default function ThSort(props: React.PropsWithChildren<{
 function SortIcon() {
     return (
         <span className="float-right">
-            <i className="fas fa-sort"></i>
+            <FontAwesomeIcon icon={faSort} />
         </span>
     );
 }
@@ -39,7 +41,7 @@ function SortIcon() {
 function SortUpIcon() {
     return (
         <span className="float-right">
-            <i className="fas fa-sort-up"></i>
+            <FontAwesomeIcon icon={faSortUp} />
         </span>
     );
 }
@@ -47,7 +49,7 @@ function SortUpIcon() {
 function SortDownIcon() {
     return (
         <span className="float-right">
-            <i className="fas fa-sort-down"></i>
+            <FontAwesomeIcon icon={faSortDown} />
         </span>
     );
 }
