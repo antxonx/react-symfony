@@ -7,7 +7,7 @@ import EditableTextField from '@components/editable/editableTextField';
 import Button from '@components/buttons/button';
 import Modal from '@components/modals/modal';
 import LoaderH from '@components/loader/loaderH';
-import { Card } from 'antd';
+import Card from 'antd/es/card';
 import HandleResponse from '@scripts/services/handleResponse';
 import { ToastEventsI } from '@scripts/app';
 import RoleBadge from '@components/misc/roleBadge';

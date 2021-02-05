@@ -1,6 +1,4 @@
-import '@fortawesome/fontawesome-free/js/all.min.js';
 import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import parse from 'html-react-parser';
@@ -17,8 +15,8 @@ const Logger = React.lazy(() => import('@pages/logger'));
 import Authentication from '@services/authentication';
 
 import Loader from '@components/loader/loader';
-import Toast, { ToastData } from './components/alerts/toast';
-import ToastContainer from './components/alerts/toastContainer';
+import Toast, { ToastData } from '@components/alerts/toast';
+import ToastContainer from '@components/alerts/toastContainer';
 import ErrorBoundary from '@components/error';
 import NavigationContainer from '@components/navigation';
 import Nav from '@components/nav';
@@ -32,7 +30,7 @@ export interface ToastEventsI {
     add: (toast: ToastData) => void;
 }
 
-class App extends React.Component<{}, AppStateI>{
+export default class App extends React.Component<{}, AppStateI>{
 
     protected router: Router;
 
@@ -49,7 +47,6 @@ class App extends React.Component<{}, AppStateI>{
         const payload = Authentication.getPayload();
         let time = (payload!.exp - Math.floor(Date.now() / 1000)) - 300;
         time = (time < 0) ? 0 : time;
-        console.log(time);
         setTimeout(async () => {
             await Authentication.refreshToken();
             this.refreshToken();
@@ -202,8 +199,3 @@ class App extends React.Component<{}, AppStateI>{
         );
     };
 }
-
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
-);

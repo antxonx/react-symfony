@@ -1,5 +1,5 @@
 import { Router } from '@scripts/router';
-import axios from 'axios';
+import axios from '@services/axios';
 import HandleResponse from '@services/handleResponse';
 
 export interface UserI {
@@ -116,7 +116,6 @@ export default class Authentication {
     };
 
     public static refreshToken = async () => {
-
         try {
             const res = await axios.get(
                 (new Router(process.env.BASE_ROUTE)).apiGet("user_refresh_token"),
@@ -134,12 +133,8 @@ export default class Authentication {
     };
 
     public static impersonate = async (id: number) => {
-        try {
-            const res = await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_impersonate", { id: id }));
-            Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
-        } catch (err) {
-            throw new Error(err);
-        }
+        const res = await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_impersonate", { id: id }));
+        Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
     };
 
     public static setImpersonation = (token: string) => {

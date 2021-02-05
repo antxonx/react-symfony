@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "target": "esnext",
-        "module": "CommonJS",
+        "target": "es5",
+        "module": "esnext",
+        "moduleResolution": "node",
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
@@ -10,7 +11,8 @@
         "strict": true,
         "baseUrl": ".",
         "resolveJsonModule": true,
-        "jsx": "react-jsx",
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react",
         "paths": {
             "@components/*": ["assets/scripts/components/*"],
             "@pages/*": ["assets/scripts/pages/*"],

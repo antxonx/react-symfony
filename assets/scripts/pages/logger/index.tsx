@@ -1,15 +1,15 @@
+import React from 'react';
+import 'bootstrap/js/dist/collapse';
 import LoaderH from '@components/loader/loaderH';
-import Log, { LogI, LogRoutes, LogNames, logTypes, LogMethods, InfoLogI, ErrorLogI } from '@components/log';
+import Log, { LogI, LogRoutes, LogNames, logTypes, InfoLogI, ErrorLogI } from '@components/log';
 import Method from '@components/log/method';
 import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
-import React from 'react';
-import { Input, Radio, RadioChangeEvent } from 'antd';
+import Radio, { RadioChangeEvent } from 'antd/es/radio';
 import Search from '@components/search/search';
 import RangePicker from '@components/RangePicker';
 import { Column } from '@components/grid';
-
 
 interface LoggerPropsI extends PanelPropsI { }
 
@@ -109,6 +109,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
     };
 
     handleTypeChange = (e: RadioChangeEvent) => {
+        const change = (this.route != LogRoutes.UNDEFINED);
         this.route = (() => {
             switch (e.target.value) {
                 case LogNames.INFO: return LogRoutes.INFO;
@@ -117,7 +118,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             }
         })();
         this.setState({
-            changing: true,
+            changing: change,
             header: this.unsetSorts(this.state.header),
             type: e.target.value,
         });
@@ -132,7 +133,6 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
             const dates = _ as moment.Moment[];
             const startDate = dates![ 0 ]?.format("YYYY-MM-DD");
             const endDate = dates![ 1 ]?.format("YYYY-MM-DD");
-            console.log(startDate + " - " + endDate);
             this.params.startDate = startDate;
             this.params.endDate = endDate;
         } else {
@@ -204,7 +204,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                         <RangePicker onChange={this.handleDateChange} />
                     </Column>
                 </this.MainBar>
-                <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing}>
+                <this.MainTable extraTableClass={extraTableClass} noLoader={this.state.changing} striped="4">
                     <Tbody rows={
                         ...this.getEntities().map((_log, i) => {
                             if (_log.infoField) {

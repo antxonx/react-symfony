@@ -268,11 +268,12 @@ export default class Panel<
 
     protected Table = (props: React.PropsWithChildren<{
         extraTableClass?: string;
+        striped?: string;
         noLoader?: boolean;
     }>): JSX.Element => {
         return (
             <>
-                <Table extraClass={props.extraTableClass}>
+                <Table extraClass={props.extraTableClass} striped={props.striped}>
                     <Thead cells={this.state.header} />
                     {
                         props.noLoader
@@ -299,6 +300,7 @@ export default class Panel<
 
     protected MainTable = (props: React.PropsWithChildren<{
         extraTableClass?: string;
+        striped?: string;
         noLoader?: boolean;
     }>) => {
         return (

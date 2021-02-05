@@ -3,6 +3,8 @@ import parser from 'html-react-parser';
 import LoaderH from '@components/loader/loaderH';
 import { Card } from 'antd';
 import { Column, Row } from '@components/grid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 export interface AlertPropsI<PT = number> {
     show: boolean;
@@ -143,19 +145,20 @@ export default class Alert<T = number> extends React.Component<AlertPropsI<T>, A
             <div className={"modal-component" + (this.props.show ? " show" : "")}>
                 <div className="modal-component-content modal-alert">
                     <Card
+                        size="small"
                         className="round"
                         title={
                             (
-                                <i className={
-                                    "fas fa-2x " +
-                                    (() => {
+                                <FontAwesomeIcon
+                                    size="2x"
+                                    {...(() => {
                                         switch (this.props.type) {
-                                            case "info": return "fa-info-circle text-info";
-                                            case "warning": return "fa-exclamation-triangle fa-2x text-warning";
-                                            default: return "fa-exclamation-triangle text-danger";
+                                            case "info": return { icon: faInfoCircle, className: "text-info" };
+                                            case "warning": return { icon: faExclamationTriangle, className: "text-warning" };
+                                            default: return { icon: faExclamationTriangle, className: "text-danger" };
                                         }
-                                    })()
-                                } />
+                                    })()}
+                                />
                             )
                         }
                         actions={actions}

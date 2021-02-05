@@ -9,6 +9,7 @@ interface JsonErrorResonse {
 export default class HandleResponse {
     public static error = (err: AxiosError, toasts: ToastEventsI | null = null): JsonErrorResonse | null => {
         if (err.response) {
+            console.log(err.response);
             const error = err.response.data as JsonErrorResonse;
             let message = error.message;
             console.error(`${error.code}: ${error.message}`);

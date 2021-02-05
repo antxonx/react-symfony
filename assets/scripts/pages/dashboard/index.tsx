@@ -1,5 +1,5 @@
 import Layout from '@components/layout';
-import { Card } from 'antd';
+import Card from 'antd/es/card';
 import React from 'react';
 
 export default class Dashboard extends React.Component {

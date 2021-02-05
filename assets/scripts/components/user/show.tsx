@@ -3,7 +3,7 @@ import { Column, Row } from '@components/grid';
 import { Router } from '@scripts/router';
 import { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
-import axios from 'axios';
+import axios from '@services/axios';
 import React from 'react';
 
 interface UserShowPropsI {

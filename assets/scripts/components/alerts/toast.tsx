@@ -1,5 +1,6 @@
 import { Column, Row } from '@components/grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import { Card } from 'antd';
 import React from 'react';
 
@@ -28,8 +29,8 @@ export default function Toast(props: React.PropsWithChildren<ToastPropsI>): JSX.
                 <Column size={1}>
                     {
                         props.type === "success"
-                            ? <FontAwesomeIcon icon={[ 'far', 'check-circle' ]} size="2x" color="#52c41a" />
-                            : <FontAwesomeIcon icon={[ 'far', 'times-circle' ]} size="2x" color="#e79a93" />
+                            ? <FontAwesomeIcon icon={faCheckCircle} size="2x" color="#52c41a" />
+                            : <FontAwesomeIcon icon={faTimesCircle} size="2x" color="#e79a93" />
                     }
                 </Column>
                 <Column size={11} extraClass="mt-1">

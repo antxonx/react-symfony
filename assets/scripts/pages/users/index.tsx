@@ -9,18 +9,19 @@ import Search from '@components/search/search';
 import Tbody from '@components/tables/tbody';
 import Authentication, { UserI } from '@services/authentication';
 import HandleResponse from '@services/handleResponse';
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+import axios from '@services/axios';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserTie, faBook, faKey, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Redirect } from 'react-router-dom';
 import { TdPropsI, ThPropsI } from '@components/tables';
-import { Button } from 'antd';
+import Button from 'antd/es/button';
 import { Column } from '@components/grid';
 
 const PasswordFormAdmin = React.lazy(() => import('@scripts/forms/user/passwordAdmin'));
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));
 const UserShow = React.lazy(() => import('@components/user/show'));
-
 interface UserPropsI extends PanelPropsI {
 
 }
@@ -41,13 +42,13 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
             impersonatorCell = {
                 name: "impersonate",
                 key: "impersonate",
-                children: <FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />,
+                children: <FontAwesomeIcon icon={faUserTie} />,
                 className: "icon-col border-right-0 border-left-0",
             };
             logsCell = {
                 name: "logs",
                 key: "logs",
-                children: <FontAwesomeIcon icon={[ 'fas', 'book' ]} />,
+                children: <FontAwesomeIcon icon={faBook} />,
                 className: "icon-col border-right-0 border-left-0",
             };
         } else {
@@ -120,14 +121,14 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                 }, {
                     name: "password",
                     key: "password",
-                    children: <FontAwesomeIcon icon={[ 'fas', 'key' ]} />,
+                    children: <FontAwesomeIcon icon={faKey} />,
                     className: "icon-col border-right-0",
                 },
                 logsCell,
                 impersonatorCell, {
                     name: "delete",
                     key: "delete",
-                    children: <FontAwesomeIcon icon={[ 'fas', 'trash-alt' ]} />,
+                    children: <FontAwesomeIcon icon={faTrashAlt} />,
                     className: "icon-col border-left-0",
                 },
             ],
@@ -328,7 +329,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                                             key={"_action_" + user.id}
                                                             id={user.id}
                                                             color='info'
-                                                            content={<FontAwesomeIcon icon={[ 'fas', 'user-tie' ]} />}
+                                                            content={<FontAwesomeIcon icon={faUserTie} />}
                                                             loading={this.state.impersonateLoading.findIndex(x => x === user.id) >= 0}
                                                             onClick={this.handleImpersonateClick}
                                                         />),
@@ -340,7 +341,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                                         (<Action<number>
                                                             id={user.id}
                                                             color='secondary'
-                                                            content={<FontAwesomeIcon icon={[ 'fas', 'book' ]} />}
+                                                            content={<FontAwesomeIcon icon={faBook} />}
                                                             onClick={this.handleLoadLogger}
                                                         />),
                                                 };
@@ -392,7 +393,7 @@ export default class Users extends Panel<UserI, UserPropsI, UsersStateI> {
                                                             (<Action<number>
                                                                 id={user.id}
                                                                 color='danger'
-                                                                content={<FontAwesomeIcon icon={[ 'fas', 'key' ]} />}
+                                                                content={<FontAwesomeIcon icon={faKey} />}
                                                                 onClick={this.handlePasswordClick}
                                                             />),
                                                     },

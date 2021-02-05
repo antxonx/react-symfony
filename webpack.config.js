@@ -33,7 +33,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('app', './assets/scripts/app.tsx')
+    .addEntry('app', './assets/index.tsx')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     // .enableStimulusBridge('./assets/controllers.json')
@@ -79,9 +79,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader(function (options) {
-        options.sassOptions.localIdentName = '[sha1:hash:hex:4]';
-    })
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()

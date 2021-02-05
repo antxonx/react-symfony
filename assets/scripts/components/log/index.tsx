@@ -2,6 +2,7 @@ import React from 'react';
 import parser from 'html-react-parser';
 import Method from './method';
 import { Column, Row } from '@components/grid';
+import { Card } from 'antd';
 
 export enum LogMethods {
     GET = "GET",
@@ -70,8 +71,8 @@ interface LogPropsI {
 export default function Log(props: React.PropsWithChildren<LogPropsI>): JSX.Element {
     const errorLog = props.log as ErrorLogI;
     return (
-        <div className="container mx-auto card my-5 round">
-            <div className="card-body">
+        <div className="container mx-auto my-5">
+            <Card className="round log-card">
                 <Row extraClass="hide-on-mobile">
                     <Column extraClass="text-left">
                         <b>{props.log.id}</b>
@@ -157,7 +158,7 @@ export default function Log(props: React.PropsWithChildren<LogPropsI>): JSX.Elem
                     <hr />
                     {parser(props.log.message)}
                 </div>
-            </div>
+            </Card>
         </div>
     );
 }

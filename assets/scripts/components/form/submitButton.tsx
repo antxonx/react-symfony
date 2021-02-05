@@ -17,7 +17,7 @@ export default function SubmitButton(props: React.PropsWithChildren<SubmitButton
                         </button>
                     )
                     : (
-                        <button className="btn btn-success mt-2 round w-100" type="submit">
+                        <button className="btn btn-primary mt-2 round w-100" type="submit">
                             {props.text}
                         </button>
                     )

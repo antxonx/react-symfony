@@ -2,7 +2,8 @@ import TextInput from '@components/form/textInput';
 import ErrorAlert from '@components/alerts/errorAlert';
 import SubmitButton from '@components/form/submitButton';
 import { Router } from '@scripts/router';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import axios from '@services/axios';
 import React from 'react';
 import HandleResponse from '@scripts/services/handleResponse';
 
