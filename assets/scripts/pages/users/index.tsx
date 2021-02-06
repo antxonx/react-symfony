@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Redirect } from 'react-router-dom';
 import { TdPropsI, ThPropsI } from '@components/tables';
 import Button from 'antd/es/button';
+import 'antd/es/button/style/css';
 import { Column } from '@components/grid';
 
 import { faUserTie } from '@fortawesome/free-solid-svg-icons/faUserTie';

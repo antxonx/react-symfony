@@ -4,6 +4,7 @@ import LoaderH from '@components/loader/loaderH';
 import Button from '@components/buttons/button';
 import parser from 'html-react-parser';
 import Card from 'antd/es/card';
+import 'antd/es/card/style/css';
 
 interface ModalPropsI {
     show: boolean;

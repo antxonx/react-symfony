@@ -1,4 +1,5 @@
 import Input from 'antd/es/input';
+import 'antd/es/input/style/css';
 import React from 'react';
 
 interface SearchPropsI {

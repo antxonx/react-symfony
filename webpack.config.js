@@ -80,6 +80,9 @@ Encore
 
     // enables Sass/SCSS support
     .enableSassLoader()
+    // .enableLessLoader(function(options){
+    //     options.lessOptions.javascriptEnabled = true;
+    // })
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()

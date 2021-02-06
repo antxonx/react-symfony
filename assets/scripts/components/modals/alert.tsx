@@ -2,6 +2,7 @@ import React from 'react';
 import parser from 'html-react-parser';
 import LoaderH from '@components/loader/loaderH';
 import Card from 'antd/es/card';
+import 'antd/es/card/style/css';
 import { Column, Row } from '@components/grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

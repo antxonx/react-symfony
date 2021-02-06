@@ -1,6 +1,7 @@
 import { Column, Row } from '@components/grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Card from 'antd/es/card';
+import 'antd/es/card/style/css';
 import React from 'react';
 
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons/faCheckCircle';

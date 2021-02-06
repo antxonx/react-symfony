@@ -14,6 +14,10 @@ import LoaderH from '@components/loader/loaderH';
 import AlertBox from 'antd/es/alert';
 import { Row } from '@components/grid';
 
+import '@styles/table.scss';
+import '@styles/paginator.scss'
+import 'antd/es/alert/style/css';
+
 export interface PanelPropsI {
     toasts: ToastEventsI;
 }
