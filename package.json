@@ -1,6 +1,16 @@
 {
+    "name": "react-symfony",
     "license": "MIT",
     "private": false,
+    "author": {
+        "name": "Antxony",
+        "email": "dantonyofcarim@gmail.com"
+    },
+    "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/antxony/react-symfony.git"
+    },
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
