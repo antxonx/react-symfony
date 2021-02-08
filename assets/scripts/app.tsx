@@ -4,14 +4,6 @@ import { Router } from '@scripts/router';
 import parse from 'html-react-parser';
 import '@styles/app.scss';
 
-const Profile = React.lazy(() => import('@pages/profile'));
-const Error404 = React.lazy(() => import('@pages/error404'));
-const Logout = React.lazy(() => import('@pages/logout'));
-const Dashboard = React.lazy(() => import('@pages/dashboard'));
-const Login = React.lazy(() => import('@pages/login'));
-const Users = React.lazy(() => import('@pages/users'));
-const Logger = React.lazy(() => import('@pages/logger'));
-
 import Authentication from '@services/authentication';
 
 import Loader from '@components/loader/loader';
@@ -20,6 +12,14 @@ import ToastContainer from '@components/alerts/toastContainer';
 import ErrorBoundary from '@components/error';
 import NavigationContainer from '@components/navigation';
 import Nav from '@components/nav';
+
+const Profile = React.lazy(() => import('@pages/profile'));
+const Error404 = React.lazy(() => import('@pages/error404'));
+const Logout = React.lazy(() => import('@pages/logout'));
+const Dashboard = React.lazy(() => import('@pages/dashboard'));
+const Login = React.lazy(() => import('@pages/login'));
+const Users = React.lazy(() => import('@pages/users'));
+const Logger = React.lazy(() => import('@pages/logger'));
 
 interface AppStateI {
     loggedIn: boolean | null;

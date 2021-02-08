@@ -11,8 +11,12 @@ import Alert, { AlertPropsI, FinishedAlertState, FinishedStateTypes } from '@com
 import Layout from '@components/layout';
 import Modal from '@components/modals/modal';
 import LoaderH from '@components/loader/loaderH';
-import { Alert as AlertBox } from 'antd';
+import AlertBox from 'antd/es/alert';
 import { Row } from '@components/grid';
+
+import '@styles/table.scss';
+import '@styles/paginator.scss'
+import 'antd/es/alert/style/css';
 
 export interface PanelPropsI {
     toasts: ToastEventsI;

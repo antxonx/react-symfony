@@ -1,4 +1,5 @@
 import React from 'react';
+import '@styles/toast.scss';
 
 export default function ToastContainer(props: React.PropsWithChildren<{}>): JSX.Element {
     return (

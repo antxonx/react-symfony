@@ -6,6 +6,8 @@ import axios from '@services/axios';
 import React from 'react';
 import parse from 'html-react-parser';
 
+import '@styles/checkbox.scss'
+
 interface AddPropsI {
     onSuccess: (res: AxiosResponse) => void;
     onError: (err: AxiosError) => string | undefined;

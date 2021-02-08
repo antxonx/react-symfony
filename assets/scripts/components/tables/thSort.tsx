@@ -1,6 +1,9 @@
-import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+
+import { faSort } from '@fortawesome/free-solid-svg-icons/faSort';
+import { faSortDown } from '@fortawesome/free-solid-svg-icons/faSortDown';
+import { faSortUp } from '@fortawesome/free-solid-svg-icons/faSortUp';
 
 export default function ThSort(props: React.PropsWithChildren<{
     onClick?: (name: string) => void;

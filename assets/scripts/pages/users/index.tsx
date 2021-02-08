@@ -13,11 +13,16 @@ import { AxiosError, AxiosResponse } from 'axios';
 import axios from '@services/axios';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserTie, faBook, faKey, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Redirect } from 'react-router-dom';
 import { TdPropsI, ThPropsI } from '@components/tables';
 import Button from 'antd/es/button';
+import 'antd/es/button/style/css';
 import { Column } from '@components/grid';
+
+import { faUserTie } from '@fortawesome/free-solid-svg-icons/faUserTie';
+import { faBook } from '@fortawesome/free-solid-svg-icons/faBook';
+import { faKey } from '@fortawesome/free-solid-svg-icons/faKey';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 
 const PasswordFormAdmin = React.lazy(() => import('@scripts/forms/user/passwordAdmin'));
 const AddForm = React.lazy(() => import('@scripts/forms/user/add'));

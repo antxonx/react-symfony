@@ -2,7 +2,8 @@ import React from 'react';
 import parser from 'html-react-parser';
 import Method from './method';
 import { Column, Row } from '@components/grid';
-import { Card } from 'antd';
+import Card from 'antd/es/card';
+import 'antd/es/card/style/css';
 
 export enum LogMethods {
     GET = "GET",

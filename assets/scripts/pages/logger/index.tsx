@@ -7,6 +7,7 @@ import Panel, { PanelPropsI, PanelStateI } from '@components/panel';
 import Tbody from '@components/tables/tbody';
 import parser from 'html-react-parser';
 import Radio, { RadioChangeEvent } from 'antd/es/radio';
+import 'antd/es/radio/style/css';
 import Search from '@components/search/search';
 import RangePicker from '@components/RangePicker';
 import { Column } from '@components/grid';

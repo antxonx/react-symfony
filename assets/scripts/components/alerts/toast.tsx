@@ -1,9 +1,13 @@
 import { Column, Row } from '@components/grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
-import { Card } from 'antd';
+import Card from 'antd/es/card';
+import 'antd/es/card/style/css';
 import React from 'react';
 
+import { faCheckCircle } from '@fortawesome/free-regular-svg-icons/faCheckCircle';
+import { faTimesCircle } from '@fortawesome/free-regular-svg-icons/faTimesCircle';
+
+import '@styles/toast.scss';
 interface ToastPropsI {
     type: "success" | "error";
     title?: string;
