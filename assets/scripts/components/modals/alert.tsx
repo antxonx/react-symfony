@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle';
 
+import '@styles/modal.scss';
+
 export interface AlertPropsI<PT = number> {
     show: boolean;
     id: PT;

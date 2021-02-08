@@ -6,6 +6,8 @@ import parser from 'html-react-parser';
 import Card from 'antd/es/card';
 import 'antd/es/card/style/css';
 
+import '@styles/modal.scss';
+
 interface ModalPropsI {
     show: boolean;
     size?: number;

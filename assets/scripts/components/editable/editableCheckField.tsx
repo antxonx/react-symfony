@@ -5,6 +5,8 @@ import React from 'react';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
 
+import '@styles/editable.scss';
+
 interface EditableCheckFieldPropsI {
     data: CheckValue[];
     options: CheckValue[];

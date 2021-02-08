@@ -2,11 +2,10 @@
   width: 100%;
   position: absolute;
   top: 20%;
-}
-
-.loader-container-no-abs {
-  width: 100%;
-  top: 20%; 
+  &-no-abs {
+    width: 100%;
+    top: 20%; 
+  }
 }
 
 .loader,

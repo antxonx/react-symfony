@@ -6,6 +6,8 @@ import React from 'react';
 
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons/faCheckCircle';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons/faTimesCircle';
+
+import '@styles/toast.scss';
 interface ToastPropsI {
     type: "success" | "error";
     title?: string;

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import '@styles/loaderH.scss';
+
 interface LoaderHPropsI {
     position: "left" | "right" | "center";
 }
