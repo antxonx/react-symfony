@@ -1,6 +1,6 @@
+import React from 'react';
 import Authentication from '@services/authentication';
 import SubmitButton from '@components/form/submitButton';
-import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import Layout from '@components/layout';
@@ -131,7 +131,7 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
                                         <hr />
                                         <div className="text-center">
                                             <small>
-                                                <Link to="/">Olvidé mi contraseña</Link>
+                                                <Link to={(new Router(process.env.BASE_URL).get("password"))}>Olvidé mi contraseña</Link>
                                             </small>
                                         </div>
                                     </div>

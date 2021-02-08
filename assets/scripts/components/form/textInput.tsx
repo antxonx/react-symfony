@@ -8,6 +8,7 @@ interface TextInputPropsI {
     errorMsg?: string;
     type?: string;
     placeholder?: string;
+    value?: string;
 }
 
 export default function TextInput(props: React.PropsWithChildren<TextInputPropsI>): JSX.Element {
@@ -20,6 +21,7 @@ export default function TextInput(props: React.PropsWithChildren<TextInputPropsI
                 onChange={props.onChange}
                 onKeyDown={props.onKeyDown}
                 placeholder={props.placeholder}
+                value={props.value}
             />
             {
                 (props.error && props.errorMsg) && (

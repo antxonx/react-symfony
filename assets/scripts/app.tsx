@@ -18,6 +18,7 @@ const Error404 = React.lazy(() => import('@pages/error404'));
 const Logout = React.lazy(() => import('@pages/logout'));
 const Dashboard = React.lazy(() => import('@pages/dashboard'));
 const Login = React.lazy(() => import('@pages/login'));
+const Password = React.lazy(() => import('@pages/password'));
 const Users = React.lazy(() => import('@pages/users'));
 const Logger = React.lazy(() => import('@pages/logger'));
 
@@ -164,11 +165,10 @@ export default class App extends React.Component<{}, AppStateI>{
                                     )
                                     : (
                                         <>
-                                            <Redirect to={this.router.get("login")} />
                                             <Suspense fallback={<Loader />}>
-                                                <Switch>
-                                                    <Route exact path={this.router.get("dashboard")}>
-                                                        <Redirect to={this.router.get("login")} />
+                                                <NavigationContainer toast={{ add: this.addToast }}>
+                                                    <Route exact path={this.router.get("password")}>
+                                                        <Password />
                                                     </Route>
                                                     <Route>
                                                         <Login
@@ -176,7 +176,7 @@ export default class App extends React.Component<{}, AppStateI>{
                                                             onloggedinchange={this.handleLoggedInChange}
                                                         />
                                                     </Route>
-                                                </Switch>
+                                                </NavigationContainer>
                                             </Suspense>
                                         </>
                                     )
