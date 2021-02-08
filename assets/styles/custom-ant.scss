@@ -60,6 +60,9 @@
         background-color: #1e2b37 !important;
         border-color: #1a252f !important;
     }
+    &.round {
+        border-radius: 1.25rem;
+    }
 }
 
 .ant-btn[disabled] {

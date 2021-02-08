@@ -1,6 +1,7 @@
 var Encore = require('@symfony/webpack-encore');
 const dotenv = require('dotenv');
 const path = require('path');
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const env = dotenv.config({ path: '.env' });
 
@@ -83,6 +84,11 @@ Encore
     // .enableLessLoader(function(options){
     //     options.lessOptions.javascriptEnabled = true;
     // })
+    .addPlugin(new BundleAnalyzerPlugin({
+        analyzerMode: (Encore.isProduction() ? "disabled" : "static"),
+        openAnalyzer: false,
+        reportFilename: "./report.html",
+    }))
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
