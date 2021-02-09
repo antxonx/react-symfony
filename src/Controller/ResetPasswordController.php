@@ -92,7 +92,10 @@ class ResetPasswordController extends AbstractController
                 $mail->CharSet = "UTF-8";
                 $mail->isHTML(true);
                 $mail->Subject = "Recuperación de contraseña para React";
-                $mail->Body = "token de recuperación: {$token}";
+                $mail->Body = $this->renderView("emails/resetPassword.html.twig", [
+                    'token' => $token,
+                    'name' => $user->getName(),
+                ]);
                 $mail->AltBody = "token de recuperación: {$token}";
                 $mail->send();
             }

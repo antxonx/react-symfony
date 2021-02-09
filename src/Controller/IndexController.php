@@ -25,4 +25,9 @@ class IndexController extends AbstractController
     {
         return new JsonResponse("ok");
     }
+
+    /**
+     * @Route("/password_form", name="password_reset_form")
+     */
+    public function __nothing__(){}
 }
