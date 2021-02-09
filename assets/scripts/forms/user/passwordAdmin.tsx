@@ -9,7 +9,8 @@ import HandleResponse from '@scripts/services/handleResponse';
 
 interface PasswordFormPropsI {
     onSuccess: (res: AxiosResponse) => void;
-    id: number;
+    onSubmit?: (e: React.FormEvent, inputs: any) => Promise<AxiosResponse<any>>;
+    id?: number;
 }
 
 interface PasswordFormStateI {
@@ -52,7 +53,7 @@ export default class PasswordFormAdmin extends React.Component<PasswordFormProps
         this.setState(current);
     };
 
-    handleSubmit = (e: React.FormEvent) => {
+    handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         let inputError: boolean;
         let anyError: boolean;
@@ -84,18 +85,39 @@ export default class PasswordFormAdmin extends React.Component<PasswordFormProps
             this.setState({
                 loading: true,
             });
-            axios.patch((new Router(process.env.BASE_URL)).apiGet("user_change_password", {id: this.props.id}), this.state.inputs)
-                .then(this.props.onSuccess)
-                .catch(err => {
-                    this.setState({
-                        error: true,
-                        errorMsg: HandleResponse.error(err)!.message
-                    });
-                    this.setState({
-                        loading: false,
-                    });
+            try {
+                const res = this.props.onSubmit
+                    ? await this.props.onSubmit(e, this.state.inputs)
+                    : await this.handleSubmitLocal(e, this.state.inputs);
+                this.props.onSuccess(res);
+            } catch (err) {
+                this.setState({
+                    error: true,
+                    errorMsg: HandleResponse.error(err)!.message
                 });
+                this.setState({
+                    loading: false,
+                });
+            }
+            // axios.patch((new Router(process.env.BASE_URL)).apiGet("user_change_password", {id: this.props.id}), this.state.inputs)
+            //     .then(this.props.onSuccess)
+            //     .catch(err => {
+            //         this.setState({
+            //             error: true,
+            //             errorMsg: HandleResponse.error(err)!.message
+            //         });
+            //         this.setState({
+            //             loading: false,
+            //         });
+            //     });
         }
+    };
+
+    handleSubmitLocal = async (e: React.FormEvent, inputs: any): Promise<AxiosResponse<any>> => {
+        return await axios.patch(
+            (new Router(process.env.BASE_URL)).apiGet("user_change_password", {id: this.props.id}),
+            inputs
+        );
     };
 
     handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

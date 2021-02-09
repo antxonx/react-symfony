@@ -44,8 +44,8 @@ Encore
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
-    // .enableSingleRuntimeChunk()
-    .disableSingleRuntimeChunk()
+    .enableSingleRuntimeChunk()
+    //.disableSingleRuntimeChunk()
 
     /*
      * FEATURE CONFIG
@@ -84,11 +84,11 @@ Encore
     // .enableLessLoader(function(options){
     //     options.lessOptions.javascriptEnabled = true;
     // })
-    .addPlugin(new BundleAnalyzerPlugin({
-        analyzerMode: (Encore.isProduction() ? "disabled" : "static"),
-        openAnalyzer: false,
-        reportFilename: "./report.html",
-    }))
+    // .addPlugin(new BundleAnalyzerPlugin({
+    //     analyzerMode: (Encore.isProduction() ? "disabled" : "static"),
+    //     openAnalyzer: false,
+    //     reportFilename: "./report.html",
+    // }))
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
