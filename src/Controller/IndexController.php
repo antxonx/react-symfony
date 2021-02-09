@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/{reactRouting}", name="index", requirements={"reactRouting"="^(?!(api|register|build)).+"}, defaults={"reactRouting": null}) 
+     * @Route("/{reactRouting}", name="index", requirements={"reactRouting"="^(?!(api|register|build|reset_password)).+"}, defaults={"reactRouting": null}) 
      */
     public function index(): Response
     {

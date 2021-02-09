@@ -12,6 +12,7 @@ import ToastContainer from '@components/alerts/toastContainer';
 import ErrorBoundary from '@components/error';
 import NavigationContainer from '@components/navigation';
 import Nav from '@components/nav';
+import PasswordReset from '@pages/password/reset';
 
 const Profile = React.lazy(() => import('@pages/profile'));
 const Error404 = React.lazy(() => import('@pages/error404'));
@@ -169,6 +170,9 @@ export default class App extends React.Component<{}, AppStateI>{
                                                 <NavigationContainer toast={{ add: this.addToast }}>
                                                     <Route exact path={this.router.get("password")}>
                                                         <Password />
+                                                    </Route>
+                                                    <Route exact path={this.router.get("passwordForm")}>
+                                                        <PasswordReset />
                                                     </Route>
                                                     <Route>
                                                         <Login
