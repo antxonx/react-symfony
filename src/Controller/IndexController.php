@@ -27,7 +27,11 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/password_form", name="password_reset_form")
+     * @Route("/password_form", name="password_reset_form_mail")
      */
     public function __nothing__(){}
+    /**
+     * @Route("/password", name="password_reset_mail")
+     */
+    public function __nothing__2(){}
 }

@@ -91,12 +91,12 @@ class ResetPasswordController extends AbstractController
                 $mail->addAddress($content->email, $user->getName());
                 $mail->CharSet = "UTF-8";
                 $mail->isHTML(true);
-                $mail->Subject = "Recuperación de contraseña para React";
+                $mail->Subject = "Recuperación de contraseña en Sistema";
                 $mail->Body = $this->renderView("emails/resetPassword.html.twig", [
                     'token' => $token,
                     'name' => $user->getName(),
                 ]);
-                $mail->AltBody = "token de recuperación: {$token}";
+                $mail->AltBody = "";
                 $mail->send();
             }
             if($infoLog) {
@@ -180,6 +180,19 @@ class ResetPasswordController extends AbstractController
                 "user" => $user->getId()
             ]);
             $this->getDoctrine()->getManager()->remove($resetPassword);
+
+            $mail = new PHPMailer(true);
+            $mail->setFrom($_ENV["ALERT_EMAIL"]);
+            $mail->addAddress($user->getEmail(), $user->getName());
+            $mail->CharSet = "UTF-8";
+            $mail->isHTML(true);
+            $mail->Subject = "Cambio de contraseña en Sistema";
+            $mail->Body = $this->renderView("emails/changedPassword.html.twig", [
+                "name" => $user->getName()
+            ]);
+            $mail->AltBody = "";
+            $mail->send();
+
             return $this->response->success(
                 "Contraseña actualizada",
                 "El usuario <b>{$user->getName()}</b>(<em>{$user->getUsername()}</em>) ha recuperado acceso al sistema"
