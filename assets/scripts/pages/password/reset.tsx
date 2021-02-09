@@ -7,9 +7,8 @@ import Loader from '@components/loader/loader';
 import AlertBox from 'antd/es/alert';
 import 'antd/es/alert/style/css';
 import HandleResponse from '@services/handleResponse';
-import { runInThisContext } from 'vm';
 
-const PasswordForm = React.lazy(() => import('@scripts/forms/user/password'));
+const PasswordForm = React.lazy(() => import('@scripts/forms/user/passwordAdmin'));
 
 interface PasswordResetPropsI {
 
@@ -52,8 +51,6 @@ export default class PasswordReset extends React.Component<PasswordResetPropsI, 
                         token: token
                     })
                 );
-                console.log(res);
-                console.log(HandleResponse.success<UserDataI>(res));
                 this.setState({
                     loading: false,
                     data: HandleResponse.success<UserDataI>(res),
@@ -73,11 +70,14 @@ export default class PasswordReset extends React.Component<PasswordResetPropsI, 
     }
 
     handleSuccess = (res: AxiosResponse) => {
-
+        window.location.href = (new Router(process.env.BASE_URL)).get("dashboard");
     };
 
     handleSubmit = async (e: React.FormEvent, inputs: any): Promise<AxiosResponse<any>> => {
-        return await Axios.post((new Router(process.env.BASE_URL)).apiGet("reset_password_reset"), inputs);
+        return await Axios.post(
+            (new Router(process.env.BASE_URL)).apiGet("reset_password_reset", {username: this.state.data.username}),
+            inputs
+        );
     };
 
     NoToken = (): JSX.Element => {

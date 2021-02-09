@@ -103,18 +103,6 @@ export default class PasswordForm extends React.Component<PasswordFormPropsI, Pa
                     loading: false,
                 });
             }
-
-            // axios.patch((new Router(process.env.BASE_URL)).apiGet("user_profile_change_password"), this.state.inputs)
-            //     .then(this.props.onSuccess)
-            //     .catch(err => {
-            //         this.setState({
-            //             error: true,
-            //             errorMsg: HandleResponse.error(err)!.message
-            //         });
-            //         this.setState({
-            //             loading: false,
-            //         });
-            //     });
         }
     };
 

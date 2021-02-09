@@ -83,7 +83,7 @@ export default class Login extends React.Component<LoginPropsI, LoginStateI>{
                 this.changeStateValue("error", true);
                 this.changeStateValue("isLoggedIn", false);
                 this.changeStateValue("loading", false);
-                this.props.onloggedinchange(false);
+                // this.props.onloggedinchange(false);
             }
         });
     };

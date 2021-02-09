@@ -14,6 +14,7 @@ use DateTime;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * ResetPasswordController class
@@ -30,11 +31,19 @@ class ResetPasswordController extends AbstractController
 
     protected Response $response;
 
-    public function __construct(UserRepository $uRep, ResetPasswordRepository $rep, Response $response)
+    protected UserPasswordEncoderInterface $passwordEncoder;
+
+    public function __construct(
+        UserRepository $uRep, 
+        ResetPasswordRepository $rep, 
+        Response $response,
+        UserPasswordEncoderInterface $passwordEncoder
+        )
     {
         $this->uRep = $uRep;
         $this->rep = $rep;
         $this->response = $response;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     /**
@@ -45,6 +54,7 @@ class ResetPasswordController extends AbstractController
     public function reset(Request $request): JsonResponse
     {
         try {
+            $infoLog = false;
             $content = json_decode($request->getContent());
             if (!filter_var($content->email, FILTER_VALIDATE_EMAIL)) {
                 throw new Exception("El formato del correo no es correcto");
@@ -53,6 +63,7 @@ class ResetPasswordController extends AbstractController
                 "email" => $content->email
             ]);
             if ($user) {
+                $infoLog = true;
                 $em = $this->getDoctrine()->getManager();
                 $exists = $this->rep->findOneBy([
                     "user" => $user->getId()
@@ -85,7 +96,16 @@ class ResetPasswordController extends AbstractController
                 $mail->AltBody = "token de recuperación: {$token}";
                 $mail->send();
             }
-            return $this->response->successNoLog("Se ha enviado un enlace de recuperación a <b>{$content->email}</b>");
+            if($infoLog) {
+                return $this->response->success(
+                    "Se ha enviado un enlace de recuperación a <b>{$content->email}</b>",
+                    "El usuario <b>{$user->getName()}</b>(<em>{$user->getUsername()}</em>) ha solicitado recuperar su contraseña"
+                );
+            } else {
+                return $this->response->successNoLog(
+                    "Se ha enviado un enlace de recuperación a <b>{$content->email}</b>"
+                );
+            }
         } catch (PHPMailerException $e) {
             return $this->response->error($e);
         } catch (Exception $e) {
@@ -98,7 +118,7 @@ class ResetPasswordController extends AbstractController
      * 
      * @Route("/{token}", name="reset_password_confirm", methods={"GET"}, options={"expose"=true})
      */
-    public function resetForm(string $token)
+    public function resetForm(string $token) : JsonResponse
     {
         try {
             $em = $this->getDoctrine()->getManager();
@@ -127,6 +147,40 @@ class ResetPasswordController extends AbstractController
                 "username" => $resetPassword->getUser()->getUsername(),
                 "name" => $resetPassword->getUser()->getName(),
             ]));
+        } catch (Exception $e) {
+            return $this->response->error($e);
+        }
+    }
+
+    /**
+     * Cambiar contraseña
+     * 
+     * @Route("/{username}", name="reset_password_reset", methods={"POST"}, options={"expose"=true})
+     */
+    public function changePassword(string $username,  Request $request): JsonResponse
+    {
+        try {
+            $content = json_decode($request->getContent());
+            $user = $this->uRep->findOneBy([
+                "username" => $username
+            ]);
+            if ($content->new != $content->confirmNew) {
+                throw new Exception("Las contraseñas no coinciden");
+            }
+            $user->setPassword(
+                $this->passwordEncoder->encodePassword(
+                    $user,
+                    $content->new
+                )
+            );
+            $resetPassword = $this->rep->findOneBy([
+                "user" => $user->getId()
+            ]);
+            $this->getDoctrine()->getManager()->remove($resetPassword);
+            return $this->response->success(
+                "Contraseña actualizada",
+                "El usuario <b>{$user->getName()}</b>(<em>{$user->getUsername()}</em>) ha recuperado acceso al sistema"
+            );
         } catch (Exception $e) {
             return $this->response->error($e);
         }

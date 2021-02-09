@@ -134,7 +134,7 @@ export default class Authentication {
 
     public static impersonate = async (id: number) => {
         const res = await axios.get((new Router(process.env.BASE_ROUTE)).apiGet("user_impersonate", { id: id }));
-        Authentication.setImpersonation(JSON.parse(HandleResponse.success(res)).token);
+        Authentication.setImpersonation(HandleResponse.success<{token: string}>(res).token);
     };
 
     public static setImpersonation = (token: string) => {
