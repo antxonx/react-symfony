@@ -2,8 +2,8 @@ import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
 import Authentication from '@services/authentication';
 class Axios {
-    public static async get(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse> {
-        return await axios.get(url, {
+    public static async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+        return await axios.get<T>(url, {
             ...config,
             ...{
                 headers: {
@@ -13,8 +13,8 @@ class Axios {
         });
     }
 
-    public static async delete(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse> {
-        return await axios.delete(url, {
+    public static async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+        return await axios.delete<T>(url, {
             ...config,
             ...{
                 headers: {
@@ -24,8 +24,8 @@ class Axios {
         });
     }
 
-    public static async post(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
-        return await axios.post(url, data, {
+    public static async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+        return await axios.post<T>(url, data, {
             ...config,
             ...{
                 headers: {
@@ -35,8 +35,8 @@ class Axios {
         });
     }
 
-    public static async put(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
-        return await axios.put(url, data, {
+    public static async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+        return await axios.put<T>(url, data, {
             ...config,
             ...{
                 headers: {
@@ -46,8 +46,8 @@ class Axios {
         });
     }
 
-    public static async patch(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse> {
-        return await axios.patch(url, data, {
+    public static async patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+        return await axios.patch<T>(url, data, {
             ...config,
             ...{
                 headers: {

@@ -109,7 +109,7 @@ export default class Panel<
             this.setLoading();
         try {
             const res = await axios.get(this.router.apiGet(this.route, this.params));
-            this.setRequestResult(JSON.parse(HandleResponse.success(res)));
+            this.setRequestResult(HandleResponse.success(res));
             if (!options?.silent)
                 this.unsetLoading();
         } catch (err) {

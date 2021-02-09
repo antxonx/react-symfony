@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/{reactRouting}", name="index", requirements={"reactRouting"="^(?!(api|register|build)).+"}, defaults={"reactRouting": null}) 
+     * @Route("/{reactRouting}", name="index", requirements={"reactRouting"="^(?!(api|register|build|reset_password)).+"}, defaults={"reactRouting": null}) 
      */
     public function index(): Response
     {
@@ -25,4 +25,13 @@ class IndexController extends AbstractController
     {
         return new JsonResponse("ok");
     }
+
+    /**
+     * @Route("/password_form", name="password_reset_form_mail")
+     */
+    public function __nothing__(){}
+    /**
+     * @Route("/password", name="password_reset_mail")
+     */
+    public function __nothing__2(){}
 }

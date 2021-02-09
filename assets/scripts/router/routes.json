@@ -4,5 +4,7 @@
     "logout": "/logout",
     "profile": "/profile",
     "users": "/users",
-    "logger": "/logger"
+    "logger": "/logger",
+    "password": "/password",
+    "passwordForm": "/password_form"
 }

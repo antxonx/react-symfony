@@ -9,7 +9,6 @@ interface JsonErrorResonse {
 export default class HandleResponse {
     public static error = (err: AxiosError, toasts: ToastEventsI | null = null): JsonErrorResonse | null => {
         if (err.response) {
-            console.log(err.response);
             const error = err.response.data as JsonErrorResonse;
             let message = error.message;
             console.error(`${error.code}: ${error.message}`);
@@ -42,7 +41,7 @@ export default class HandleResponse {
             return null;
         }
     };
-    public static success = (res: AxiosResponse, toasts: ToastEventsI | null = null): string => {
+    public static success = <T = string>(res: AxiosResponse, toasts: ToastEventsI | null = null): T => {
         const message = res.data.message || res.data;
         toasts && (
             toasts.add({
@@ -52,6 +51,11 @@ export default class HandleResponse {
                 message: message,
             })
         );
-        return message;
+        try {
+            return JSON.parse(message);
+        } catch (err) {
+            return message;
+        }
+        
     };
 }

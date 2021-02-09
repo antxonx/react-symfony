@@ -12,12 +12,14 @@ import ToastContainer from '@components/alerts/toastContainer';
 import ErrorBoundary from '@components/error';
 import NavigationContainer from '@components/navigation';
 import Nav from '@components/nav';
+import PasswordReset from '@pages/password/reset';
 
 const Profile = React.lazy(() => import('@pages/profile'));
 const Error404 = React.lazy(() => import('@pages/error404'));
 const Logout = React.lazy(() => import('@pages/logout'));
 const Dashboard = React.lazy(() => import('@pages/dashboard'));
 const Login = React.lazy(() => import('@pages/login'));
+const Password = React.lazy(() => import('@pages/password'));
 const Users = React.lazy(() => import('@pages/users'));
 const Logger = React.lazy(() => import('@pages/logger'));
 
@@ -164,11 +166,13 @@ export default class App extends React.Component<{}, AppStateI>{
                                     )
                                     : (
                                         <>
-                                            <Redirect to={this.router.get("login")} />
                                             <Suspense fallback={<Loader />}>
-                                                <Switch>
-                                                    <Route exact path={this.router.get("dashboard")}>
-                                                        <Redirect to={this.router.get("login")} />
+                                                <NavigationContainer toast={{ add: this.addToast }}>
+                                                    <Route exact path={this.router.get("password")}>
+                                                        <Password />
+                                                    </Route>
+                                                    <Route exact path={this.router.get("passwordForm")}>
+                                                        <PasswordReset />
                                                     </Route>
                                                     <Route>
                                                         <Login
@@ -176,7 +180,7 @@ export default class App extends React.Component<{}, AppStateI>{
                                                             onloggedinchange={this.handleLoggedInChange}
                                                         />
                                                     </Route>
-                                                </Switch>
+                                                </NavigationContainer>
                                             </Suspense>
                                         </>
                                     )
