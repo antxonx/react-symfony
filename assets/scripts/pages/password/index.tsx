@@ -8,6 +8,8 @@ import { Router } from '@scripts/router';
 import Axios from '@services/axios';
 import parser from 'html-react-parser';
 
+import '@styles/widths.scss'
+
 const EmailRegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface PasswordPropsI {

@@ -8,6 +8,8 @@ import AlertBox from 'antd/es/alert';
 import 'antd/es/alert/style/css';
 import HandleResponse from '@services/handleResponse';
 
+import '@styles/widths.scss'
+
 const PasswordForm = React.lazy(() => import('@scripts/forms/user/passwordAdmin'));
 
 interface PasswordResetPropsI {

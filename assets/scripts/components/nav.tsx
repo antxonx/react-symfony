@@ -1,14 +1,17 @@
 import React from "react";
-import 'bootstrap/js/dist/dropdown';
 import { NavLink } from 'react-router-dom';
 import { Router } from '@scripts/router';
 import Authentication from "@services/authentication";
+import { useMediaQuery } from 'react-responsive';
+import 'bootstrap/js/dist/dropdown';
+import 'bootstrap/js/dist/collapse';
 interface NavPropsI {
     router: Router;
 }
 
 export default function Nav(props: React.PropsWithChildren<NavPropsI>) {
     const roles = Authentication.getRoles();
+    const isMobile = useMediaQuery({ query: `(max-width: 900px)` });
     return (
         <nav className="navbar navbar-expand-lg navbar-light" style={{
             height: "54px",
@@ -31,7 +34,11 @@ export default function Nav(props: React.PropsWithChildren<NavPropsI>) {
             >
                 <span className="navbar-toggler-icon"></span>
             </button>
-            <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
+            
+            <div 
+            className={"collapse navbar-collapse justify-content-between" + (isMobile?" navbar-overall": "")}
+            id="navbarNav"
+            >
                 <ul></ul>
                 <ul className="navbar-nav">
                     {

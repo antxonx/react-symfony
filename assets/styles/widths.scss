@@ -1,0 +1,17 @@
+@for $i from 1 through 7 {
+    @for $j from 1 through 8 {
+        .wd-#{$i*10}-wm-#{($j*5) + 60} {
+            width: $i * 10%;
+        }
+    }
+}
+
+@media screen and (max-width: 900px) and (min-width: 300px) {
+    @for $i from 1 through 7 {
+        @for $j from 1 through 8 {
+            .wd-#{$i*10}-wm-#{($j*5) + 60} {
+                width: ($j * 5)+60% !important;
+            }
+        }
+    }
+}

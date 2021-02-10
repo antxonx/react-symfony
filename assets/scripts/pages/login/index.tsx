@@ -7,6 +7,8 @@ import Layout from '@components/layout';
 import TextInput from '@components/form/textInput';
 import HandleResponse from '@scripts/services/handleResponse';
 
+import '@styles/widths.scss'
+
 declare type LoginFields = "username" | "password";
 
 interface LoginPropsI {
