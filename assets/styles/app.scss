@@ -184,3 +184,14 @@ h5 {
         opacity: 0;
     }
 }
+
+.navbar-overall {
+    z-index: 900;
+    background-color: rgb(255, 255, 255);
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+    padding-right: 1rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    box-shadow: rgb(0 0 0) 0px 10px 13px -7px, rgb(0 0 0 / 0%) -50px -50px 0px -30px;
+}

@@ -249,7 +249,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                                         }, {
                                             name: "route",
                                             children: <>{log.route}</>,
-                                            className: "cursor-pointer",
+                                            className: "text-truncate cursor-pointer",
                                         }, {
                                             name: "message",
                                             children: <>{parser(log.message)}</>,
