@@ -188,7 +188,7 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
         return (
             <this.Layout title="Registro">
                 <this.MainBar>
-                    <Column size={3}>
+                    <Column size={3} extraClass="mt-1">
                         <Radio.Group
                             options={[ { label: 'Info', value: 'info' }, { label: 'Error', value: 'error' } ]}
                             onChange={this.handleTypeChange}
@@ -198,10 +198,10 @@ export default class Logger extends Panel<LogI, LoggerPropsI, LoggerStateI> {
                             buttonStyle="solid"
                         />
                     </Column>
-                    <Column size={6}>
+                    <Column size={6} extraClass="mt-1">
                         <Search callback={this.handleSearch} />
                     </Column>
-                    <Column size={3}>
+                    <Column size={3} extraClass="mt-1">
                         <RangePicker onChange={this.handleDateChange} />
                     </Column>
                 </this.MainBar>

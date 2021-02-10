@@ -27,6 +27,7 @@
         "@types/node": "^14.14.22",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
+        "@types/react-responsive": "^8.0.2",
         "@types/react-router-dom": "^5.1.7",
         "@types/react-transition-group": "^4.4.0",
         "core-js": "^3.8.3",
@@ -57,6 +58,7 @@
         "prop-types": "^15.7.2",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
+        "react-responsive": "^8.2.0",
         "react-router-dom": "^5.2.0",
         "react-transition-group": "^4.4.1",
         "symfony-ts-router": "^1.0.6"
