@@ -16,6 +16,7 @@ import { Row } from '@components/grid';
 
 import '@styles/table.scss';
 import '@styles/paginator.scss'
+import '@styles/widths.scss'
 import 'antd/es/alert/style/css';
 
 export interface PanelPropsI {
@@ -120,7 +121,7 @@ export default class Panel<
     protected NoRegisters = (): JSX.Element => {
         return (
             <AlertBox
-                className="round w-50 mx-auto mt-5"
+                className="round wd-50-wm-100 mx-auto mt-5"
                 message="No hay registros."
                 description="No se pudo encontrar registros con la petición realizada."
                 type="info"
