@@ -11,16 +11,16 @@ self.addEventListener("message", (event) => {
   }
 });
 
-workbox.routing.registerRoute(
-  new RegExp(/\/api\/*/),
-  new workbox.strategies.NetworkFirst({
-    cacheName: CACHE
-  })
-);
+// workbox.routing.registerRoute(
+//   new RegExp(/\/api\/*/),
+//   new workbox.strategies.NetworkFirst({
+//     cacheName: CACHE
+//   })
+// );
 
 workbox.routing.registerRoute(
   new RegExp(/\/(?!api).*/),
-  new workbox.strategies.NetworkFirst({
+  new workbox.strategies.CacheFirst({
     cacheName: CACHED
   })
 );
