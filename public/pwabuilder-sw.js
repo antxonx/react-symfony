@@ -1,6 +1,7 @@
 // This is the "Offline copy of assets" service worker
 
 const CACHE = "pwabuilder-offline";
+const CACHED = "pwabuilder-offline-stored";
 
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
@@ -11,8 +12,15 @@ self.addEventListener("message", (event) => {
 });
 
 workbox.routing.registerRoute(
-  new RegExp('/*'),
+  new RegExp(/\/api\/*/),
   new workbox.strategies.NetworkFirst({
     cacheName: CACHE
+  })
+);
+
+workbox.routing.registerRoute(
+  new RegExp(/\/(?!api).*/),
+  new workbox.strategies.NetworkFirst({
+    cacheName: CACHED
   })
 );
