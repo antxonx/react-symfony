@@ -132,7 +132,7 @@ export default class Panel<
     protected NoRoute = (): JSX.Element => {
         return (
             <AlertBox
-                className="round w-50 mx-auto mt-5"
+                className="round wd-50-wm-100 mx-auto mt-5"
                 message="No se ha seleccionado una ruta."
                 description="Debe seleccionar una ruta para poder mostrar los resultados."
                 type="info"
